@@ -1,0 +1,51 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.i-plugins-list {
+    & > h2 { margin-top: 2em; }
+
+    & > .i-badges-list {
+        display: flex;
+        justify-content: flex-start;
+
+        & > .i-badge {
+            @include transition(background-color $default-transition-duration $default-transition-function);
+
+            width: 10em;
+            margin-left: 0;
+            margin-right: 1.6em;
+
+            &.i-badge-disabled {
+                background-color: lighten($dark-blue, $light-color-variation);
+                background: repeating-linear-gradient(
+                    -40deg,
+                    $dark-blue,
+                    $dark-blue 10px,
+                    lighten($dark-blue, 0.5*$light-color-variation) 10px,
+                    lighten($dark-blue, 0.5*$light-color-variation) 20px
+                );
+            }
+
+            &:not(.i-badge-disabled):hover {
+                background-color: darken($dark-blue, 2*$light-color-variation);
+            }
+
+            & > .i-badge-content { height: 4.2em; }
+        }
+    }
+}

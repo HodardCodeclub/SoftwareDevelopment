@@ -1,0 +1,55 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+.clearableinput {
+    position: relative;
+
+    .clearabletext {
+        padding-right: 1.7em !important;
+
+        &.actionabletext {
+            padding-right: 3.1em !important;
+            word-break: break-all;
+        }
+
+        &::-webkit-search-cancel-button {
+            display: none;
+        }
+    }
+
+    .button-box {
+        position: absolute;
+        padding: 0 2px;
+        right: 0;
+        top: 3px;
+
+        a.i-link {
+            font-size: 1.2em;
+            padding-left: 2px;
+            visibility: hidden;
+
+            &:last-child {
+                padding-right: 2px;
+            }
+        }
+    }
+}
+
+// Fix fox clearableinput within qtips
+.qtip .clearableinput {
+    line-height: normal;
+}

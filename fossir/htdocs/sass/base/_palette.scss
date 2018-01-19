@@ -1,0 +1,59 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+// when changing a color in here don't forget to check palette.js
+// whether it is used in there too and update it if necessary.
+
+$darker-blue: #005272;
+$dark-blue: #007cac;
+$blue: #5d95ea;
+$pastel-blue: #cde1ff;
+$light-blue: #edf3fd;
+
+$red: #af0000;
+$dark-red: #a76766;
+$pastel-red: #a76766;
+$light-red: #f2dede;
+
+$dark-gray: #999;
+$gray: #bbb;
+$pastel-gray: #dfdfdf;
+$light-gray: #f9f9f9;
+
+$dark-black: #333;
+$black: #555;
+$light-black: #777;
+
+$dark-green: #67a766;
+$green: #6cc644;
+$pastel-green: #67a766;
+$light-green: #def2de;
+
+$dark-yellow: #9c793b;
+$yellow: #e99e18;
+$postit-yellow: #ffffa5;
+$light-yellow: #ffe6ba;
+
+$orange: #b14300;
+$bright-orange: #e25300;
+
+$purple: #6e5494;
+
+$separator-color: #ebebeb;
+
+$link: #0b63a5;
+$fossir-blue: #00a4e4;

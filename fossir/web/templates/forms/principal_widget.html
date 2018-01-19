@@ -1,0 +1,21 @@
+{% extends 'forms/base_widget.html' %}
+
+
+{% block html %}
+    <input type="hidden" id="{{ field.id }}" name="{{ field.name }}" value="{{ field._value() | tojson | forceescape }}">
+    <input type="text" id="display-{{ field.id }}" placeholder="{% trans %}Choose user...{% endtrans %}" readonly>
+    <button type="button" id="choose-{{ field.id }}" class="i-button" data-tooltip-anchor>{% trans %}Choose{% endtrans %}</button>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        setupPrincipalWidget({
+            fieldId: {{ field.id | tojson }},
+            eventId: {{ (field.event.id if field.event else none) | tojson }},
+            required: {{ field.flags.required | tojson }},
+            allowExternal: {{ field.allow_external | tojson }}
+        });
+    </script>
+{% endblock %}
+

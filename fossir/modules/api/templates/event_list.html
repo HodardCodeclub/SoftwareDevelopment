@@ -1,0 +1,21 @@
+<ul class="fossir_event_list" data-ts="{{ ts }}">
+    {% for date, events in events_by_date %}
+        <li>
+            <span class="fossir_event_list_day">{{ date.strftime('%A %B %d, %Y') }}</span>
+            <ul class="fossir_day_content">
+                {% for event in events %}
+                    <li class="fossir_event_entry" data-id="{{ event.id }}">
+                        <span class="fossir_event_time">{{ event.start_dt.strftime('%H:%M') }}</span>
+                        <span class="fossir_event_category">{{ event.category }}</span>
+                        <a href="{{ event.url }}" title="{{ event.title }}">
+                            {#- keeping the typo'd class in case someone uses it (hopefully not..) -#}
+                            <span class="fossir_event_tile fossir_event_title">{{ event.title }}</span>
+                        </a>
+                        <span class="fossir_event_room">{{ event.room }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+

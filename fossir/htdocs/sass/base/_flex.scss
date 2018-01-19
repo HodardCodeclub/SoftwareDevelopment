@@ -1,0 +1,82 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+.flexrow,
+.flexcol {
+    display: flex;
+}
+
+.flexrow {
+    flex-flow: row nowrap;
+}
+
+.flexcol {
+    flex-flow: column nowrap;
+}
+
+.f-j-start {
+    justify-content: flex-start;
+}
+
+.f-j-end {
+    justify-content: flex-end;
+}
+
+.f-j-center {
+    justify-content: center;
+}
+
+.f-j-space-between {
+    justify-content: space-between;
+}
+
+.f-j-space-around {
+    justify-content: space-around;
+}
+
+.f-a-start {
+    align-items: flex-start;
+}
+
+.f-a-end {
+    align-items: flex-end;
+}
+
+.f-a-center {
+    align-items: center;
+}
+
+.f-a-stretch {
+    align-items: stretch
+}
+
+.f-a-baseline {
+    align-items: baseline;
+}
+
+.f-wrap {
+    flex-wrap: wrap;
+}
+
+.f-self-stretch {
+    flex-grow: 1;
+    flex-basis: 0%;
+}
+
+.f-self-no-shrink {
+    flex-shrink: 0;
+}

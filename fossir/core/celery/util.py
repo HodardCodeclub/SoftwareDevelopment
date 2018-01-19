@@ -1,0 +1,55 @@
+# This file is part of fossir.
+# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+#
+# fossir is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 3 of the
+# License, or (at your option) any later version.
+#
+# fossir is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with fossir; if not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import unicode_literals
+
+from functools import wraps
+
+from celery import current_task
+
+from fossir.core.logger import Logger
+from fossir.legacy.common.cache import GenericCache
+
+
+def locked_task(f):
+    """Decorator to prevent a task from running multiple times at once."""
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        cache = GenericCache('task-locks')
+        name = current_task.name
+        if cache.get(name):
+            Logger.get('celery').warning('Task %s is locked; not executing it. '
+                                         'To manually unlock it, run `fossir celery unlock %s`',
+                                         name, name)
+            return
+        cache.set(name, True, 86400)
+        try:
+            return f(*args, **kwargs)
+        finally:
+            cache.delete(name)
+    return wrapper
+
+
+def unlock_task(name):
+    """Unlock a locked task.
+
+    :return: ``True`` if the task has been unlocked; ``False`` if it was not locked.
+    """
+    cache = GenericCache('task-locks')
+    if not cache.get(name):
+        return False
+    cache.delete(name)
+    return True

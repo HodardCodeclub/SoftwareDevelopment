@@ -1,0 +1,135 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* Basic elements */
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.center {
+    margin: 0px auto;
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.inline-vcentered {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.header-aligned {
+    margin-top: 0.35em;
+}
+
+.clear {
+    clear: both;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.weak-hidden {
+    display: none;
+}
+
+.hidden-if-empty:empty {
+    display: none !important;
+}
+
+.icon-medium {
+    font-size: 3em;
+}
+
+.icon-large {
+    font-size: 5em;
+}
+
+.icon-background {
+    font-size: 10em;
+    color: #EEE;
+}
+
+.area {
+    color: #555;
+    margin-top: 1em;
+    padding: 1em;
+    background: #fafafa;
+}
+
+.area h2:first-of-type {
+    margin-top: 0;
+}
+
+.area h2 {
+    color: #aaa;
+}
+
+.prevent-scrolling {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.transparent-overlay {
+    position: relative;
+
+    &:before {
+        @include gradient(transparent, white);
+        bottom: 0;
+        content: '';
+        height: 3em;
+        position: absolute;
+        width: 100%;
+    }
+}
+
+.truncate-text {
+    @include ellipsis;
+}
+
+@media print {
+    .noprint {
+        visibility: hidden;
+    }
+    .print {
+        visibility: visible;
+    }
+}
+
+img {
+    border: 0;
+}
+
+label, .label {
+    font-weight: bold;
+}

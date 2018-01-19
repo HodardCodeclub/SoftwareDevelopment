@@ -1,0 +1,14 @@
+{% from 'confirmation_dialog.html' import confirmation_dialog %}
+
+{% set confirmation_message %}
+    {% trans -%}
+        Please note that if you delete the event you will lose all the information contained in it.
+        This operation is irreversible!
+    {%- endtrans %}
+{% endset %}
+
+{% call confirmation_dialog('danger', message=confirmation_message, ok_text=_('Delete event')) %}
+    {% trans event_title=event.title -%}
+        You are about to <strong>delete</strong> the whole event "<strong>{{ event_title }}</strong>"!
+    {%- endtrans %}
+{% endcall %}

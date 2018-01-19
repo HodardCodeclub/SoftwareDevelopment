@@ -1,0 +1,155 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "contributions/display";
+@import "contributions/editor";
+
+@mixin picker-root-element-label() {
+    .label {
+        @include ellipsis;
+
+        flex-grow: 1;
+        flex-basis: 0%;
+        display: inline-block;
+        line-height: 1.2em;
+        text-align: left;
+    }
+}
+
+.session-item-picker {
+    @include picker-root-element-label();
+
+    width: 100%;
+    line-height: 0.9em;
+    white-space: nowrap;
+}
+
+.track-item-picker {
+    @include picker-root-element-label();
+
+    width: 100%;
+}
+
+#contribution-list {
+    .subcontribution-count {
+        // TODO: Make all .i-labels flexbox and remove the following line
+        display: inline-flex;
+        align-items: center;
+
+        .label {
+            @include ellipsis;
+
+            line-height: 15px;
+            vertical-align: middle;
+        }
+
+        .badge {
+            display: inline-block;
+        }
+    }
+
+    .tablesorter {
+        .material-column {
+            width: 5em;
+        }
+
+        .id-column {
+            width: 3em;
+        }
+
+        .time-column {
+            width: 11em;
+        }
+
+        .duration-column {
+            width: 6em;
+        }
+
+        .type-column {
+            width: 6em;
+        }
+
+        .actions-column {
+            width: 5em;
+        }
+
+        .title-column {
+            min-width: 10em;
+        }
+    }
+}
+
+#subcontribution-list {
+    width: 600px;
+
+    table {
+        td.subcontribution-title {
+            @include ellipsis;
+
+            max-width: 150px;
+        }
+    }
+}
+
+.qbubble-contrib-start-date {
+    max-width: 450px !important;
+
+    .datetime-widget {
+        width: 100% !important;
+    }
+
+    .timepicker {
+        width: 35% !important;
+    }
+}
+
+.qbubble-contrib-duration {
+    max-width: 420px !important;
+}
+
+.manage-contribution-types {
+    max-width: 600px;
+
+    table.i-table {
+        table-layout: auto;
+        min-width: 360px;
+        margin-bottom: 1.5em;
+
+        th, td {
+            white-space: normal;
+
+            &.name-column {
+                white-space: nowrap;
+            }
+        }
+
+        .action-column {
+            white-space: nowrap;
+            width: 1px;
+        }
+    }
+}
+
+#contributions-fixed-fields {
+    margin-bottom: 5px;
+}
+
+#display-contribution-list {
+    .contrib-id {
+        color: $light-black;
+    }
+}

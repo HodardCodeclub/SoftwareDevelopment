@@ -1,0 +1,12 @@
+include fossir/*.sample fossir/web/fossir.wsgi
+recursive-include fossir *.html *.tpl *.txt *.js *.yaml
+
+graft fossir/core/plugins/alembic/
+graft fossir/htdocs/
+graft fossir/migrations/
+graft fossir/translations/
+graft fossir/legacy/webinterface/stylesheets/
+prune fossir/htdocs/static/assets
+
+global-exclude *.pyc __pycache__ .keep
+include fossir/migrations/versions/.keep

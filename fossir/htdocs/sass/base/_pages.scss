@@ -1,0 +1,248 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+%fossir-page {
+    header {
+        $separator-margin: 0.42rem;
+        position: relative;
+        margin-bottom: 1.8em;
+
+        h2, h3 {
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        h2 {
+            margin-right: 0.5rem;
+        }
+
+        h3 {
+            color: $light-black;
+            margin-top: $separator-margin;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 11px;
+            left: -20px;
+            font-size: 15px;
+            color: $pastel-gray;
+
+            &:hover {
+                color: $dark-gray;
+            }
+        }
+
+        .title {
+            display: flex;
+            align-items: flex-start;
+            padding-top: 0.4rem;
+            min-height: 2rem;
+            border-bottom: 1px solid $separator-color;
+            margin-bottom: 1rem;
+
+            > .text {
+                flex-grow: 1;
+
+                > .title-with-actions {
+                    h2, h3 {
+                        display: inline;
+                        margin-right: 0;
+                    }
+
+                    .actions {
+                        display: inline-block;
+                        vertical-align: bottom;
+                    }
+                }
+            }
+
+            > .actions {
+                flex-grow: 0;
+                flex-shrink: 0;
+                white-space: nowrap;
+            }
+        }
+
+        .page-description {
+            @extend %font-family-title-light;
+            @extend .fixed-width;
+            color: $dark-gray;
+            font-size: 1.2em;
+            margin-top: $separator-margin;
+        }
+
+        .page-info {
+            @extend %font-family-title;
+            color: $dark-gray;
+            margin-top: $separator-margin;
+        }
+    }
+}
+
+%fossir-page-standalone {
+    @extend %fossir-page;
+
+    header {
+        margin-top: 1em;
+    }
+}
+
+.banner {
+    @extend .flexrow;
+
+    $banner-color: #000;
+    $banner-title-color: $orange;
+    $banner-subtitle-color: $dark-gray;
+
+    color: $banner-color;
+    max-width: 800px;
+
+    &.full-width {
+        max-width: none;
+
+        .title {
+            flex-grow: 1;
+        }
+    }
+
+    .toolbar {
+        padding: 0;
+    }
+
+    .title {
+        margin-bottom: 19px;
+        font-family: 'Roboto Light', sans-serif;
+        font-size: 2em;
+        color: $banner-title-color;
+
+        a:not(:hover) {
+            color: inherit;
+        }
+
+        .subtitle {
+            color: $banner-subtitle-color;
+            font-size: 0.5em;
+
+            a {
+                border-bottom: 1px dashed;
+            }
+        }
+
+        .date {
+            color: $banner-color;
+            font-size: 0.75em;
+            font-style: italic;
+
+        }
+    }
+}
+
+.dialog-page {
+    @extend %fossir-page;
+
+    max-width: 800px;
+}
+
+.management-page {
+    @extend %fossir-page;
+
+    div.page-content {
+        @extend .fixed-width;
+    }
+
+    &.wide {
+        .page-content {
+            max-width: 1000px !important;
+        }
+    }
+}
+
+.fixed-width-standalone-page {
+    @extend %fossir-page-standalone;
+
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+
+    .page-content {
+        max-width: 1000px;
+    }
+}
+
+.fixed-width-standalone-text-page {
+    // standalone page that looks good if there's just a big bunch of text
+    // which would look ugly with 1000px width and the default font size
+    // which is rather small
+    @extend .fixed-width-standalone-page;
+
+    width: 800px;
+
+    .page-content {
+        max-width: 800px;
+        font-size: 1.2em;
+
+        p:first-child {
+            margin-top: 0;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.conference-page {
+    @extend %fossir-page;
+
+    header h2 {
+        color: $orange;
+        padding-right: 5px;
+
+        .track-name {
+            font-style: italic;
+        }
+    }
+}
+
+.meeting-header {
+    max-width: 800px;
+    margin: 2em auto 0 auto;
+
+    h1 {
+        color: $dark-blue;
+    }
+}
+
+.meeting-page {
+    @extend %fossir-page;
+    max-width: 800px;
+    margin: 2em auto 0 auto;
+}
+
+.event-wrapper {
+    width: 1000px;
+    margin: 30px auto;
+    margin-top: 18px;
+}
+
+.conference-title-link {
+   font-size: 33px;
+   background: transparent;
+   color: white;
+}

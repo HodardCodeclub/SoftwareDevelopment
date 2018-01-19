@@ -1,0 +1,210 @@
+{% extends 'users/base.html' %}
+{% from 'users/_category.html' import suggested_category, user_category %}
+
+{% macro _format_event_times(event) %}
+    {% if event.start_dt.astimezone(session.tzinfo).date() != event.end_dt.astimezone(session.tzinfo).date() %}
+        {{ event.start_dt|format_datetime }} - {{ event.end_dt|format_datetime }}
+    {% else %}
+        {{ event.start_dt|format_time }} - {{ event.end_dt|format_time }}
+    {% endif %}
+    ({{ session.tzinfo.zone }})
+{% endmacro %}
+
+{% macro _format_event_time(event) %}
+    {% if event.start_dt <= now() < event.end_dt %}
+        {% trans %}Now{% endtrans %}
+    {% else %}
+        {{ event.start_dt | format_pretty_date(tzinfo=session.tzinfo) }}
+    {% endif %}
+{% endmacro %}
+
+
+{% block title -%}
+    {% trans %}Dashboard{% endtrans %}
+{%- endblock %}
+
+{% block page_class %}user-dashboard{% endblock %}
+{% block banner_class %}user-dashboard{% endblock %}
+
+{% block user_content %}
+    <div class="dashboard-tab">
+        <div class="quick-access-pane">
+
+            <div class="dashboard-col">
+                <div class="your-details clearfix">
+                    <div class="avatar-image left">
+                        <i class="icon-user"></i>
+                    </div>
+                    <div class="your-details-wrapper left">
+                        <h3>{{ user.full_name }}</h3>
+                        {% if config.DEBUG %}
+                            <div>
+                                <i class="icon-info" title="{% trans %}User ID{% endtrans %}"></i><span>{{ user.id }}</span>
+                            </div>
+                        {% endif %}
+                        {% if user.affiliation %}
+                            <div>
+                                <i class="icon-users"></i><span>{{ user.affiliation }}</span>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <i class="icon-mail"></i><span>{{ user.email }}</span>
+                        </div>
+                        {% if user.phone %}
+                            <div>
+                                <i class="icon-phone"></i><span>{{ user.phone }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="toolbar right">
+                        <div class="group">
+                            <a type="button" class="i-button icon-settings" href="{{ url_for('users.user_profile') }}">Settings</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-box">
+                    <h3>
+                        {% trans %}Your events at hand{% endtrans %}
+                    </h3>
+                    <ol>
+                        {% for event, roles in linked_events %}
+                            <li id="event-{{ event.id }}" class="truncate">
+                                <a href="{{ event.url }}" class="truncate">
+                                    <span class="event-date" title="{{ _format_event_times(event) }}">
+                                        {{ _format_event_time(event) }}
+                                    </span>
+                                    <span class="event-title truncate-target">
+                                        {{ event.get_verbose_title(show_series_pos=true) }}
+                                    </span>
+                                    <span class="item-legend">
+                                        <span {% if roles.management %}title="{% trans %}You have management rights{% endtrans %}"{% endif %}
+                                              class="icon-medal contextHelp {% if roles.management %}active{% endif %}"></span>
+                                        <span {% if roles.reviewing %}title="{% trans %}You are a reviewer{% endtrans %}"{% endif %}
+                                              class="icon-user-reading contextHelp {% if roles.reviewing %}active{% endif %}"></span>
+                                        <span {% if roles.attendance %}title="{% trans %}You are an attendee{% endtrans %}"{% endif %}
+                                              class="icon-ticket contextHelp {% if roles.attendance %}active{% endif %}"></span>
+                                    </span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="no-event">
+                                <span class="event-title italic text-superfluous">
+                                    {% trans %}You have no events.{% endtrans %}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                {% if suggested_categories %}
+                    <div id="suggestedCategories" class="dashboard-box suggestions">
+                        <h3>{% trans %}You might be interested in the following categories...{% endtrans %}</h3>
+                        <ol>
+                            {% for category in suggested_categories %}
+                                {{ suggested_category(category.categ, category.path) }}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="dashboard-col">
+                <div id="yourCategories" class="dashboard-box">
+                    <h3>{% trans %}Your categories{% endtrans %}</h3>
+                    <ol>
+                        {% if not categories %}
+                            <li class="no-event">
+                                <span class="event-title italic text-superfluous">{% trans %}You have no categories.{% endtrans %}</span>
+                            </li>
+                        {% else %}
+                            {% for category in categories.itervalues() %}
+                                {{ user_category(category.categ, category.path, category.managed) }}
+                            {% endfor %}
+                        {% endif %}
+                    </ol>
+                </div>
+                <div id="happeningCategories" class="dashboard-box">
+                    <h3>{% trans %}Happening in your categories{% endtrans %}</h3>
+                    <ol>
+                        {% if not categories %}
+                            <li class="no-event">
+                                <span class="event-title italic text-superfluous">
+                                    {% trans %}You have no categories.{% endtrans %}
+                                </span>
+                            </li>
+                        {% elif not categories_events %}
+                            <li class="no-event">
+                                <span class="event-title italic text-superfluous">
+                                    {% trans %}Nothing happening in your categories.{% endtrans %}
+                                </span>
+                            </li>
+                        {% else %}
+                            {% for event in categories_events %}
+                                <li class="truncate">
+                                    <a href="{{ event.url }}" class="truncate">
+                                        <span class="event-date" title="{{ _format_event_times(event) }}">
+                                            {{ _format_event_time(event) }}
+                                        </span>
+                                        <span class="event-title truncate-target">
+                                            {{ event.get_verbose_title(show_series_pos=true) }}
+                                        </span>
+                                        <span class="event-category">
+                                            {{ event.category.title }}
+                                        </span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            {% if suggested_categories %}
+                $('.suggestion-favorite').on('click', function(e) {
+                    var container = $(this).closest('li.category-box');
+                    var $this = $(this);
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: $this.data('href'),
+                        method: 'PUT',
+                        error: handleAjaxError,
+                        success: function() {
+                            container.find('.category-action-extra').remove();
+                            container
+                                .find('.category-action')
+                                .replaceWith($('<span>', {
+                                    'class': 'category-action icon-star active',
+                                    'title': $T('You have favourited this category')
+                                }));
+                            container.appendTo('#yourCategories ol');
+                            if(!$('#suggestedCategories ol > li').length) {
+                                $('#suggestedCategories').remove();
+                            }
+                        }
+                    });
+                });
+
+                $('.suggestion-remove').on('click', function(e) {
+                    var container = $(this).closest('li.category-box');
+                    var $this = $(this);
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: $this.data('href'),
+                        method: 'DELETE',
+                        error: handleAjaxError,
+                        success: function() {
+                            container.remove();
+                            if (!$('#suggestedCategories ol > li').length) {
+                                $('#suggestedCategories').remove();
+                            }
+                        }
+                    });
+                });
+            {% endif %}
+        });
+    </script>
+{% endblock %}

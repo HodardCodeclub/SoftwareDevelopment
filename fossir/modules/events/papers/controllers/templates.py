@@ -1,0 +1,105 @@
+# This file is part of fossir.
+# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+#
+# fossir is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 3 of the
+# License, or (at your option) any later version.
+#
+# fossir is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with fossir; if not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import unicode_literals
+
+from flask import flash, request
+
+from fossir.modules.events.papers.controllers.base import RHManagePapersBase, RHPapersBase
+from fossir.modules.events.papers.forms import PaperTemplateForm
+from fossir.modules.events.papers.models.templates import PaperTemplate
+from fossir.modules.events.papers.operations import create_paper_template, delete_paper_template, update_paper_template
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_template_module
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_form, jsonify_template
+
+
+class RHManagePaperTemplates(RHManagePapersBase):
+    """Manage the available paper templates"""
+
+    def _process(self):
+        return jsonify_template('events/papers/management/templates.html', event=self.event)
+
+
+class RHManagePaperTemplateBase(RHManagePapersBase):
+    """Base class to manage a specific paper template"""
+
+    normalize_url_spec = {
+        'locators': {
+            lambda self: self.template
+        }
+    }
+
+    def _process_args(self):
+        RHManagePapersBase._process_args(self)
+        self.template = PaperTemplate.get_one(request.view_args['template_id'])
+
+
+def _render_teplate_list(event):
+    tpl = get_template_module('events/papers/management/_templates.html')
+    return jsonify_data(html=tpl.render_template_list(event))
+
+
+class RHUploadPaperTemplate(RHManagePapersBase):
+    """Upload a new paper template"""
+
+    def _process(self):
+        form = PaperTemplateForm()
+        if form.validate_on_submit():
+            template = create_paper_template(self.event, form.data)
+            flash(_('Paper template "{}" added.').format(template.name), 'success')
+            return _render_teplate_list(self.event)
+        return jsonify_form(form, form_header_kwargs={'action': request.relative_url})
+
+
+class RHEditPaperTemplate(RHManagePaperTemplateBase):
+    """Edit a paper template"""
+
+    def _process(self):
+        form = PaperTemplateForm(template=self.template, obj=FormDefaults(self.template, template=self.template))
+        if form.validate_on_submit():
+            old_name = self.template.name
+            update_paper_template(self.template, form.data)
+            flash(_('Paper template "{}" updated.').format(old_name), 'success')
+            return _render_teplate_list(self.event)
+        return jsonify_form(form, form_header_kwargs={'action': request.relative_url})
+
+
+class RHDeletePaperTemplate(RHManagePaperTemplateBase):
+    """Delete a paper template"""
+
+    def _process(self):
+        delete_paper_template(self.template)
+        flash(_('Paper template "{}" deleted.').format(self.template.name), 'success')
+        return _render_teplate_list(self.event)
+
+
+class RHDownloadPaperTemplate(RHPapersBase):
+    """Download a paper template"""
+
+    normalize_url_spec = {
+        'locators': {
+            lambda self: self.template
+        }
+    }
+
+    def _process_args(self):
+        RHPapersBase._process_args(self)
+        self.template = PaperTemplate.get_one(request.view_args['template_id'])
+
+    def _process(self):
+        return self.template.send()

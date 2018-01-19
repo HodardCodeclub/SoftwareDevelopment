@@ -1,0 +1,10 @@
+{% extends 'events/management/base.html' %}
+{% from 'events/management/_settings.html' import render_event_settings %}
+
+{% block title %}{% trans %}Settings{% endtrans %}{% endblock %}
+
+{% block content %}
+    <div class="action-box event-settings">
+        {{ render_event_settings(event) }}
+    </div>
+{% endblock %}

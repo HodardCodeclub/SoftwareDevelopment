@@ -1,0 +1,10 @@
+{% extends 'events/display/conference/base.html' %}
+
+{% block title %}
+    {# The title of a user-generated page isn't translated, localized title is not needed #}
+    {{ page.menu_entry.title }}
+{% endblock %}
+
+{% block content %}
+    {{ page.html|sanitize_html }}
+{% endblock %}

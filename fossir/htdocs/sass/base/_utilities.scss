@@ -1,0 +1,76 @@
+/* This file is part of fossir.
+ * Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
+ *
+ * fossir is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * fossir is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with fossir; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "partials/icons";
+
+%adjacent-icon {
+    font-family: 'icomoon-ultimate';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+@mixin icon-after($icon-class) {
+    @extend .#{$icon-class}-after;
+    &:after {
+        @extend %adjacent-icon;
+        margin-left: 0.2em;
+    }
+}
+
+@mixin icon-before($icon-class) {
+    @extend .#{$icon-class};
+    &:before {
+        @extend %adjacent-icon;
+    }
+}
+
+@mixin apply-to-inputs($class) {
+    input[type=date],
+    input[type=datetime],
+    input[type=datetime-local],
+    input[type=email],
+    input[type=month],
+    input[type=number],
+    input[type=password],
+    input[type=search],
+    input[type=tel],
+    input[type=text],
+    input[type=time],
+    input[type=url],
+    input[type=week] {
+        @extend #{$class};
+    }
+}
+
+@mixin apply-to-text-inputs($class) {
+    input[type=datetime],
+    input[type=datetime-local],
+    input[type=email],
+    input[type=month],
+    input[type=password],
+    input[type=search],
+    input[type=tel],
+    input[type=text],
+    input[type=url],
+    input[type=week] {
+        @extend #{$class};
+    }
+}
