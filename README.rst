@@ -1,8 +1,6 @@
 fossir
 ======
-|build-status|
 
-|license|
 
 fossir is a general-purpose event management web-based solution. It includes a full-blown conference organization workflow as well as tools for meeting management and room booking. It provides as well integration with video-conferencing solutions.
 
