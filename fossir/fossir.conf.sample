@@ -31,7 +31,7 @@ SQLALCHEMY_DATABASE_URI = 'postgresql:///indico'
 #------------------------------------------------------------------------------
 # SECURITY
 #------------------------------------------------------------------------------
-# To sign data such as activation tokens used in emails, Indico needs a secret
+# To sign data such as activation tokens used in emails, fossir needs a secret
 # key.  It should be a random string; the preferred way to generate it is using
 # `import os; os.urandom(32)` in a Python shell.
 SECRET_KEY = ''
