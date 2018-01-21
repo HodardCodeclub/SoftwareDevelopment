@@ -44,22 +44,22 @@ This is the result of the following the query https://my.fossir/export/categ/2.j
             {
                 "category": "TEST Category",
                 "startDate": {
-                    "date": "2011-06-17",
-                    "tz": "Europe/Zurich",
+                    "date": "2018-01-17",
+                    "tz": "Africa/Rwanda",
                     "time": "08:00:00"
                 },
                 "_type": "Conference",
                 "endDate": {
-                    "date": "2011-06-30",
-                    "tz": "Europe/Zurich",
+                    "date": "2018-01-20",
+                    "tz": "Africa/Rwanda",
                     "time": "18:00:00"
                 },
                 "description": "",
                 "title": "Test EPayment",
-                "url": "http://pcituds07.cern.ch/fossir/conferenceDisplay.py?confId=137344",
-                "location": "CERN",
+                "url": "http://pcituds07.Kigali.ch/fossir/conferenceDisplay.py?confId=137344",
+                "location": "Kigali",
                 "_fossil": "conferenceMetadata",
-                "timezone": "Europe/Zurich",
+                "timezone": "Africa/Rwanda",
                 "type": "conference",
                 "id": "137344",
                 "room": "1-1-025"
@@ -67,23 +67,23 @@ This is the result of the following the query https://my.fossir/export/categ/2.j
             {
                 "category": "TEST Category",
                 "startDate": {
-                    "date": "2011-06-23",
-                    "tz": "Europe/Zurich",
+                    "date": "2018-01-23",
+                    "tz": "Africa/Rwanda",
                     "time": "08:00:00"
                 },
                 "_type": "Conference",
                 "endDate": {
-                    "date": "2011-06-24",
-                    "tz": "Europe/Zurich",
+                    "date": "2018-01-24",
+                    "tz": "Africa/Rwanda",
                     "time": "18:00:00"
                 },
                 "description": "",
                 "title": "Export Test",
-                "url": "http://pcituds07.cern.ch/fossir/conferenceDisplay.py?confId=137346",
-                "location": "CERN",
+                "url": "http://pcituds07.Kigali.ch/fossir/conferenceDisplay.py?confId=137346",
+                "location": "Kigali",
                 "_fossil": "conferenceMetadata",
-                "timezone": "Europe/Zurich",
-                "type": "meeting",
+                "timezone": "Africa/Rwanda",
+                "type": "Meeting",
                 "id": "137346",
                 "room": null
             }

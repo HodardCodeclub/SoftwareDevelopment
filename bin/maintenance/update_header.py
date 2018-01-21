@@ -1,18 +1,4 @@
-# This file is part of fossir.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# fossir is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# fossir is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with fossir; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import print_function
 
@@ -26,7 +12,7 @@ from fossir.util.console import cformat
 
 HEADER = """
  {comment_start} This file is part of fossir.
-{comment_middle} Copyright (C) 2002 - {end_year} European Organization for Nuclear Research (CERN).
+{comment_middle} Copyright (C) 2017 - {end_year} University of Rwanda College of Science and Technology.
 {comment_middle}
 {comment_middle} fossir is free software; you can redistribute it and/or
 {comment_middle} modify it under the terms of the GNU General Public License as
