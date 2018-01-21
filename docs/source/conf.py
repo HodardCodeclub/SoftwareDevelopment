@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # cds-fossir documentation build configuration file, created by
-# sphinx-quickstart on Sun Nov 29 13:19:24 2009.
+# sphinx-quickstart on Sun Jan 7 18:00:20 2018.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #

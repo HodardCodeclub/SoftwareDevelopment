@@ -1,4 +1,4 @@
-# This file is based on code taken from http://stackoverflow.com/a/18143318/298479
+
 
 import os
 import sys

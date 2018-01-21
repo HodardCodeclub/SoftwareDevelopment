@@ -20,7 +20,7 @@ location  l      Only include events taking place at the specified location.
 room      r      Only include events taking place in the specified room.
                  The `*` and `?` wildcards may be used.
 type      T      Only include events of the specified type. Must be one of:
-                 simple_event (or lecture), meeting, conference
+                 Simple_event (or lecture), Meeting, Conference, Public lecture,
 ========  =====  ==========================================================
 
 

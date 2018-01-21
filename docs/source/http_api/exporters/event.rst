@@ -38,7 +38,7 @@ Result for https://fossir.server/export/event/137346.json?occ=yes&pretty=yes::
             {
                 "category": "TEST Category",
                 "startDate": {
-                    "date": "2011-06-23",
+                    "date": "2018-06-23",
                     "tz": "Europe/Zurich",
                     "time": "08:00:00"
                 },
