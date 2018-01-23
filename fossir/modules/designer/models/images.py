@@ -4,16 +4,16 @@ from __future__ import unicode_literals
 
 import posixpath
 
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.storage import StoredFileMixin
-from indico.util.string import return_ascii, strict_unicode
-from indico.web.flask.util import url_for
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.storage import StoredFileMixin
+from fossir.util.string import return_ascii, strict_unicode
+from fossir.web.flask.util import url_for
 
 
 class DesignerImageFile(StoredFileMixin, db.Model):
     __tablename__ = 'designer_image_files'
-    __table_args__ = {'schema': 'indico'}
+    __table_args__ = {'schema': 'fossir'}
 
     # Image files are not version-controlled
     version_of = None
@@ -26,7 +26,7 @@ class DesignerImageFile(StoredFileMixin, db.Model):
     #: The designer template the image belongs to
     template_id = db.Column(
         db.Integer,
-        db.ForeignKey('indico.designer_templates.id'),
+        db.ForeignKey('fossir.designer_templates.id'),
         nullable=False,
         index=True
     )
