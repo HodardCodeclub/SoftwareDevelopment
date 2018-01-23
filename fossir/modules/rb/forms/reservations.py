@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -26,19 +12,19 @@ from wtforms.validators import DataRequired, InputRequired, NumberRange, Validat
 from wtforms.widgets.core import HiddenInput
 from wtforms_components import TimeField
 
-from indico.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
-from indico.util.i18n import _
-from indico.web.forms.base import IndicoForm, generated_data
-from indico.web.forms.fields import IndicoDateField, IndicoQuerySelectMultipleCheckboxField, PrincipalField
-from indico.web.forms.validators import HiddenUnless, UsedIf
+from fossir.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
+from fossir.util.i18n import _
+from fossir.web.forms.base import fossirForm, generated_data
+from fossir.web.forms.fields import fossirDateField, fossirQuerySelectMultipleCheckboxField, PrincipalField
+from fossir.web.forms.validators import HiddenUnless, UsedIf
 
 
-class BookingSearchForm(IndicoForm):
+class BookingSearchForm(fossirForm):
     room_ids = SelectMultipleField('Rooms', [DataRequired()], coerce=int)
 
-    start_date = IndicoDateField('Start Date', [InputRequired()])
+    start_date = fossirDateField('Start Date', [InputRequired()])
     start_time = TimeField('Start Time', [InputRequired()])
-    end_date = IndicoDateField('End Date', [InputRequired()])
+    end_date = fossirDateField('End Date', [InputRequired()])
     end_time = TimeField('End Time', [InputRequired()])
 
     booked_for_name = StringField('Booked For Name')
@@ -66,7 +52,7 @@ class BookingSearchForm(IndicoForm):
         return datetime.combine(self.end_date.data, self.end_time.data)
 
 
-class NewBookingFormBase(IndicoForm):
+class NewBookingFormBase(fossirForm):
     start_dt = DateTimeField('Start date', validators=[InputRequired()], parse_kwargs={'dayfirst': True},
                              display_format='%d/%m/%Y %H:%M')
     end_dt = DateTimeField('End date', validators=[InputRequired()], parse_kwargs={'dayfirst': True},
@@ -118,7 +104,7 @@ class NewBookingConfirmForm(NewBookingPeriodForm):
                                                  DataRequired()], allow_external=True)
     booking_reason = TextAreaField(_('Reason'), [DataRequired()])
     uses_vc = BooleanField(_('I will use videoconference equipment'))
-    used_equipment = IndicoQuerySelectMultipleCheckboxField(_('VC equipment'), get_label=lambda x: x.name)
+    used_equipment = fossirQuerySelectMultipleCheckboxField(_('VC equipment'), get_label=lambda x: x.name)
     needs_vc_assistance = BooleanField(_('Request assistance for the startup of the videoconference session. '
                                          'This support is usually performed remotely.'))
     needs_assistance = BooleanField(_('Request personal assistance for meeting startup'))

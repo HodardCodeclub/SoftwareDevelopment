@@ -1,32 +1,18 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from sqlalchemy.dialects.postgresql import JSON
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import UTCDateTime
-from indico.core.db.sqlalchemy.util.queries import increment_and_get
-from indico.util.string import return_ascii
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import UTCDateTime
+from fossir.core.db.sqlalchemy.util.queries import increment_and_get
+from fossir.util.string import return_ascii
 
 
 def _get_next_friendly_id(context):
     """Get the next friendly id for a survey submission."""
-    from indico.modules.events.surveys.models.surveys import Survey
+    from fossir.modules.events.surveys.models.surveys import Survey
     survey_id = context.current_parameters['survey_id']
     assert survey_id is not None
     return increment_and_get(Survey._last_friendly_submission_id, Survey.id == survey_id)

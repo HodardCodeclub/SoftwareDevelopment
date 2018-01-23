@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -20,29 +6,29 @@ from operator import attrgetter
 
 from flask import flash, redirect, request
 
-from indico.core.db import db
-from indico.core.errors import NoReportError
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.events.timetable.models.entries import TimetableEntry
-from indico.modules.rb.controllers import RHRoomBookingBase
-from indico.modules.rb.controllers.user.reservations import (RHRoomBookingAcceptBooking, RHRoomBookingBookingDetails,
+from fossir.core.db import db
+from fossir.core.errors import NoReportError
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.events.timetable.models.entries import TimetableEntry
+from fossir.modules.rb.controllers import RHRoomBookingBase
+from fossir.modules.rb.controllers.user.reservations import (RHRoomBookingAcceptBooking, RHRoomBookingBookingDetails,
                                                              RHRoomBookingCancelBooking,
                                                              RHRoomBookingCancelBookingOccurrence,
                                                              RHRoomBookingCloneBooking, RHRoomBookingModifyBooking,
                                                              RHRoomBookingNewBooking, RHRoomBookingNewBookingSimple,
                                                              RHRoomBookingRejectBooking,
                                                              RHRoomBookingRejectBookingOccurrence)
-from indico.modules.rb.controllers.user.rooms import RHRoomBookingRoomDetails
-from indico.modules.rb.models.reservations import RepeatFrequency
-from indico.modules.rb.views.user.event import (WPRoomBookingEventBookingDetails, WPRoomBookingEventBookingList,
+from fossir.modules.rb.controllers.user.rooms import RHRoomBookingRoomDetails
+from fossir.modules.rb.models.reservations import RepeatFrequency
+from fossir.modules.rb.views.user.event import (WPRoomBookingEventBookingDetails, WPRoomBookingEventBookingList,
                                                 WPRoomBookingEventChooseEvent, WPRoomBookingEventModifyBooking,
                                                 WPRoomBookingEventNewBookingConfirm,
                                                 WPRoomBookingEventNewBookingSelectPeriod,
                                                 WPRoomBookingEventNewBookingSelectRoom,
                                                 WPRoomBookingEventNewBookingSimple, WPRoomBookingEventRoomDetails)
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
 
 
 def _get_object_type(obj):

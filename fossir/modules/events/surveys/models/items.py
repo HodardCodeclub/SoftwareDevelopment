@@ -1,29 +1,15 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.event import listens_for
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIntEnum
-from indico.modules.events.surveys.fields import get_field_types
-from indico.util.string import return_ascii, text_to_repr
-from indico.util.struct.enum import IndicoEnum
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIntEnum
+from fossir.modules.events.surveys.fields import get_field_types
+from fossir.util.string import return_ascii, text_to_repr
+from fossir.util.struct.enum import fossirEnum
 
 
 def _get_next_position(context):
@@ -38,7 +24,7 @@ def _get_item_default_title(context):
     return '' if context.current_parameters['type'] == SurveyItemType.section else None
 
 
-class SurveyItemType(int, IndicoEnum):
+class SurveyItemType(int, fossirEnum):
     question = 1
     section = 2
     text = 3

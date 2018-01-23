@@ -1,33 +1,19 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from datetime import date
 
 import pytest
 from dateutil.relativedelta import relativedelta
 
-from indico.core.errors import IndicoError
-from indico.modules.rb import rb_settings
-from indico.modules.rb.models.reservation_edit_logs import ReservationEditLog
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.reservations import RepeatFrequency, RepeatMapping, Reservation
-from indico.testing.util import bool_matrix
+from fossir.core.errors import fossirError
+from fossir.modules.rb import rb_settings
+from fossir.modules.rb.models.reservation_edit_logs import ReservationEditLog
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.reservations import RepeatFrequency, RepeatMapping, Reservation
+from fossir.testing.util import bool_matrix
 
 
-pytest_plugins = 'indico.modules.rb.testing.fixtures'
+pytest_plugins = 'fossir.modules.rb.testing.fixtures'
 
 
 @pytest.fixture
@@ -59,7 +45,7 @@ def test_repeat_mapping(repetition, legacy, short_name, message):
 
 
 def test_repeat_mapping_invalid_legacy():
-    with pytest.raises(IndicoError):
+    with pytest.raises(fossirError):
         RepeatMapping.convert_legacy_repeatability(123)
 
 

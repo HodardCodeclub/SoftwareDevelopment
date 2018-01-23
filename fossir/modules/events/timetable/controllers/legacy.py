@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -25,37 +11,37 @@ from flask import flash, jsonify, request, session
 from pytz import utc
 from werkzeug.exceptions import BadRequest, NotFound
 
-from indico.core.errors import UserValueError
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.contributions.operations import create_contribution, delete_contribution, update_contribution
-from indico.modules.events.management.util import flash_if_unregistered
-from indico.modules.events.sessions.controllers.management.sessions import RHCreateSession, RHSessionREST
-from indico.modules.events.sessions.forms import SessionForm
-from indico.modules.events.sessions.models.blocks import SessionBlock
-from indico.modules.events.sessions.operations import delete_session_block, update_session, update_session_block
-from indico.modules.events.timetable.controllers import (RHManageTimetableBase, RHManageTimetableEntryBase,
+from fossir.core.errors import UserValueError
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.contributions.operations import create_contribution, delete_contribution, update_contribution
+from fossir.modules.events.management.util import flash_if_unregistered
+from fossir.modules.events.sessions.controllers.management.sessions import RHCreateSession, RHSessionREST
+from fossir.modules.events.sessions.forms import SessionForm
+from fossir.modules.events.sessions.models.blocks import SessionBlock
+from fossir.modules.events.sessions.operations import delete_session_block, update_session, update_session_block
+from fossir.modules.events.timetable.controllers import (RHManageTimetableBase, RHManageTimetableEntryBase,
                                                          SessionManagementLevel)
-from indico.modules.events.timetable.controllers.manage import RHBreakREST
-from indico.modules.events.timetable.forms import (BaseEntryForm, BreakEntryForm, ContributionEntryForm,
+from fossir.modules.events.timetable.controllers.manage import RHBreakREST
+from fossir.modules.events.timetable.forms import (BaseEntryForm, BreakEntryForm, ContributionEntryForm,
                                                    SessionBlockEntryForm)
-from indico.modules.events.timetable.legacy import (TimetableSerializer, serialize_contribution, serialize_day_update,
+from fossir.modules.events.timetable.legacy import (TimetableSerializer, serialize_contribution, serialize_day_update,
                                                     serialize_entry_update, serialize_session)
-from indico.modules.events.timetable.models.breaks import Break
-from indico.modules.events.timetable.models.entries import TimetableEntryType
-from indico.modules.events.timetable.operations import (create_break_entry, create_session_block_entry,
+from fossir.modules.events.timetable.models.breaks import Break
+from fossir.modules.events.timetable.models.entries import TimetableEntryType
+from fossir.modules.events.timetable.operations import (create_break_entry, create_session_block_entry,
                                                         delete_timetable_entry, fit_session_block_entry,
                                                         move_timetable_entry, schedule_contribution,
                                                         swap_timetable_entry, update_break_entry,
                                                         update_timetable_entry, update_timetable_entry_object)
-from indico.modules.events.timetable.reschedule import RescheduleMode, Rescheduler
-from indico.modules.events.timetable.util import (find_next_start_dt, get_session_block_entries,
+from fossir.modules.events.timetable.reschedule import RescheduleMode, Rescheduler
+from fossir.modules.events.timetable.util import (find_next_start_dt, get_session_block_entries,
                                                   get_time_changes_notifications, shift_following_entries)
-from indico.modules.events.util import get_field_values, get_random_color, track_time_changes
-from indico.util.date_time import as_utc, iterdays
-from indico.util.i18n import _
-from indico.util.string import handle_legacy_description
-from indico.web.forms.base import FormDefaults
-from indico.web.util import jsonify_data, jsonify_form, jsonify_template
+from fossir.modules.events.util import get_field_values, get_random_color, track_time_changes
+from fossir.util.date_time import as_utc, iterdays
+from fossir.util.i18n import _
+from fossir.util.string import handle_legacy_description
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_form, jsonify_template
 
 
 class RHLegacyTimetableAddEntryBase(RHManageTimetableBase):

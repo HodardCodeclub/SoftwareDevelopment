@@ -1,6 +1,6 @@
 from flask import render_template
 
-from indico.core.notifications import email_sender, make_email
+from fossir.core.notifications import email_sender, make_email
 
 
 @email_sender

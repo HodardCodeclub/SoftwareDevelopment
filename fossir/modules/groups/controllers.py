@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,18 +8,18 @@ from flask import flash, jsonify, redirect, request
 from sqlalchemy.orm import joinedload
 from werkzeug.exceptions import NotFound
 
-from indico.core.auth import multipass
-from indico.core.db import db
-from indico.modules.admin import RHAdminBase
-from indico.modules.groups import GroupProxy
-from indico.modules.groups.forms import EditGroupForm, SearchForm
-from indico.modules.groups.models.groups import LocalGroup
-from indico.modules.groups.views import WPGroupsAdmin
-from indico.modules.users import User
-from indico.util.i18n import _
-from indico.web.flask.templating import get_template_module
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
+from fossir.core.auth import multipass
+from fossir.core.db import db
+from fossir.modules.admin import RHAdminBase
+from fossir.modules.groups import GroupProxy
+from fossir.modules.groups.forms import EditGroupForm, SearchForm
+from fossir.modules.groups.models.groups import LocalGroup
+from fossir.modules.groups.views import WPGroupsAdmin
+from fossir.modules.users import User
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_template_module
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
 
 
 class RHGroups(RHAdminBase):
@@ -47,7 +33,7 @@ class RHGroups(RHAdminBase):
         if not providers:
             del form.provider
         else:
-            form.provider.choices = ([('', _('All')), ('indico', _('Local Groups'))] +
+            form.provider.choices = ([('', _('All')), ('fossir', _('Local Groups'))] +
                                      [(p.name, p.title) for p in sorted(providers, key=attrgetter('title'))])
         search_results = None
         if form.validate_on_submit():

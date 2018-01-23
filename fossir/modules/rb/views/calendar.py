@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+>.
 
 from collections import defaultdict
 from datetime import datetime, time, timedelta
@@ -23,17 +9,17 @@ from flask import session
 from sqlalchemy.orm import defaultload
 from werkzeug.datastructures import MultiDict
 
-from indico.legacy.webinterface.wcomponents import WTemplated
-from indico.modules.rb.models.blocked_rooms import BlockedRoom
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
-from indico.modules.rb.models.rooms import Room
-from indico.util.date_time import format_date, iterdays, overlaps
-from indico.util.i18n import _
-from indico.util.serializer import Serializer
-from indico.util.string import natural_sort_key
-from indico.util.struct.iterables import group_list
-from indico.web.flask.util import url_for
+from fossir.legacy.webinterface.wcomponents import WTemplated
+from fossir.modules.rb.models.blocked_rooms import BlockedRoom
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
+from fossir.modules.rb.models.rooms import Room
+from fossir.util.date_time import format_date, iterdays, overlaps
+from fossir.util.i18n import _
+from fossir.util.serializer import Serializer
+from fossir.util.string import natural_sort_key
+from fossir.util.struct.iterables import group_list
+from fossir.web.flask.util import url_for
 
 
 class RoomBookingCalendarWidget(object):

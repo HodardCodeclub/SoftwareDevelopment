@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -32,26 +18,26 @@ from sqlalchemy import inspect
 from sqlalchemy.orm import load_only, noload
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from indico.core import signals
-from indico.core.config import config
-from indico.core.errors import NoReportError, UserValueError
-from indico.modules.api import api_settings
-from indico.modules.events import Event
-from indico.modules.events.contributions.models.contributions import Contribution
-from indico.modules.events.contributions.models.subcontributions import SubContribution
-from indico.modules.events.layout import theme_settings
-from indico.modules.events.models.events import EventType
-from indico.modules.events.models.persons import EventPerson
-from indico.modules.events.models.principals import EventPrincipal
-from indico.modules.events.models.static_list_links import StaticListLink
-from indico.modules.events.sessions.models.sessions import Session
-from indico.modules.events.timetable.models.breaks import Break
-from indico.modules.events.timetable.models.entries import TimetableEntry
-from indico.util.fs import chmod_umask, secure_filename
-from indico.util.i18n import _
-from indico.web.flask.templating import get_template_module
-from indico.web.flask.util import send_file, url_for
-from indico.web.forms.colors import get_colors
+from fossir.core import signals
+from fossir.core.config import config
+from fossir.core.errors import NoReportError, UserValueError
+from fossir.modules.api import api_settings
+from fossir.modules.events import Event
+from fossir.modules.events.contributions.models.contributions import Contribution
+from fossir.modules.events.contributions.models.subcontributions import SubContribution
+from fossir.modules.events.layout import theme_settings
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.models.persons import EventPerson
+from fossir.modules.events.models.principals import EventPrincipal
+from fossir.modules.events.models.static_list_links import StaticListLink
+from fossir.modules.events.sessions.models.sessions import Session
+from fossir.modules.events.timetable.models.breaks import Break
+from fossir.modules.events.timetable.models.entries import TimetableEntry
+from fossir.util.fs import chmod_umask, secure_filename
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_template_module
+from fossir.web.flask.util import send_file, url_for
+from fossir.web.forms.colors import get_colors
 
 
 def check_event_locked(rh, event, force=False):
@@ -254,7 +240,7 @@ def update_object_principals(obj, new_principals, read_access=False, full_access
 
 
 class ListGeneratorBase(object):
-    """Base class for classes performing actions on Indico object lists.
+    """Base class for classes performing actions on fossir object lists.
 
     :param event: The associated `Event`
     :param entry_parent: The parent of the entries of the list. If it's None,
@@ -386,7 +372,7 @@ class ListGeneratorBase(object):
 def get_base_ical_parameters(user, detail, path, params=None):
     """Returns a dict of all parameters expected by iCal template"""
 
-    from indico.web.http_api.util import generate_public_auth_request
+    from fossir.web.http_api.util import generate_public_auth_request
 
     api_mode = api_settings.get('security_mode')
     persistent_allowed = api_settings.get('allow_persistent')
@@ -536,7 +522,7 @@ def register_event_time_change(event):
 
 
 def serialize_event_for_ical(event, detail_level):
-    from indico.modules.events.contributions.util import serialize_contribution_for_ical
+    from fossir.modules.events.contributions.util import serialize_contribution_for_ical
     fossil = 'conferenceMetadataWithContribs' if detail_level == 'contributions' else 'conferenceMetadata'
     data = {'id': event.id, 'title': event.title, 'description': event.description, 'startDate': event.start_dt,
             'endDate': event.end_dt, 'url': event.external_url,
@@ -603,7 +589,7 @@ class ZipGeneratorMixin:
         :return: The generated zip file.
         """
 
-        temp_file = NamedTemporaryFile(suffix='indico.tmp', dir=config.TEMP_DIR)
+        temp_file = NamedTemporaryFile(suffix='fossir.tmp', dir=config.TEMP_DIR)
         with ZipFile(temp_file.name, 'w', allowZip64=True) as zip_handler:
             self.used_filenames = set()
             for item in self._iter_items(files_holder):

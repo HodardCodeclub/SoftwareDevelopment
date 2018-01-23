@@ -1,31 +1,17 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_method
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
-from indico.modules.rb.models.blocking_principals import BlockingPrincipal
-from indico.modules.rb.util import rb_is_admin
-from indico.util.date_time import now_utc
-from indico.util.string import return_ascii
-from indico.util.user import iter_acl
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
+from fossir.modules.rb.models.blocking_principals import BlockingPrincipal
+from fossir.modules.rb.util import rb_is_admin
+from fossir.util.date_time import now_utc
+from fossir.util.string import return_ascii
+from fossir.util.user import iter_acl
 
 
 class Blocking(db.Model):

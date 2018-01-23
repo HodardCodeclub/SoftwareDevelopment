@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,19 +8,19 @@ from flask import flash, redirect, render_template, request, session
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import Forbidden
 
-from indico.core.db import db
-from indico.modules.admin import RHAdminBase
-from indico.modules.oauth import logger
-from indico.modules.oauth.forms import ApplicationForm
-from indico.modules.oauth.models.applications import SCOPES, OAuthApplication
-from indico.modules.oauth.models.tokens import OAuthToken
-from indico.modules.oauth.provider import oauth
-from indico.modules.oauth.views import WPOAuthAdmin, WPOAuthUserProfile
-from indico.modules.users.controllers import RHUserBase
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.rh import RH, RHProtected
+from fossir.core.db import db
+from fossir.modules.admin import RHAdminBase
+from fossir.modules.oauth import logger
+from fossir.modules.oauth.forms import ApplicationForm
+from fossir.modules.oauth.models.applications import SCOPES, OAuthApplication
+from fossir.modules.oauth.models.tokens import OAuthToken
+from fossir.modules.oauth.provider import oauth
+from fossir.modules.oauth.views import WPOAuthAdmin, WPOAuthUserProfile
+from fossir.modules.users.controllers import RHUserBase
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.rh import RH, RHProtected
 
 
 class RHOAuthAuthorize(RHProtected):

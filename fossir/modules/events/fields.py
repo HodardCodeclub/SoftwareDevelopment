@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,19 +7,19 @@ import json
 from sqlalchemy import inspect
 from wtforms import SelectField
 
-from indico.core import signals
-from indico.core.db.sqlalchemy.util.session import no_autoflush
-from indico.core.errors import UserValueError
-from indico.modules.events.layout import theme_settings
-from indico.modules.events.models.persons import EventPerson, EventPersonLink, PersonLinkBase
-from indico.modules.events.models.references import ReferenceType
-from indico.modules.events.util import serialize_person_link
-from indico.modules.users import User
-from indico.modules.users.models.users import UserTitle
-from indico.modules.users.util import get_user_by_email
-from indico.util.i18n import _
-from indico.web.forms.fields import MultipleItemsField, PrincipalListField
-from indico.web.forms.widgets import JinjaWidget
+from fossir.core import signals
+from fossir.core.db.sqlalchemy.util.session import no_autoflush
+from fossir.core.errors import UserValueError
+from fossir.modules.events.layout import theme_settings
+from fossir.modules.events.models.persons import EventPerson, EventPersonLink, PersonLinkBase
+from fossir.modules.events.models.references import ReferenceType
+from fossir.modules.events.util import serialize_person_link
+from fossir.modules.users import User
+from fossir.modules.users.models.users import UserTitle
+from fossir.modules.users.util import get_user_by_email
+from fossir.util.i18n import _
+from fossir.web.forms.fields import MultipleItemsField, PrincipalListField
+from fossir.web.forms.widgets import JinjaWidget
 
 
 class ReferencesField(MultipleItemsField):
@@ -80,7 +66,7 @@ class ReferencesField(MultipleItemsField):
 
 
 class EventPersonListField(PrincipalListField):
-    """A field that lets you select a list Indico user and EventPersons
+    """A field that lets you select a list fossir user and EventPersons
 
     Requires its form to have an event set.
     """
@@ -140,7 +126,7 @@ class EventPersonListField(PrincipalListField):
             raise ValueError(_("Unknown person type '{}'").format(person_type))
 
     def _serialize_principal(self, principal):
-        from indico.modules.events.util import serialize_event_person
+        from fossir.modules.events.util import serialize_event_person
         if principal.id is None:
             # We created an EventPerson which has not been persisted to the
             # database. Revert the conversion.
@@ -250,11 +236,11 @@ class EventPersonLinkListField(PersonLinkListFieldBase):
             persons.add(person_link.person)
 
 
-class IndicoThemeSelectField(SelectField):
+class fossirThemeSelectField(SelectField):
     def __init__(self, *args, **kwargs):
         allow_default = kwargs.pop('allow_default', False)
         event_type = kwargs.pop('event_type').name
-        super(IndicoThemeSelectField, self).__init__(*args, **kwargs)
+        super(fossirThemeSelectField, self).__init__(*args, **kwargs)
         self.choices = sorted([(tid, theme['title'])
                                for tid, theme in theme_settings.get_themes_for(event_type).viewitems()],
                               key=lambda x: x[1].lower())

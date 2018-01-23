@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,13 +7,13 @@ from sqlalchemy.event import listens_for
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm.base import NEVER_SET, NO_VALUE
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.colors import ColorMixin, ColorTuple
-from indico.core.db.sqlalchemy.descriptions import DescriptionMixin, RenderMode
-from indico.core.db.sqlalchemy.locations import LocationMixin
-from indico.core.db.sqlalchemy.util.models import auto_table_args
-from indico.util.locators import locator_property
-from indico.util.string import format_repr, return_ascii
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.colors import ColorMixin, ColorTuple
+from fossir.core.db.sqlalchemy.descriptions import DescriptionMixin, RenderMode
+from fossir.core.db.sqlalchemy.locations import LocationMixin
+from fossir.core.db.sqlalchemy.util.models import auto_table_args
+from fossir.util.locators import locator_property
+from fossir.util.string import format_repr, return_ascii
 
 
 class Break(DescriptionMixin, ColorMixin, LocationMixin, db.Model):
@@ -97,7 +83,7 @@ Break.register_location_events()
 
 @listens_for(Break.duration, 'set')
 def _set_duration(target, value, oldvalue, *unused):
-    from indico.modules.events.util import register_time_change
+    from fossir.modules.events.util import register_time_change
     if oldvalue in (NEVER_SET, NO_VALUE):
         return
     if value != oldvalue and target.timetable_entry is not None:

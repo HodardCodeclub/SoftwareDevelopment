@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -25,13 +11,13 @@ from io import BytesIO
 import pytest
 import yaml
 
-import indico
-from indico.core.db.sqlalchemy.links import LinkType
-from indico.modules.attachments.util import get_attached_items
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.export import export_event, import_event
-from indico.modules.events.sessions import Session
-from indico.util.date_time import as_utc
+import fossir
+from fossir.core.db.sqlalchemy.links import LinkType
+from fossir.modules.attachments.util import get_attached_items
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.export import export_event, import_event
+from fossir.modules.events.sessions import Session
+from fossir.util.date_time import as_utc
 
 
 class _MockUUID(object):
@@ -47,12 +33,12 @@ class _MockUUID(object):
 @pytest.fixture
 def reproducible_uuids(monkeypatch):
     muid = _MockUUID()
-    monkeypatch.setattr('indico.modules.events.export.uuid4', muid.uuid4)
+    monkeypatch.setattr('fossir.modules.events.export.uuid4', muid.uuid4)
 
 
 @pytest.mark.usefixtures('reproducible_uuids')
 def test_event_export(db, dummy_event, monkeypatch):
-    monkeypatch.setattr('indico.modules.events.export.now_utc', lambda: as_utc(datetime(2017, 8, 24, 9, 0, 0)))
+    monkeypatch.setattr('fossir.modules.events.export.now_utc', lambda: as_utc(datetime(2017, 8, 24, 9, 0, 0)))
 
     f = BytesIO()
     dummy_event.created_dt = as_utc(datetime(2017, 8, 24, 0, 0, 0))
@@ -67,7 +53,7 @@ def test_event_export(db, dummy_event, monkeypatch):
     f.seek(0)
 
     with open(os.path.join(os.path.dirname(__file__), 'export_test_1.yaml'), 'r') as ref_file:
-        data_yaml_content = ref_file.read().format(version=indico.__version__)
+        data_yaml_content = ref_file.read().format(version=fossir.__version__)
 
     # check composition of tarfile and data.yaml content
     with tarfile.open(fileobj=f) as tarf:
@@ -119,7 +105,7 @@ def test_event_attachment_export(db, dummy_event, dummy_attachment):
 
 def test_event_import(db, dummy_user):
     with open(os.path.join(os.path.dirname(__file__), 'export_test_2.yaml'), 'r') as ref_file:
-        data_yaml_content = ref_file.read().replace('{version}', indico.__version__)
+        data_yaml_content = ref_file.read().replace('{version}', fossir.__version__)
 
     data_yaml = BytesIO(data_yaml_content.encode('utf-8'))
     tar_buffer = BytesIO()

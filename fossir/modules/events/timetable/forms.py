@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -25,18 +11,18 @@ from wtforms.validators import DataRequired, InputRequired, NumberRange, Validat
 from wtforms.widgets.html5 import NumberInput
 from wtforms_components import TimeField
 
-from indico.modules.events.contributions.forms import ContributionForm
-from indico.modules.events.sessions.forms import SessionBlockForm
-from indico.modules.events.timetable.models.entries import TimetableEntryType
-from indico.modules.events.timetable.util import find_next_start_dt
-from indico.util.i18n import _
-from indico.web.forms.base import FormDefaults, IndicoForm, generated_data
-from indico.web.forms.colors import get_colors
-from indico.web.forms.fields import (IndicoLocationField, IndicoPalettePickerField,
-                                     IndicoSelectMultipleCheckboxBooleanField, TimeDeltaField)
-from indico.web.forms.util import get_form_field_names
-from indico.web.forms.validators import HiddenUnless, MaxDuration
-from indico.web.forms.widgets import SwitchWidget
+from fossir.modules.events.contributions.forms import ContributionForm
+from fossir.modules.events.sessions.forms import SessionBlockForm
+from fossir.modules.events.timetable.models.entries import TimetableEntryType
+from fossir.modules.events.timetable.util import find_next_start_dt
+from fossir.util.i18n import _
+from fossir.web.forms.base import FormDefaults, fossirForm, generated_data
+from fossir.web.forms.colors import get_colors
+from fossir.web.forms.fields import (fossirLocationField, fossirPalettePickerField,
+                                     fossirSelectMultipleCheckboxBooleanField, TimeDeltaField)
+from fossir.web.forms.util import get_form_field_names
+from fossir.web.forms.validators import HiddenUnless, MaxDuration
+from fossir.web.forms.widgets import SwitchWidget
 
 
 class EntryFormMixin(object):
@@ -97,15 +83,15 @@ class EntryFormMixin(object):
         return start_dt.astimezone(self.event.tzinfo).time() if start_dt else None
 
 
-class BreakEntryForm(EntryFormMixin, IndicoForm):
+class BreakEntryForm(EntryFormMixin, fossirForm):
     _entry_type = TimetableEntryType.BREAK
     _default_duration = timedelta(minutes=20)
     _display_fields = ('title', 'description', 'time', 'duration', 'location_data', 'colors')
 
     title = StringField(_("Title"), [DataRequired()])
     description = TextAreaField(_("Description"))
-    location_data = IndicoLocationField(_("Location"))
-    colors = IndicoPalettePickerField(_('Colours'), color_list=get_colors())
+    location_data = fossirLocationField(_("Location"))
+    colors = fossirPalettePickerField(_('Colours'), color_list=get_colors())
 
 
 class ContributionEntryForm(EntryFormMixin, ContributionForm):
@@ -137,7 +123,7 @@ class SessionBlockEntryForm(EntryFormMixin, SessionBlockForm):
             self._validate_duration(self.session_block.timetable_entry, field, self.start_dt)
 
 
-class BaseEntryForm(EntryFormMixin, IndicoForm):
+class BaseEntryForm(EntryFormMixin, fossirForm):
     shift_later = BooleanField(_('Shift down'), widget=SwitchWidget(),
                                description=_("Shift down everything else that starts after this"))
 
@@ -169,22 +155,22 @@ _OTHER_CHOICES = [('showSpeakerTitle', _('Show speaker title')),
                   ('showSpeakerAffiliation', _('Show speaker affiliation'))]
 
 
-class TimetablePDFExportForm(IndicoForm):
+class TimetablePDFExportForm(fossirForm):
     _pdf_options_fields = {'pagesize', 'fontsize', 'firstPageNumber'}
 
     advanced = BooleanField(_("Advanced timetable"), widget=SwitchWidget(),
                             description=_("Advanced customization options"))
-    document_settings = IndicoSelectMultipleCheckboxBooleanField(_('Document settings'), [HiddenUnless('advanced')],
+    document_settings = fossirSelectMultipleCheckboxBooleanField(_('Document settings'), [HiddenUnless('advanced')],
                                                                  choices=_DOCUMENT_SETTINGS_CHOICES)
-    contribution_info = IndicoSelectMultipleCheckboxBooleanField(_('Contributions related info'),
+    contribution_info = fossirSelectMultipleCheckboxBooleanField(_('Contributions related info'),
                                                                  [HiddenUnless('advanced')],
                                                                  choices=_CONTRIBUTION_CHOICES)
-    session_info = IndicoSelectMultipleCheckboxBooleanField(_('Sessions related info'), [HiddenUnless('advanced')],
+    session_info = fossirSelectMultipleCheckboxBooleanField(_('Sessions related info'), [HiddenUnless('advanced')],
                                                             choices=_SESSION_CHOICES)
-    visible_entries = IndicoSelectMultipleCheckboxBooleanField(_('Breaks and contributions'),
+    visible_entries = fossirSelectMultipleCheckboxBooleanField(_('Breaks and contributions'),
                                                                [HiddenUnless('advanced')],
                                                                choices=_VISIBLE_ENTRIES_CHOICES)
-    other = IndicoSelectMultipleCheckboxBooleanField(_('Miscellaneous'), choices=_OTHER_CHOICES)
+    other = fossirSelectMultipleCheckboxBooleanField(_('Miscellaneous'), choices=_OTHER_CHOICES)
     pagesize = SelectField(_('Page size'), choices=[('A0', 'A0'), ('A1', 'A1'), ('A2', 'A2'), ('A3', 'A3'),
                                                     ('A4', 'A4'), ('A5', 'A5'), ('Letter', 'Letter')], default='A4')
     fontsize = SelectField(_('Font size'), choices=[('xxx-small', _('xxx-small')), ('xx-small', _('xx-small')),

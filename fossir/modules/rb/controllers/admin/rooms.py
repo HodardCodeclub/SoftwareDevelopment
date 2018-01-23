@@ -1,39 +1,25 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from flask import flash, redirect, request
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-from indico.core.db import db
-from indico.legacy.common.cache import GenericCache
-from indico.modules.rb.controllers.admin import RHRoomBookingAdminBase
-from indico.modules.rb.controllers.decorators import requires_location, requires_room
-from indico.modules.rb.forms.rooms import RoomForm
-from indico.modules.rb.models.equipment import EquipmentType
-from indico.modules.rb.models.photos import Photo
-from indico.modules.rb.models.room_attributes import RoomAttribute, RoomAttributeAssociation
-from indico.modules.rb.models.room_bookable_hours import BookableHours
-from indico.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.views.admin import rooms as room_views
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.forms.validators import IndicoEmail
+from fossir.core.db import db
+from fossir.legacy.common.cache import GenericCache
+from fossir.modules.rb.controllers.admin import RHRoomBookingAdminBase
+from fossir.modules.rb.controllers.decorators import requires_location, requires_room
+from fossir.modules.rb.forms.rooms import RoomForm
+from fossir.modules.rb.models.equipment import EquipmentType
+from fossir.modules.rb.models.photos import Photo
+from fossir.modules.rb.models.room_attributes import RoomAttribute, RoomAttributeAssociation
+from fossir.modules.rb.models.room_bookable_hours import BookableHours
+from fossir.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.views.admin import rooms as room_views
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.forms.validators import fossirEmail
 
 
 _cache = GenericCache('Rooms')
@@ -72,7 +58,7 @@ class RHRoomBookingCreateModifyRoomBase(RHRoomBookingAdminBase):
         for attribute in self._location.attributes.order_by(RoomAttribute.parent_id).all():
             validators = [DataRequired()] if attribute.is_required else []
             if attribute.name == 'notification-email':
-                validators.append(IndicoEmail(multi=True))
+                validators.append(fossirEmail(multi=True))
             field_name = 'attribute_{}'.format(attribute.id)
             field = StringField(attribute.title, validators)
             setattr(form_class, field_name, field)

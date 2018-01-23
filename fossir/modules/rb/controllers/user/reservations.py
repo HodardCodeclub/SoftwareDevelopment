@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta
@@ -22,27 +7,27 @@ from flask import flash, jsonify, redirect, request, session
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import Forbidden, NotFound
 
-from indico.core.db import db
-from indico.core.errors import IndicoError, NoReportError
-from indico.modules.rb import rb_settings
-from indico.modules.rb.controllers import RHRoomBookingBase
-from indico.modules.rb.forms.reservations import (BookingSearchForm, ModifyBookingForm, NewBookingConfirmForm,
+from fossir.core.db import db
+from fossir.core.errors import fossirError, NoReportError
+from fossir.modules.rb import rb_settings
+from fossir.modules.rb.controllers import RHRoomBookingBase
+from fossir.modules.rb.forms.reservations import (BookingSearchForm, ModifyBookingForm, NewBookingConfirmForm,
                                                   NewBookingCriteriaForm, NewBookingPeriodForm, NewBookingSimpleForm)
-from indico.modules.rb.models.locations import Location
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.reservations import RepeatMapping, Reservation
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.util import get_default_booking_interval, rb_is_admin
-from indico.modules.rb.views.user.reservations import (WPRoomBookingBookingDetails, WPRoomBookingCalendar,
+from fossir.modules.rb.models.locations import Location
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.reservations import RepeatMapping, Reservation
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.util import get_default_booking_interval, rb_is_admin
+from fossir.modules.rb.views.user.reservations import (WPRoomBookingBookingDetails, WPRoomBookingCalendar,
                                                        WPRoomBookingModifyBooking, WPRoomBookingNewBookingConfirm,
                                                        WPRoomBookingNewBookingSelectPeriod,
                                                        WPRoomBookingNewBookingSelectRoom, WPRoomBookingNewBookingSimple,
                                                        WPRoomBookingSearchBookings, WPRoomBookingSearchBookingsResults)
-from indico.util.date_time import get_datetime_from_request, round_up_to_minutes
-from indico.util.i18n import _
-from indico.util.string import natural_sort_key
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
+from fossir.util.date_time import get_datetime_from_request, round_up_to_minutes
+from fossir.util.i18n import _
+from fossir.util.string import natural_sort_key
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
 
 
 class RHRoomBookingBookingMixin:
@@ -72,7 +57,7 @@ class RHRoomBookingAcceptBooking(_SuccessUrlDetailsMixin, RHRoomBookingBookingMi
 
     def _process(self):
         if self._reservation.find_overlapping().filter(Reservation.is_accepted).count():
-            raise IndicoError(_(u"This reservation couldn't be accepted due to conflicts with other reservations"))
+            raise fossirError(_(u"This reservation couldn't be accepted due to conflicts with other reservations"))
         if self._reservation.is_pending:
             self._reservation.accept(session.user)
             flash(_(u'Booking accepted'), 'success')
@@ -586,10 +571,10 @@ class RHRoomBookingNewBooking(RHRoomBookingNewBookingBase):
             # Doing so would be very hard anyway as we don't keep all data necessary to show step 2
             # when it's not a step 1 form submission.
             if not form.validate():
-                raise IndicoError(u'<br>'.join(form.error_list))
+                raise fossirError(u'<br>'.join(form.error_list))
             room = Room.get(form.room_id.data)
             if not room:
-                raise IndicoError(u'Invalid room')
+                raise fossirError(u'Invalid room')
             # Show step 3 page
             confirm_form_defaults = FormDefaults(form.data)
             return self._show_confirm(room, form, self._step, confirm_form_defaults)

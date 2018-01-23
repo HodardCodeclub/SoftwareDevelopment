@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -20,17 +6,17 @@ from operator import attrgetter
 
 from flask import session
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.errors import UserValueError
-from indico.modules.events import EventLogKind, EventLogRealm
-from indico.modules.events.sessions.operations import update_session_block
-from indico.modules.events.timetable import logger
-from indico.modules.events.timetable.models.breaks import Break
-from indico.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
-from indico.modules.events.timetable.util import find_latest_entry_end_dt
-from indico.util.date_time import format_datetime
-from indico.util.i18n import _
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.errors import UserValueError
+from fossir.modules.events import EventLogKind, EventLogRealm
+from fossir.modules.events.sessions.operations import update_session_block
+from fossir.modules.events.timetable import logger
+from fossir.modules.events.timetable.models.breaks import Break
+from fossir.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
+from fossir.modules.events.timetable.util import find_latest_entry_end_dt
+from fossir.util.date_time import format_datetime
+from fossir.util.i18n import _
 
 
 def _get_object_info(entry):
@@ -65,7 +51,7 @@ def update_break_entry(break_, data):
 
 
 def create_session_block_entry(session_, data):
-    from indico.modules.events.sessions.operations import create_session_block
+    from fossir.modules.events.sessions.operations import create_session_block
 
     start_dt = data.pop('start_dt')
     block = create_session_block(session_=session_, data=data)
@@ -150,7 +136,7 @@ def move_timetable_entry(entry, parent=None, day=None):
     if bool(parent) + bool(day) != 1:
         raise TypeError("Wrong number of arguments")
 
-    from indico.modules.events.contributions.operations import update_contribution
+    from fossir.modules.events.contributions.operations import update_contribution
 
     updates = {}
     contrib_update_data = {}
@@ -178,7 +164,7 @@ def move_timetable_entry(entry, parent=None, day=None):
 
 def update_timetable_entry_object(entry, data):
     """Update the `object` of a timetable entry according to its type"""
-    from indico.modules.events.contributions.operations import update_contribution
+    from fossir.modules.events.contributions.operations import update_contribution
     obj = entry.object
     if entry.type == TimetableEntryType.CONTRIBUTION:
         update_contribution(obj, data)

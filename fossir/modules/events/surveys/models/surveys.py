@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
@@ -24,20 +9,20 @@ from sqlalchemy.event import listens_for
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.session import object_session
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import UTCDateTime
-from indico.core.errors import IndicoError
-from indico.core.notifications import make_email, send_email
-from indico.modules.events.registration.models.registrations import Registration
-from indico.modules.events.surveys import logger
-from indico.util.date_time import now_utc
-from indico.util.locators import locator_property
-from indico.util.string import return_ascii
-from indico.util.struct.enum import IndicoEnum
-from indico.web.flask.templating import get_template_module
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import UTCDateTime
+from fossir.core.errors import fossirError
+from fossir.core.notifications import make_email, send_email
+from fossir.modules.events.registration.models.registrations import Registration
+from fossir.modules.events.surveys import logger
+from fossir.util.date_time import now_utc
+from fossir.util.locators import locator_property
+from fossir.util.string import return_ascii
+from fossir.util.struct.enum import fossirEnum
+from fossir.web.flask.templating import get_template_module
 
 
-class SurveyState(IndicoEnum):
+class SurveyState(fossirEnum):
     not_ready = 1
     ready_to_open = 2
     active_and_clean = 3
@@ -284,12 +269,12 @@ class Survey(db.Model):
 
     def open(self):
         if self.state != SurveyState.ready_to_open:
-            raise IndicoError("Survey can't be opened")
+            raise fossirError("Survey can't be opened")
         self.start_dt = now_utc()
 
     def close(self):
         if self.state not in (SurveyState.active_and_clean, SurveyState.active_and_answered):
-            raise IndicoError("Survey can't be closed")
+            raise fossirError("Survey can't be closed")
         self.end_dt = now_utc()
 
     def send_start_notification(self):

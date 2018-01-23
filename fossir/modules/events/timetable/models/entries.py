@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,14 +10,14 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.base import NEVER_SET, NO_VALUE
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIntEnum, UTCDateTime
-from indico.core.db.sqlalchemy.util.models import populate_one_to_one_backrefs
-from indico.util.date_time import overlaps
-from indico.util.i18n import _
-from indico.util.locators import locator_property
-from indico.util.string import format_repr, return_ascii
-from indico.util.struct.enum import RichIntEnum
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIntEnum, UTCDateTime
+from fossir.core.db.sqlalchemy.util.models import populate_one_to_one_backrefs
+from fossir.util.date_time import overlaps
+from fossir.util.i18n import _
+from fossir.util.locators import locator_property
+from fossir.util.string import format_repr, return_ascii
+from fossir.util.struct.enum import RichIntEnum
 
 
 class TimetableEntryType(RichIntEnum):
@@ -178,9 +164,9 @@ class TimetableEntry(db.Model):
 
     @object.setter
     def object(self, value):
-        from indico.modules.events.contributions import Contribution
-        from indico.modules.events.sessions.models.blocks import SessionBlock
-        from indico.modules.events.timetable.models.breaks import Break
+        from fossir.modules.events.contributions import Contribution
+        from fossir.modules.events.sessions.models.blocks import SessionBlock
+        from fossir.modules.events.timetable.models.breaks import Break
         self.session_block = self.contribution = self.break_ = None
         if isinstance(value, SessionBlock):
             self.session_block = value
@@ -201,9 +187,9 @@ class TimetableEntry(db.Model):
 
     @duration.expression
     def duration(cls):
-        from indico.modules.events.contributions import Contribution
-        from indico.modules.events.sessions.models.blocks import SessionBlock
-        from indico.modules.events.timetable.models.breaks import Break
+        from fossir.modules.events.contributions import Contribution
+        from fossir.modules.events.sessions.models.blocks import SessionBlock
+        from fossir.modules.events.timetable.models.breaks import Break
         return db.case({
             TimetableEntryType.SESSION_BLOCK.value:
                 db.select([SessionBlock.duration])
@@ -244,7 +230,7 @@ class TimetableEntry(db.Model):
 
     @property
     def siblings(self):
-        from indico.modules.events.timetable.util import get_top_level_entries, get_nested_entries
+        from fossir.modules.events.timetable.util import get_top_level_entries, get_nested_entries
         tzinfo = self.event.tzinfo
         day = self.start_dt.astimezone(tzinfo).date()
         siblings = (get_nested_entries(self.event)[self.parent_id]
@@ -379,7 +365,7 @@ def _set_break(target, value, *unused):
 
 @listens_for(TimetableEntry.start_dt, 'set')
 def _set_start_dt(target, value, oldvalue, *unused):
-    from indico.modules.events.util import register_time_change
+    from fossir.modules.events.util import register_time_change
     if oldvalue in (NEVER_SET, NO_VALUE):
         return
     if value != oldvalue and target.object is not None:

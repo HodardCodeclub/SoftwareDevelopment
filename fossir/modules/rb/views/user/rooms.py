@@ -1,36 +1,22 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
 from flask import request, session
 
-from indico.legacy.common.cache import GenericCache
-from indico.legacy.webinterface.wcomponents import WTemplated
-from indico.modules.rb import rb_settings
-from indico.modules.rb.models.locations import Location
-from indico.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
-from indico.modules.rb.util import rb_is_admin
-from indico.modules.rb.views import WPRoomBookingBase, WPRoomBookingLegacyBase
-from indico.modules.rb.views.calendar import RoomBookingCalendarWidget
-from indico.util.i18n import _
-from indico.util.string import crc32
-from indico.web.flask.util import url_for
-from indico.web.views import WPNotDecorated
+from fossir.legacy.common.cache import GenericCache
+from fossir.legacy.webinterface.wcomponents import WTemplated
+from fossir.modules.rb import rb_settings
+from fossir.modules.rb.models.locations import Location
+from fossir.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
+from fossir.modules.rb.util import rb_is_admin
+from fossir.modules.rb.views import WPRoomBookingBase, WPRoomBookingLegacyBase
+from fossir.modules.rb.views.calendar import RoomBookingCalendarWidget
+from fossir.util.i18n import _
+from fossir.util.string import crc32
+from fossir.web.flask.util import url_for
+from fossir.web.views import WPNotDecorated
 
 
 class WPRoomBookingMapOfRooms(WPRoomBookingBase):

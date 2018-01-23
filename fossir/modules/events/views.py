@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import print_function, unicode_literals
 
@@ -21,18 +7,18 @@ import posixpath
 from flask import render_template, request
 from sqlalchemy.orm import load_only
 
-from indico.modules.admin.views import WPAdmin
-from indico.modules.core.settings import core_settings, social_settings
-from indico.modules.events import Event
-from indico.modules.events.layout import layout_settings, theme_settings
-from indico.modules.events.layout.util import (build_menu_entry_name, get_css_url, get_menu_entry_by_name,
+from fossir.modules.admin.views import WPAdmin
+from fossir.modules.core.settings import core_settings, social_settings
+from fossir.modules.events import Event
+from fossir.modules.events.layout import layout_settings, theme_settings
+from fossir.modules.events.layout.util import (build_menu_entry_name, get_css_url, get_menu_entry_by_name,
                                                menu_entries_for_event)
-from indico.modules.events.models.events import EventType
-from indico.util.date_time import format_date
-from indico.util.mathjax import MathjaxMixin
-from indico.util.string import strip_tags, to_unicode, truncate
-from indico.web.flask.util import url_for
-from indico.web.views import WPDecorated, WPJinjaMixin
+from fossir.modules.events.models.events import EventType
+from fossir.util.date_time import format_date
+from fossir.util.mathjax import MathjaxMixin
+from fossir.util.string import strip_tags, to_unicode, truncate
+from fossir.web.flask.util import url_for
+from fossir.web.views import WPDecorated, WPJinjaMixin
 
 
 def _get_print_url(event, theme=None, theme_override=False):
@@ -78,7 +64,7 @@ def render_event_footer(event, dark=False):
         'details': description,
         'location': location,
         'trp': False,
-        'sprop': [event.external_url, 'name:indico']
+        'sprop': [event.external_url, 'name:fossir']
     }
 
     social_settings_data = social_settings.get_all()

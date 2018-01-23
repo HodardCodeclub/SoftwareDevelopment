@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,14 +7,14 @@ from operator import attrgetter
 from flask import session
 from sqlalchemy.orm import joinedload, load_only
 
-from indico.core.db import db
-from indico.modules.events import Event
-from indico.modules.events.surveys.models.submissions import SurveySubmission
-from indico.util.caching import memoize_request
-from indico.util.date_time import format_datetime
-from indico.util.spreadsheets import unique_col
-from indico.util.string import to_unicode
-from indico.web.forms.base import IndicoForm
+from fossir.core.db import db
+from fossir.modules.events import Event
+from fossir.modules.events.surveys.models.submissions import SurveySubmission
+from fossir.util.caching import memoize_request
+from fossir.util.date_time import format_datetime
+from fossir.util.spreadsheets import unique_col
+from fossir.util.string import to_unicode
+from fossir.web.forms.base import fossirForm
 
 
 def make_survey_form(survey):
@@ -37,9 +23,9 @@ def make_survey_form(survey):
     Each question will use a field named ``question_ID``.
 
     :param survey: The `Survey` for which to create the form.
-    :return: An `IndicoForm` subclass.
+    :return: An `fossirForm` subclass.
     """
-    form_class = type(b'SurveyForm', (IndicoForm,), {})
+    form_class = type(b'SurveyForm', (fossirForm,), {})
 
     for question in survey.questions:
         field_impl = question.field
@@ -60,7 +46,7 @@ def save_submitted_survey_to_session(submission):
 @memoize_request
 def was_survey_submitted(survey):
     """Check whether the current user has submitted a survey"""
-    from indico.modules.events.surveys.models.surveys import Survey
+    from fossir.modules.events.surveys.models.surveys import Survey
     query = (Survey.query.with_parent(survey.event)
              .filter(Survey.submissions.any(db.and_(SurveySubmission.is_submitted,
                                                     SurveySubmission.user == session.user))))
@@ -75,7 +61,7 @@ def was_survey_submitted(survey):
 
 def is_submission_in_progress(survey):
     """Check whether the current user has a survey submission in progress"""
-    from indico.modules.events.surveys.models.surveys import Survey
+    from fossir.modules.events.surveys.models.surveys import Survey
     if session.user:
         query = (Survey.query.with_parent(survey.event)
                  .filter(Survey.submissions.any(db.and_(~SurveySubmission.is_submitted,
@@ -132,7 +118,7 @@ def get_events_with_submitted_surveys(user, dt=None):
     :param dt: Only include events taking place on/after that date
     :return: A set of event ids
     """
-    from indico.modules.events.surveys.models.surveys import Survey
+    from fossir.modules.events.surveys.models.surveys import Survey
     # Survey submissions are not stored in links anymore, so we need to get them directly
     query = (user.survey_submissions
              .options(load_only('survey_id'))
@@ -144,7 +130,7 @@ def get_events_with_submitted_surveys(user, dt=None):
 
 
 def query_active_surveys(event):
-    from indico.modules.events.surveys.models.surveys import Survey
+    from fossir.modules.events.surveys.models.surveys import Survey
     private_criterion = ~Survey.private
     if session.user:
         user_pending_criterion = ~SurveySubmission.is_submitted & (SurveySubmission.user == session.user)

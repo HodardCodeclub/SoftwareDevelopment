@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from collections import OrderedDict, defaultdict
 from datetime import datetime
@@ -26,34 +12,34 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import cast
 from werkzeug.datastructures import OrderedMultiDict
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.custom import PyIntEnum, static_array
-from indico.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
-from indico.core.db.sqlalchemy.util.queries import limit_groups
-from indico.core.errors import NoReportError
-from indico.modules.rb.models.equipment import EquipmentType, ReservationEquipmentAssociation, RoomEquipmentAssociation
-from indico.modules.rb.models.reservation_edit_logs import ReservationEditLog
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
-from indico.modules.rb.models.util import unimplemented
-from indico.modules.rb.notifications.reservations import (notify_cancellation, notify_confirmation, notify_creation,
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.custom import PyIntEnum, static_array
+from fossir.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
+from fossir.core.db.sqlalchemy.util.queries import limit_groups
+from fossir.core.errors import NoReportError
+from fossir.modules.rb.models.equipment import EquipmentType, ReservationEquipmentAssociation, RoomEquipmentAssociation
+from fossir.modules.rb.models.reservation_edit_logs import ReservationEditLog
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
+from fossir.modules.rb.models.util import unimplemented
+from fossir.modules.rb.notifications.reservations import (notify_cancellation, notify_confirmation, notify_creation,
                                                           notify_modification, notify_rejection)
-from indico.modules.rb.util import rb_is_admin
-from indico.util.date_time import format_date, format_time, now_utc
-from indico.util.i18n import N_, _
-from indico.util.locators import locator_property
-from indico.util.serializer import Serializer
-from indico.util.string import return_ascii, to_unicode
-from indico.util.struct.enum import IndicoEnum
-from indico.util.user import unify_user_args
-from indico.web.flask.util import url_for
+from fossir.modules.rb.util import rb_is_admin
+from fossir.util.date_time import format_date, format_time, now_utc
+from fossir.util.i18n import N_, _
+from fossir.util.locators import locator_property
+from fossir.util.serializer import Serializer
+from fossir.util.string import return_ascii, to_unicode
+from fossir.util.struct.enum import fossirEnum
+from fossir.util.user import unify_user_args
+from fossir.web.flask.util import url_for
 
 
 class ConflictingOccurrences(Exception):
     pass
 
 
-class RepeatFrequency(int, IndicoEnum):
+class RepeatFrequency(int, fossirEnum):
     NEVER = 0
     DAY = 1
     WEEK = 2

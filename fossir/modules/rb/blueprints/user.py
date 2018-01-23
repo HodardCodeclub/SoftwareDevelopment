@@ -1,30 +1,16 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
-
-from indico.modules.rb.controllers.admin import reservations as reservation_admin_handlers
-from indico.modules.rb.controllers.user import blockings as blocking_handlers
-from indico.modules.rb.controllers.user import index as index_handler
-from indico.modules.rb.controllers.user import photos as photo_handlers
-from indico.modules.rb.controllers.user import reservations as reservation_handlers
-from indico.modules.rb.controllers.user import rooms as room_handlers
-from indico.web.flask.util import make_compat_redirect_func
-from indico.web.flask.wrappers import IndicoBlueprint
 
 
-_bp = IndicoBlueprint('rooms', __name__, template_folder='../templates', virtual_template_folder='rb',
+from fossir.modules.rb.controllers.admin import reservations as reservation_admin_handlers
+from fossir.modules.rb.controllers.user import blockings as blocking_handlers
+from fossir.modules.rb.controllers.user import index as index_handler
+from fossir.modules.rb.controllers.user import photos as photo_handlers
+from fossir.modules.rb.controllers.user import reservations as reservation_handlers
+from fossir.modules.rb.controllers.user import rooms as room_handlers
+from fossir.web.flask.util import make_compat_redirect_func
+from fossir.web.flask.wrappers import fossirBlueprint
+
+
+_bp = fossirBlueprint('rooms', __name__, template_folder='../templates', virtual_template_folder='rb',
                       url_prefix='/rooms')
 
 
@@ -160,7 +146,7 @@ _bp.add_url_rule('/blocking/list/my-rooms',
                  blocking_handlers.RHRoomBookingBlockingsForMyRooms)
 
 
-_compat_bp = IndicoBlueprint('compat_rooms', __name__)
+_compat_bp = fossirBlueprint('compat_rooms', __name__)
 _compat_bp.add_url_rule('/roomBooking.py', 'roomBooking',
                         make_compat_redirect_func(_bp, 'roomBooking'))
 _compat_bp.add_url_rule('/roomBooking.py/mapOfRooms', 'roomBooking-mapOfRooms',

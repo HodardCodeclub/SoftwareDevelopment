@@ -1,30 +1,16 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from collections import defaultdict
 from datetime import datetime
 
 import dateutil.parser
 
-from indico.modules.rb import rb_settings
-from indico.modules.rb.models.reservations import RepeatFrequency
-from indico.modules.rb.tasks import roombooking_occurrences
+from fossir.modules.rb import rb_settings
+from fossir.modules.rb.models.reservations import RepeatFrequency
+from fossir.modules.rb.tasks import roombooking_occurrences
 
 
-pytest_plugins = 'indico.modules.rb.testing.fixtures'
+pytest_plugins = 'fossir.modules.rb.testing.fixtures'
 
 
 def test_roombooking_occurrences(mocker, create_user, create_room, create_reservation, freeze_time):
@@ -118,7 +104,7 @@ def test_roombooking_occurrences(mocker, create_user, create_room, create_reserv
         if notification:
             notification_map[user][reservation] = dateutil.parser.parse(notification).date()
 
-    notify_upcoming_occurrences = mocker.patch('indico.modules.rb.tasks.notify_upcoming_occurrences')
+    notify_upcoming_occurrences = mocker.patch('fossir.modules.rb.tasks.notify_upcoming_occurrences')
     freeze_time(datetime(2017, 4, 1, 8, 0, 0))
     roombooking_occurrences()
     for (user, occurrences), __ in notify_upcoming_occurrences.call_args_list:

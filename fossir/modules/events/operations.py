@@ -1,34 +1,20 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import session
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.session import no_autoflush
-from indico.modules.categories.util import get_visibility_options
-from indico.modules.events import Event, EventLogKind, EventLogRealm, logger
-from indico.modules.events.cloning import EventCloner
-from indico.modules.events.features import features_event_settings
-from indico.modules.events.layout import layout_settings
-from indico.modules.events.logs.util import make_diff_log
-from indico.modules.events.models.events import EventType
-from indico.modules.events.models.references import ReferenceType
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.session import no_autoflush
+from fossir.modules.categories.util import get_visibility_options
+from fossir.modules.events import Event, EventLogKind, EventLogRealm, logger
+from fossir.modules.events.cloning import EventCloner
+from fossir.modules.events.features import features_event_settings
+from fossir.modules.events.layout import layout_settings
+from fossir.modules.events.logs.util import make_diff_log
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.models.references import ReferenceType
 
 
 def create_reference_type(data):

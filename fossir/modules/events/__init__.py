@@ -1,37 +1,23 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, redirect, render_template, request, session
 from werkzeug.exceptions import BadRequest, NotFound
 
-from indico.core import signals
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.core.logger import Logger
-from indico.core.roles import ManagementRole, check_roles, get_available_roles
-from indico.modules.events.cloning import get_event_cloners
-from indico.modules.events.logs import EventLogKind, EventLogRealm
-from indico.modules.events.models.events import Event
-from indico.modules.events.models.legacy_mapping import LegacyEventMapping
-from indico.util.i18n import _, ngettext, orig_string
-from indico.util.string import is_legacy_id
-from indico.web.flask.templating import template_hook
-from indico.web.flask.util import url_for
-from indico.web.menu import SideMenuItem, TopMenuItem, TopMenuSection
+from fossir.core import signals
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.core.logger import Logger
+from fossir.core.roles import ManagementRole, check_roles, get_available_roles
+from fossir.modules.events.cloning import get_event_cloners
+from fossir.modules.events.logs import EventLogKind, EventLogRealm
+from fossir.modules.events.models.events import Event
+from fossir.modules.events.models.legacy_mapping import LegacyEventMapping
+from fossir.util.i18n import _, ngettext, orig_string
+from fossir.util.string import is_legacy_id
+from fossir.web.flask.templating import template_hook
+from fossir.web.flask.util import url_for
+from fossir.web.menu import SideMenuItem, TopMenuItem, TopMenuSection
 
 
 __all__ = ('Event', 'logger', 'event_management_object_url_prefixes', 'event_object_url_prefixes')
@@ -60,8 +46,8 @@ event_management_object_url_prefixes = {
 
 @signals.users.merged.connect
 def _merge_users(target, source, **kwargs):
-    from indico.modules.events.models.persons import EventPerson
-    from indico.modules.events.models.principals import EventPrincipal
+    from fossir.modules.events.models.persons import EventPerson
+    from fossir.modules.events.models.principals import EventPrincipal
     EventPerson.merge_users(target, source)
     EventPrincipal.merge_users(target, source, 'event')
 
@@ -69,7 +55,7 @@ def _merge_users(target, source, **kwargs):
 @signals.users.registered.connect
 @signals.users.email_added.connect
 def _convert_email_principals(user, **kwargs):
-    from indico.modules.events.models.principals import EventPrincipal
+    from fossir.modules.events.models.principals import EventPrincipal
     events = EventPrincipal.replace_email_with_user(user, 'event')
     if events:
         num = len(events)
@@ -80,7 +66,7 @@ def _convert_email_principals(user, **kwargs):
 @signals.users.registered.connect
 @signals.users.email_added.connect
 def _convert_email_person_links(user, **kwargs):
-    from indico.modules.events.models.persons import EventPerson
+    from fossir.modules.events.models.persons import EventPerson
     EventPerson.link_user_by_email(user)
 
 
@@ -212,7 +198,7 @@ def _topmenu_items(sender, **kwargs):
 
 @signals.event.sidemenu.connect
 def _extend_event_menu(sender, **kwargs):
-    from indico.modules.events.layout.util import MenuEntryData, get_menu_entry_by_name
+    from fossir.modules.events.layout.util import MenuEntryData, get_menu_entry_by_name
 
     def _my_conference_visible(event):
         return session.user and (get_menu_entry_by_name('my_contributions', event).is_visible or
@@ -230,7 +216,7 @@ def _check_cloners(app, **kwargs):
 
 @signals.event_management.get_cloners.connect
 def _get_cloners(sender, **kwargs):
-    from indico.modules.events import clone
+    from fossir.modules.events import clone
     yield clone.EventLocationCloner
     yield clone.EventPersonCloner
     yield clone.EventPersonLinkCloner
@@ -250,7 +236,7 @@ def _event_cloned(old_event, new_event, **kwargs):
 
 @template_hook('event-ical-export')
 def _render_event_ical_export(event, **kwargs):
-    from indico.modules.events.util import get_base_ical_parameters
+    from fossir.modules.events.util import get_base_ical_parameters
     return render_template('events/display/event_ical_export.html', item=event,
                            ics_url=url_for('events.export_event_ical', event),
                            **get_base_ical_parameters(session.user, 'events', '/export/event/{0}.ics'.format(event.id)))

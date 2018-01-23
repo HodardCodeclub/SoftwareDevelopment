@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,21 +10,21 @@ from pytz import utc
 from sqlalchemy import Date, cast
 from sqlalchemy.orm import contains_eager, joinedload, subqueryload, undefer
 
-from indico.core.db import db
-from indico.modules.events.contributions.models.contributions import Contribution
-from indico.modules.events.models.events import Event
-from indico.modules.events.models.persons import EventPersonLink
-from indico.modules.events.sessions.models.blocks import SessionBlock
-from indico.modules.events.sessions.models.sessions import Session
-from indico.modules.events.timetable.legacy import TimetableSerializer, serialize_event_info
-from indico.modules.events.timetable.models.breaks import Break
-from indico.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
-from indico.util.caching import memoize_request
-from indico.util.date_time import format_time, get_day_end, iterdays
-from indico.util.i18n import _
-from indico.util.string import to_unicode
-from indico.web.flask.templating import get_template_module
-from indico.web.forms.colors import get_colors
+from fossir.core.db import db
+from fossir.modules.events.contributions.models.contributions import Contribution
+from fossir.modules.events.models.events import Event
+from fossir.modules.events.models.persons import EventPersonLink
+from fossir.modules.events.sessions.models.blocks import SessionBlock
+from fossir.modules.events.sessions.models.sessions import Session
+from fossir.modules.events.timetable.legacy import TimetableSerializer, serialize_event_info
+from fossir.modules.events.timetable.models.breaks import Break
+from fossir.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
+from fossir.util.caching import memoize_request
+from fossir.util.date_time import format_time, get_day_end, iterdays
+from fossir.util.i18n import _
+from fossir.util.string import to_unicode
+from fossir.web.flask.templating import get_template_module
+from fossir.web.forms.colors import get_colors
 
 
 def _query_events(categ_ids, day_start, day_end):
@@ -308,7 +294,7 @@ def shift_following_entries(entry, shift, session_=None):
 
 
 def get_timetable_offline_pdf_generator(event):
-    from indico.legacy.pdfinterface.conference import TimeTablePlain, TimetablePDFFormat
+    from fossir.legacy.pdfinterface.conference import TimeTablePlain, TimetablePDFFormat
     pdf_format = TimetablePDFFormat()
     return TimeTablePlain(event, session.user, sortingCrit=None, ttPDFFormat=pdf_format, pagesize='A4',
                           fontsize='normal')

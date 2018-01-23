@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,15 +9,15 @@ from operator import attrgetter
 from celery.schedules import crontab
 from sqlalchemy.orm import contains_eager
 
-from indico.core.celery import celery
-from indico.core.config import config
-from indico.core.db import db
-from indico.modules.rb import logger, rb_settings
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.reservations import RepeatFrequency, Reservation
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.notifications.reservation_occurrences import notify_upcoming_occurrences
-from indico.util.console import cformat
+from fossir.core.celery import celery
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.modules.rb import logger, rb_settings
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.reservations import RepeatFrequency, Reservation
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.notifications.reservation_occurrences import notify_upcoming_occurrences
+from fossir.util.console import cformat
 
 
 def _make_occurrence_date_filter():

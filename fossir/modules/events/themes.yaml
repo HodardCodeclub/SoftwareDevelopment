@@ -7,8 +7,8 @@ definitions:
   # Lectures - base
   lecture: &lecture
     event_types: [lecture]
-    stylesheet: indico.scss
-    template: indico/lecture.html
+    stylesheet: fossir.scss
+    template: fossir/lecture.html
     title: Lecture
     user_visible: true
 
@@ -19,18 +19,18 @@ definitions:
   # Meetings - base
   standard: &standard
     event_types: [conference, meeting]
-    stylesheet: indico.scss
+    stylesheet: fossir.scss
     # XXX: this maybe be inherited by custom themes in plugins so we
     # need to use path relative to the main htdocs folder which is
     # always included in the assets env
-    print_stylesheet: sass/themes/print/indico.scss
-    template: indico/meeting.html
-    title: Indico style
+    print_stylesheet: sass/themes/print/fossir.scss
+    template: fossir/meeting.html
+    title: fossir style
     user_visible: true
 
   standard_inline_minutes:
     <<: *standard
-    title: Indico style - inline minutes
+    title: fossir style - inline minutes
     settings:
       show_notes: true
 
@@ -41,11 +41,11 @@ definitions:
     title: Compact style
     user_visible: true
 
-  indico-weeks-view:
+  fossir-weeks-view:
     event_types: [conference, meeting]
     stylesheet: weeks.scss
     template: weeks.html
-    title: Indico Weeks View
+    title: fossir Weeks View
     user_visible: true
     user_settings:
       colors:

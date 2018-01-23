@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,10 +8,10 @@ from flask import has_request_context, request, session
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIPNetwork
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.util.string import format_repr, return_ascii
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIPNetwork
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.util.string import format_repr, return_ascii
 
 
 class IPNetworkGroup(db.Model):
@@ -39,7 +25,7 @@ class IPNetworkGroup(db.Model):
     @declared_attr
     def __table_args__(cls):
         return (db.Index('ix_uq_ip_network_groups_name_lower', db.func.lower(cls.name), unique=True),
-                {'schema': 'indico'})
+                {'schema': 'fossir'})
 
     id = db.Column(
         db.Integer,
@@ -109,11 +95,11 @@ class IPNetworkGroup(db.Model):
 
 class IPNetwork(db.Model):
     __tablename__ = 'ip_networks'
-    __table_args__ = {'schema': 'indico'}
+    __table_args__ = {'schema': 'fossir'}
 
     group_id = db.Column(
         db.Integer,
-        db.ForeignKey('indico.ip_network_groups.id'),
+        db.ForeignKey('fossir.ip_network_groups.id'),
         primary_key=True,
         autoincrement=False
     )

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,22 +8,22 @@ from operator import itemgetter
 from flask import flash, request
 from sqlalchemy.orm import subqueryload
 
-from indico.core.db.sqlalchemy.descriptions import RENDER_MODE_WRAPPER_MAP
-from indico.legacy.pdfinterface.conference import ProgrammeToPDF
-from indico.modules.events.controllers.base import RHDisplayEventBase
-from indico.modules.events.layout.util import get_menu_entry_by_name
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.events.tracks.forms import ProgramForm, TrackForm
-from indico.modules.events.tracks.models.tracks import Track
-from indico.modules.events.tracks.operations import create_track, delete_track, update_program, update_track
-from indico.modules.events.tracks.settings import track_settings
-from indico.modules.events.tracks.views import WPDisplayTracks, WPManageTracks
-from indico.util.i18n import _
-from indico.util.string import handle_legacy_description
-from indico.web.flask.templating import get_template_module
-from indico.web.flask.util import send_file
-from indico.web.forms.base import FormDefaults
-from indico.web.util import jsonify_data, jsonify_form
+from fossir.core.db.sqlalchemy.descriptions import RENDER_MODE_WRAPPER_MAP
+from fossir.legacy.pdfinterface.conference import ProgrammeToPDF
+from fossir.modules.events.controllers.base import RHDisplayEventBase
+from fossir.modules.events.layout.util import get_menu_entry_by_name
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.events.tracks.forms import ProgramForm, TrackForm
+from fossir.modules.events.tracks.models.tracks import Track
+from fossir.modules.events.tracks.operations import create_track, delete_track, update_program, update_track
+from fossir.modules.events.tracks.settings import track_settings
+from fossir.modules.events.tracks.views import WPDisplayTracks, WPManageTracks
+from fossir.util.i18n import _
+from fossir.util.string import handle_legacy_description
+from fossir.web.flask.templating import get_template_module
+from fossir.web.flask.util import send_file
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_form
 
 
 def _render_track_list(event):

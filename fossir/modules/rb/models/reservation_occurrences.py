@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from datetime import datetime
 from math import ceil
@@ -23,16 +9,16 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import defaultload
 from sqlalchemy.sql import cast
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.queries import db_dates_overlap
-from indico.core.errors import IndicoError
-from indico.modules.rb.models.reservation_edit_logs import ReservationEditLog
-from indico.modules.rb.models.util import proxy_to_reservation_if_last_valid_occurrence
-from indico.util import date_time
-from indico.util.date_time import format_date, iterdays
-from indico.util.serializer import Serializer
-from indico.util.string import return_ascii
-from indico.util.user import unify_user_args
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.queries import db_dates_overlap
+from fossir.core.errors import fossirError
+from fossir.modules.rb.models.reservation_edit_logs import ReservationEditLog
+from fossir.modules.rb.models.util import proxy_to_reservation_if_last_valid_occurrence
+from fossir.util import date_time
+from fossir.util.date_time import format_date, iterdays
+from fossir.util.serializer import Serializer
+from fossir.util.string import return_ascii
+from fossir.util.user import unify_user_args
 
 
 class ReservationOccurrence(db.Model, Serializer):
@@ -130,7 +116,7 @@ class ReservationOccurrence(db.Model, Serializer):
 
     @staticmethod
     def iter_start_time(start, end, repetition):
-        from indico.modules.rb.models.reservations import RepeatFrequency
+        from fossir.modules.rb.models.reservations import RepeatFrequency
 
         repeat_frequency, repeat_interval = repetition
 
@@ -141,13 +127,13 @@ class ReservationOccurrence(db.Model, Serializer):
             if repeat_interval == 1:
                 return rrule.rrule(rrule.DAILY, dtstart=start, until=end)
             else:
-                raise IndicoError(u'Unsupported interval')
+                raise fossirError(u'Unsupported interval')
 
         elif repeat_frequency == RepeatFrequency.WEEK:
             if 0 < repeat_interval < 4:
                 return rrule.rrule(rrule.WEEKLY, dtstart=start, until=end, interval=repeat_interval)
             else:
-                raise IndicoError(u'Unsupported interval')
+                raise fossirError(u'Unsupported interval')
 
         elif repeat_frequency == RepeatFrequency.MONTH:
 
@@ -159,9 +145,9 @@ class ReservationOccurrence(db.Model, Serializer):
                 return rrule.rrule(rrule.MONTHLY, dtstart=start, until=end, byweekday=start.weekday(),
                                    bysetpos=position)
             else:
-                raise IndicoError(u'Unsupported interval {}'.format(repeat_interval))
+                raise fossirError(u'Unsupported interval {}'.format(repeat_interval))
 
-        raise IndicoError(u'Unexpected frequency {}'.format(repeat_frequency))
+        raise fossirError(u'Unexpected frequency {}'.format(repeat_frequency))
 
     @staticmethod
     def filter_overlap(occurrences):
@@ -170,7 +156,7 @@ class ReservationOccurrence(db.Model, Serializer):
 
     @classmethod
     def find_overlapping_with(cls, room, occurrences, skip_reservation_id=None):
-        from indico.modules.rb.models.reservations import Reservation
+        from fossir.modules.rb.models.reservations import Reservation
 
         return (ReservationOccurrence
                 .find(Reservation.room == room,
@@ -183,8 +169,8 @@ class ReservationOccurrence(db.Model, Serializer):
 
     @classmethod
     def find_with_filters(cls, filters, user=None):
-        from indico.modules.rb.models.rooms import Room
-        from indico.modules.rb.models.reservations import Reservation
+        from fossir.modules.rb.models.rooms import Room
+        from fossir.modules.rb.models.reservations import Reservation
 
         q = (ReservationOccurrence
              .find(Room.is_active,
@@ -254,7 +240,7 @@ class ReservationOccurrence(db.Model, Serializer):
             if reason:
                 log.append(u'Reason: {}'.format(reason))
             self.reservation.add_edit_log(ReservationEditLog(user_name=user.full_name, info=log))
-            from indico.modules.rb.notifications.reservation_occurrences import notify_cancellation
+            from fossir.modules.rb.notifications.reservation_occurrences import notify_cancellation
             notify_cancellation(self)
 
     @proxy_to_reservation_if_last_valid_occurrence
@@ -266,7 +252,7 @@ class ReservationOccurrence(db.Model, Serializer):
             log = [u'Day rejected: {}'.format(format_date(self.date).decode('utf-8')),
                    u'Reason: {}'.format(reason)]
             self.reservation.add_edit_log(ReservationEditLog(user_name=user.full_name, info=log))
-            from indico.modules.rb.notifications.reservation_occurrences import notify_rejection
+            from fossir.modules.rb.notifications.reservation_occurrences import notify_rejection
             notify_rejection(self)
 
     def get_overlap(self, occurrence, skip_self=False):

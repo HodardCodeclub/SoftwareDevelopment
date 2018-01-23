@@ -1,32 +1,18 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 
-from indico.modules.rb.models.blocked_rooms import BlockedRoom
-from indico.modules.rb.models.blockings import Blocking
-from indico.modules.rb.models.rooms import Room
-from indico.util.i18n import _
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.fields import IndicoDateField, JSONField, PrincipalListField
+from fossir.modules.rb.models.blocked_rooms import BlockedRoom
+from fossir.modules.rb.models.blockings import Blocking
+from fossir.modules.rb.models.rooms import Room
+from fossir.util.i18n import _
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.fields import fossirDateField, JSONField, PrincipalListField
 
 
-class BlockingForm(IndicoForm):
+class BlockingForm(fossirForm):
     reason = TextAreaField(_(u'Reason'), [DataRequired()])
     principals = PrincipalListField(groups=True, allow_external=True)
     blocked_rooms = JSONField(default=[])
@@ -65,8 +51,8 @@ class BlockingForm(IndicoForm):
 
 
 class CreateBlockingForm(BlockingForm):
-    start_date = IndicoDateField(_(u'Start date'), [DataRequired()])
-    end_date = IndicoDateField(_(u'End date'), [DataRequired()])
+    start_date = fossirDateField(_(u'Start date'), [DataRequired()])
+    end_date = fossirDateField(_(u'End date'), [DataRequired()])
 
     def validate_start_date(self, field):
         if self.start_date.data > self.end_date.data:

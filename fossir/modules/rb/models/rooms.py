@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import ast
 import json
@@ -22,29 +8,29 @@ from sqlalchemy import and_, cast, func, or_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import contains_eager
 
-from indico.core.db.sqlalchemy import db
-from indico.core.db.sqlalchemy.custom import static_array
-from indico.core.db.sqlalchemy.util.cache import cached, versioned_cache
-from indico.core.db.sqlalchemy.util.queries import escape_like
-from indico.core.errors import NoReportError
-from indico.legacy.common.cache import GenericCache
-from indico.modules.groups import GroupProxy
-from indico.modules.rb.models.blocked_rooms import BlockedRoom
-from indico.modules.rb.models.blockings import Blocking
-from indico.modules.rb.models.equipment import EquipmentType, RoomEquipmentAssociation
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.reservations import RepeatMapping, Reservation
-from indico.modules.rb.models.room_attributes import RoomAttribute, RoomAttributeAssociation
-from indico.modules.rb.models.room_bookable_hours import BookableHours
-from indico.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
-from indico.modules.rb.util import rb_check_user_access, rb_is_admin
-from indico.util.decorators import classproperty
-from indico.util.i18n import _
-from indico.util.locators import locator_property
-from indico.util.serializer import Serializer
-from indico.util.string import natural_sort_key, return_ascii
-from indico.util.user import unify_user_args
-from indico.web.flask.util import url_for
+from fossir.core.db.sqlalchemy import db
+from fossir.core.db.sqlalchemy.custom import static_array
+from fossir.core.db.sqlalchemy.util.cache import cached, versioned_cache
+from fossir.core.db.sqlalchemy.util.queries import escape_like
+from fossir.core.errors import NoReportError
+from fossir.legacy.common.cache import GenericCache
+from fossir.modules.groups import GroupProxy
+from fossir.modules.rb.models.blocked_rooms import BlockedRoom
+from fossir.modules.rb.models.blockings import Blocking
+from fossir.modules.rb.models.equipment import EquipmentType, RoomEquipmentAssociation
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.reservations import RepeatMapping, Reservation
+from fossir.modules.rb.models.room_attributes import RoomAttribute, RoomAttributeAssociation
+from fossir.modules.rb.models.room_bookable_hours import BookableHours
+from fossir.modules.rb.models.room_nonbookable_periods import NonBookablePeriod
+from fossir.modules.rb.util import rb_check_user_access, rb_is_admin
+from fossir.util.decorators import classproperty
+from fossir.util.i18n import _
+from fossir.util.locators import locator_property
+from fossir.util.serializer import Serializer
+from fossir.util.string import natural_sort_key, return_ascii
+from fossir.util.user import unify_user_args
+from fossir.web.flask.util import url_for
 
 
 _cache = GenericCache('Rooms')
@@ -470,7 +456,7 @@ class Room(versioned_cache(_cache, 'id'), db.Model, Serializer):
 
     @staticmethod
     def get_with_data(*args, **kwargs):
-        from indico.modules.rb.models.locations import Location
+        from fossir.modules.rb.models.locations import Location
 
         only_active = kwargs.pop('only_active', True)
         filters = kwargs.pop('filters', None)
@@ -562,7 +548,7 @@ class Room(versioned_cache(_cache, 'id'), db.Model, Serializer):
 
     @staticmethod
     def find_with_filters(filters, user=None):
-        from indico.modules.rb.models.locations import Location
+        from fossir.modules.rb.models.locations import Location
 
         equipment_count = len(filters.get('available_equipment', ()))
         equipment_subquery = None

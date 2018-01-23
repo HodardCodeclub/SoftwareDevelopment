@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -20,19 +6,19 @@ from datetime import timedelta
 
 from flask import flash, redirect, request, session
 
-from indico.core.db import db
-from indico.modules.admin import RHAdminBase
-from indico.modules.news import logger, news_settings
-from indico.modules.news.forms import NewsForm, NewsSettingsForm
-from indico.modules.news.models.news import NewsItem
-from indico.modules.news.util import get_recent_news
-from indico.modules.news.views import WPManageNews, WPNews
-from indico.util.date_time import now_utc
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.rh import RH
-from indico.web.util import jsonify_data, jsonify_form
+from fossir.core.db import db
+from fossir.modules.admin import RHAdminBase
+from fossir.modules.news import logger, news_settings
+from fossir.modules.news.forms import NewsForm, NewsSettingsForm
+from fossir.modules.news.models.news import NewsItem
+from fossir.modules.news.util import get_recent_news
+from fossir.modules.news.views import WPManageNews, WPNews
+from fossir.util.date_time import now_utc
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.rh import RH
+from fossir.web.util import jsonify_data, jsonify_form
 
 
 class RHNews(RH):

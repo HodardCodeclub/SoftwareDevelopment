@@ -1,34 +1,20 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from flask import flash, redirect, request
 from werkzeug.exceptions import BadRequest, NotFound
 
-from indico.core.db import db
-from indico.modules.rb.controllers.admin import RHRoomBookingAdminBase
-from indico.modules.rb.models.equipment import EquipmentType
-from indico.modules.rb.models.locations import Location
-from indico.modules.rb.models.reservations import Reservation
-from indico.modules.rb.models.room_attributes import RoomAttribute
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.statistics import calculate_rooms_occupancy, compose_rooms_stats
-from indico.modules.rb.views.admin.locations import WPRoomBookingAdmin, WPRoomBookingAdminLocation
-from indico.util.i18n import _
-from indico.util.string import natural_sort_key
-from indico.web.flask.util import url_for
+from fossir.core.db import db
+from fossir.modules.rb.controllers.admin import RHRoomBookingAdminBase
+from fossir.modules.rb.models.equipment import EquipmentType
+from fossir.modules.rb.models.locations import Location
+from fossir.modules.rb.models.reservations import Reservation
+from fossir.modules.rb.models.room_attributes import RoomAttribute
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.statistics import calculate_rooms_occupancy, compose_rooms_stats
+from fossir.modules.rb.views.admin.locations import WPRoomBookingAdmin, WPRoomBookingAdminLocation
+from fossir.util.i18n import _
+from fossir.util.string import natural_sort_key
+from fossir.web.flask.util import url_for
 
 
 class RHRoomBookingAdmin(RHRoomBookingAdminBase):

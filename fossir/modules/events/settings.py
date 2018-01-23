@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,20 +9,20 @@ from functools import wraps
 import yaml
 from flask.helpers import get_root_path
 
-from indico.core import signals
-from indico.core.settings import ACLProxyBase, SettingProperty, SettingsProxyBase
-from indico.core.settings.converters import DatetimeConverter
-from indico.core.settings.util import get_all_settings, get_setting, get_setting_acl
-from indico.modules.events.models.settings import EventSetting, EventSettingPrincipal
-from indico.util.caching import memoize
-from indico.util.signals import values_from_signal
-from indico.util.user import iter_acl
+from fossir.core import signals
+from fossir.core.settings import ACLProxyBase, SettingProperty, SettingsProxyBase
+from fossir.core.settings.converters import DatetimeConverter
+from fossir.core.settings.util import get_all_settings, get_setting, get_setting_acl
+from fossir.modules.events.models.settings import EventSetting, EventSettingPrincipal
+from fossir.util.caching import memoize
+from fossir.util.signals import values_from_signal
+from fossir.util.user import iter_acl
 
 
 def event_or_id(f):
     @wraps(f)
     def wrapper(self, event, *args, **kwargs):
-        from indico.modules.events import Event
+        from fossir.modules.events import Event
         if isinstance(event, Event):
             event = event.id
         return f(self, int(event), *args, **kwargs)
@@ -200,7 +186,7 @@ class ThemeSettingsProxy(object):
     @property
     @memoize
     def settings(self):
-        core_path = os.path.join(get_root_path('indico'), 'modules', 'events', 'themes.yaml')
+        core_path = os.path.join(get_root_path('fossir'), 'modules', 'events', 'themes.yaml')
         with open(core_path) as f:
             core_data = f.read()
         core_settings = yaml.safe_load(core_data)

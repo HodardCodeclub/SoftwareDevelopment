@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,15 +9,15 @@ from operator import attrgetter
 from flask import render_template, request, session
 from sqlalchemy.orm import joinedload
 
-from indico.core import signals
-from indico.modules.events.layout import theme_settings
-from indico.modules.events.management.views import WPEventManagement
-from indico.modules.events.timetable.models.entries import TimetableEntryType
-from indico.modules.events.timetable.views.weeks import inject_week_timetable
-from indico.modules.events.util import get_theme
-from indico.modules.events.views import WPConferenceDisplayBase
-from indico.util.signals import values_from_signal
-from indico.web.flask.templating import register_template_hook, template_hook
+from fossir.core import signals
+from fossir.modules.events.layout import theme_settings
+from fossir.modules.events.management.views import WPEventManagement
+from fossir.modules.events.timetable.models.entries import TimetableEntryType
+from fossir.modules.events.timetable.views.weeks import inject_week_timetable
+from fossir.modules.events.util import get_theme
+from fossir.modules.events.views import WPConferenceDisplayBase
+from fossir.util.signals import values_from_signal
+from fossir.web.flask.templating import register_template_hook, template_hook
 
 
 register_template_hook('week-meeting-body', inject_week_timetable)

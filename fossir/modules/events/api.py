@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import fnmatch
 import re
@@ -26,28 +12,28 @@ from sqlalchemy import Date, cast
 from sqlalchemy.orm import joinedload, subqueryload, undefer
 from werkzeug.exceptions import ServiceUnavailable
 
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.core.db.sqlalchemy.protection import ProtectionMode
-from indico.modules.attachments.api.util import build_folders_api_data, build_material_legacy_api_data
-from indico.modules.categories import Category, LegacyCategoryMapping
-from indico.modules.categories.serialize import serialize_categories_ical
-from indico.modules.events import Event
-from indico.modules.events.models.persons import PersonLinkBase
-from indico.modules.events.notes.util import build_note_api_data, build_note_legacy_api_data
-from indico.modules.events.sessions.models.sessions import Session
-from indico.modules.events.timetable.legacy import TimetableSerializer
-from indico.modules.events.timetable.models.entries import TimetableEntry
-from indico.util.date_time import iterdays
-from indico.util.fossilize import fossilize
-from indico.util.fossilize.conversion import Conversion
-from indico.util.string import to_unicode
-from indico.web.flask.util import send_file, url_for
-from indico.web.http_api.fossils import IPeriodFossil
-from indico.web.http_api.hooks.base import HTTPAPIHook, IteratedDataFetcher
-from indico.web.http_api.responses import HTTPAPIError
-from indico.web.http_api.util import get_query_parameter
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.core.db.sqlalchemy.protection import ProtectionMode
+from fossir.modules.attachments.api.util import build_folders_api_data, build_material_legacy_api_data
+from fossir.modules.categories import Category, LegacyCategoryMapping
+from fossir.modules.categories.serialize import serialize_categories_ical
+from fossir.modules.events import Event
+from fossir.modules.events.models.persons import PersonLinkBase
+from fossir.modules.events.notes.util import build_note_api_data, build_note_legacy_api_data
+from fossir.modules.events.sessions.models.sessions import Session
+from fossir.modules.events.timetable.legacy import TimetableSerializer
+from fossir.modules.events.timetable.models.entries import TimetableEntry
+from fossir.util.date_time import iterdays
+from fossir.util.fossilize import fossilize
+from fossir.util.fossilize.conversion import Conversion
+from fossir.util.string import to_unicode
+from fossir.web.flask.util import send_file, url_for
+from fossir.web.http_api.fossils import IPeriodFossil
+from fossir.web.http_api.hooks.base import HTTPAPIHook, IteratedDataFetcher
+from fossir.web.http_api.responses import HTTPAPIError
+from fossir.web.http_api.util import get_query_parameter
 
 
 utc = pytz.timezone('UTC')

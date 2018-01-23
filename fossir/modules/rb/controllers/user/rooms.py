@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 import re
 from datetime import date, datetime, time, timedelta
@@ -22,21 +7,21 @@ from flask import request, session
 from sqlalchemy import func
 from werkzeug.datastructures import MultiDict
 
-from indico.core.db import db
-from indico.core.errors import IndicoError
-from indico.modules.rb.controllers import RHRoomBookingBase
-from indico.modules.rb.controllers.decorators import requires_location, requires_room
-from indico.modules.rb.forms.rooms import SearchRoomsForm
-from indico.modules.rb.models.equipment import EquipmentType
-from indico.modules.rb.models.locations import Location
-from indico.modules.rb.models.reservation_occurrences import ReservationOccurrence
-from indico.modules.rb.models.reservations import Reservation
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.statistics import calculate_rooms_occupancy, compose_rooms_stats
-from indico.modules.rb.views.user.rooms import (WPRoomBookingMapOfRooms, WPRoomBookingMapOfRoomsWidget,
+from fossir.core.db import db
+from fossir.core.errors import fossirError
+from fossir.modules.rb.controllers import RHRoomBookingBase
+from fossir.modules.rb.controllers.decorators import requires_location, requires_room
+from fossir.modules.rb.forms.rooms import SearchRoomsForm
+from fossir.modules.rb.models.equipment import EquipmentType
+from fossir.modules.rb.models.locations import Location
+from fossir.modules.rb.models.reservation_occurrences import ReservationOccurrence
+from fossir.modules.rb.models.reservations import Reservation
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.statistics import calculate_rooms_occupancy, compose_rooms_stats
+from fossir.modules.rb.views.user.rooms import (WPRoomBookingMapOfRooms, WPRoomBookingMapOfRoomsWidget,
                                                 WPRoomBookingRoomDetails, WPRoomBookingRoomStats,
                                                 WPRoomBookingSearchRooms, WPRoomBookingSearchRoomsResults)
-from indico.web.forms.base import FormDefaults
+from fossir.web.forms.base import FormDefaults
 
 
 class RHRoomBookingMapOfRooms(RHRoomBookingBase):
@@ -148,21 +133,21 @@ class RHRoomBookingRoomStats(RHRoomBookingBase):
         else:
             match = re.match(r'(\d{4})(?:-(\d{2}))?', self._occupancy_period)
             if match is None:
-                raise IndicoError(u'Invalid period specified')
+                raise fossirError(u'Invalid period specified')
             year = int(match.group(1))
             month = int(match.group(2)) if match.group(2) else None
             if month:
                 try:
                     self._start = date(year, month, 1)
                 except ValueError:
-                    raise IndicoError(u'Invalid year or month specified')
+                    raise fossirError(u'Invalid year or month specified')
                 self._end = self._start + relativedelta(months=1)
                 self._occupancy_period = '{:d}-{:02d}'.format(year, month)
             else:
                 try:
                     self._start = date(year, 1, 1)
                 except ValueError:
-                    raise IndicoError(u'Invalid year specified')
+                    raise fossirError(u'Invalid year specified')
                 self._end = self._start + relativedelta(years=1)
                 self._occupancy_period = str(year)
 

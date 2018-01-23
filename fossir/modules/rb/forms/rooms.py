@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import itertools
 from operator import itemgetter
@@ -26,14 +12,14 @@ from wtforms.validators import DataRequired, NumberRange, Optional, ValidationEr
 from wtforms.widgets.core import HiddenInput
 from wtforms_components import TimeField
 
-from indico.modules.rb.models.equipment import EquipmentType
-from indico.modules.rb.models.locations import Location
-from indico.util.i18n import _
-from indico.util.struct.iterables import group_nested
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.fields import IndicoQuerySelectMultipleCheckboxField, PrincipalField
-from indico.web.forms.validators import UsedIf
-from indico.web.forms.widgets import ConcatWidget
+from fossir.modules.rb.models.equipment import EquipmentType
+from fossir.modules.rb.models.locations import Location
+from fossir.util.i18n import _
+from fossir.util.struct.iterables import group_nested
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.fields import fossirQuerySelectMultipleCheckboxField, PrincipalField
+from fossir.web.forms.validators import UsedIf
+from fossir.web.forms.widgets import ConcatWidget
 
 
 def _get_equipment_label(eq):
@@ -50,14 +36,14 @@ def _group_equipment(objects):
     return group_nested(objects, itemgetter(1))
 
 
-class SearchRoomsForm(IndicoForm):
+class SearchRoomsForm(fossirForm):
     location = QuerySelectField(_(u'Location'), get_label=lambda x: x.name, query_factory=Location.find,
                                 allow_blank=True)
     details = StringField()
     available = RadioField(_(u'Availability'), coerce=int, default=-1, widget=ConcatWidget(prefix_label=False),
                            choices=[(1, _(u'Available')), (0, _(u'Booked')), (-1, _(u"Don't care"))])
     capacity = IntegerField(_(u'Capacity'), validators=[Optional(), NumberRange(min=0)])
-    available_equipment = IndicoQuerySelectMultipleCheckboxField(_(u'Equipment'), get_label=_get_equipment_label,
+    available_equipment = fossirQuerySelectMultipleCheckboxField(_(u'Equipment'), get_label=_get_equipment_label,
                                                                  modify_object_list=_group_equipment,
                                                                  query_factory=lambda: EquipmentType.find().order_by(
                                                                      EquipmentType.name))
@@ -99,7 +85,7 @@ class _DateTimePair(Form):
     validate_end = validate_start
 
 
-class RoomForm(IndicoForm):
+class RoomForm(fossirForm):
     name = StringField(_(u'Name'))
     site = StringField(_(u'Site'))
     building = StringField(_(u'Building'), [DataRequired()])
@@ -130,7 +116,7 @@ class RoomForm(IndicoForm):
     delete_photos = BooleanField(_(u'Delete photos'))
     large_photo = FileField(_(u'Large photo'))
     small_photo = FileField(_(u'Small photo'))
-    available_equipment = IndicoQuerySelectMultipleCheckboxField(_(u'Equipment'), get_label=_get_equipment_label,
+    available_equipment = fossirQuerySelectMultipleCheckboxField(_(u'Equipment'), get_label=_get_equipment_label,
                                                                  modify_object_list=_group_equipment)
     # attribute_* - set at runtime
     bookable_hours = FieldList(FormField(_TimePair), min_entries=1)

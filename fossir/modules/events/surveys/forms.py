@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,17 +10,17 @@ from wtforms.fields import BooleanField, HiddenField, SelectField, StringField, 
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, NumberRange, Optional
 
-from indico.core.db import db
-from indico.modules.events.surveys.models.surveys import Survey
-from indico.util.i18n import _
-from indico.util.placeholders import get_missing_placeholders, render_placeholder_info
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.fields import EmailListField, FileField, IndicoDateTimeField
-from indico.web.forms.validators import HiddenUnless, LinkedDateTime, UsedIf, ValidationError
-from indico.web.forms.widgets import CKEditorWidget, SwitchWidget
+from fossir.core.db import db
+from fossir.modules.events.surveys.models.surveys import Survey
+from fossir.util.i18n import _
+from fossir.util.placeholders import get_missing_placeholders, render_placeholder_info
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.fields import EmailListField, FileField, fossirDateTimeField
+from fossir.web.forms.validators import HiddenUnless, LinkedDateTime, UsedIf, ValidationError
+from fossir.web.forms.widgets import CKEditorWidget, SwitchWidget
 
 
-class SurveyForm(IndicoForm):
+class SurveyForm(fossirForm):
     _notification_fields = ('notifications_enabled', 'notify_participants', 'start_notification_emails',
                             'new_submission_emails')
 
@@ -68,7 +54,7 @@ class SurveyForm(IndicoForm):
 
     def __init__(self, *args, **kwargs):
         self.event = kwargs.pop('event')
-        super(IndicoForm, self).__init__(*args, **kwargs)
+        super(fossirForm, self).__init__(*args, **kwargs)
 
     def validate_title(self, field):
         query = (Survey.query.with_parent(self.event)
@@ -83,11 +69,11 @@ class SurveyForm(IndicoForm):
             self.require_user.data = True
 
 
-class ScheduleSurveyForm(IndicoForm):
-    start_dt = IndicoDateTimeField(_("Start"), [UsedIf(lambda form, field: form.allow_reschedule_start), Optional()],
+class ScheduleSurveyForm(fossirForm):
+    start_dt = fossirDateTimeField(_("Start"), [UsedIf(lambda form, field: form.allow_reschedule_start), Optional()],
                                    default_time=time(0, 0),
                                    description=_("Moment when the survey will open for submissions"))
-    end_dt = IndicoDateTimeField(_("End"), [Optional(), LinkedDateTime('start_dt')],
+    end_dt = fossirDateTimeField(_("End"), [Optional(), LinkedDateTime('start_dt')],
                                  default_time=time(23, 59),
                                  description=_("Moment when the survey will close"))
     resend_start_notification = BooleanField(_('Resend start notification'), widget=SwitchWidget(),
@@ -97,12 +83,12 @@ class ScheduleSurveyForm(IndicoForm):
         survey = kwargs.pop('survey')
         self.allow_reschedule_start = kwargs.pop('allow_reschedule_start')
         self.timezone = survey.event.timezone
-        super(IndicoForm, self).__init__(*args, **kwargs)
+        super(fossirForm, self).__init__(*args, **kwargs)
         if not survey.start_notification_sent or not self.allow_reschedule_start:
             del self.resend_start_notification
 
 
-class SectionForm(IndicoForm):
+class SectionForm(fossirForm):
     display_as_section = BooleanField(_("Display as section"), widget=SwitchWidget(), default=True,
                                       description=_("Whether this is going to be displayed as a section or standalone"))
     title = StringField(_('Title'), [HiddenUnless('display_as_section', preserve_data=True), DataRequired()],
@@ -111,18 +97,18 @@ class SectionForm(IndicoForm):
                                 description=_("The description text of the section."))
 
 
-class TextForm(IndicoForm):
+class TextForm(fossirForm):
     description = TextAreaField(_('Text'),
                                 description=_("The text that should be displayed."))
 
 
-class ImportQuestionnaireForm(IndicoForm):
+class ImportQuestionnaireForm(fossirForm):
     json_file = FileField(_('File'), accepted_file_types="application/json,.json",
                           description=_("Choose a previously exported survey content to import. "
                                         "Existing sections will be preserved."))
 
 
-class InvitationForm(IndicoForm):
+class InvitationForm(fossirForm):
     from_address = SelectField(_('From'), [DataRequired()])
     subject = StringField(_('Subject'), [DataRequired()])
     body = TextAreaField(_('Email body'), [DataRequired()], widget=CKEditorWidget(simple=True))

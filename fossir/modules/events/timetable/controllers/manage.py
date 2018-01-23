@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -20,20 +6,20 @@ import dateutil.parser
 from flask import jsonify, request, session
 from werkzeug.exceptions import BadRequest
 
-from indico.core.db.sqlalchemy.colors import ColorTuple
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.contributions.operations import delete_contribution
-from indico.modules.events.sessions.operations import delete_session_block
-from indico.modules.events.timetable.controllers import (RHManageTimetableBase, RHManageTimetableEntryBase,
+from fossir.core.db.sqlalchemy.colors import ColorTuple
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.contributions.operations import delete_contribution
+from fossir.modules.events.sessions.operations import delete_session_block
+from fossir.modules.events.timetable.controllers import (RHManageTimetableBase, RHManageTimetableEntryBase,
                                                          SessionManagementLevel)
-from indico.modules.events.timetable.legacy import TimetableSerializer, serialize_event_info, serialize_session
-from indico.modules.events.timetable.models.entries import TimetableEntryType
-from indico.modules.events.timetable.operations import (create_timetable_entry, delete_timetable_entry,
+from fossir.modules.events.timetable.legacy import TimetableSerializer, serialize_event_info, serialize_session
+from fossir.modules.events.timetable.models.entries import TimetableEntryType
+from fossir.modules.events.timetable.operations import (create_timetable_entry, delete_timetable_entry,
                                                         update_timetable_entry)
-from indico.modules.events.timetable.util import render_entry_info_balloon
-from indico.modules.events.timetable.views import WPManageTimetable
-from indico.modules.events.util import track_time_changes
-from indico.web.forms.colors import get_colors
+from fossir.modules.events.timetable.util import render_entry_info_balloon
+from fossir.modules.events.timetable.views import WPManageTimetable
+from fossir.modules.events.util import track_time_changes
+from fossir.web.forms.colors import get_colors
 
 
 class RHManageTimetable(RHManageTimetableBase):

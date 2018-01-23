@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,16 +8,16 @@ from flask import session
 from pytz import utc
 from werkzeug.utils import cached_property
 
-from indico.core.db import db
-from indico.core.errors import UserValueError
-from indico.modules.events import EventLogRealm
-from indico.modules.events.logs.models.entries import EventLogKind
-from indico.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
-from indico.modules.events.timetable.operations import fit_session_block_entry
-from indico.util.date_time import format_date, format_human_timedelta
-from indico.util.i18n import _
-from indico.util.struct.enum import RichEnum
-from indico.util.struct.iterables import materialize_iterable, window
+from fossir.core.db import db
+from fossir.core.errors import UserValueError
+from fossir.modules.events import EventLogRealm
+from fossir.modules.events.logs.models.entries import EventLogKind
+from fossir.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
+from fossir.modules.events.timetable.operations import fit_session_block_entry
+from fossir.util.date_time import format_date, format_human_timedelta
+from fossir.util.i18n import _
+from fossir.util.struct.enum import RichEnum
+from fossir.util.struct.iterables import materialize_iterable, window
 
 
 class RescheduleMode(unicode, RichEnum):

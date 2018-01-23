@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,11 +9,11 @@ from itertools import chain
 from flask import has_request_context, session
 from sqlalchemy.orm import defaultload
 
-from indico.modules.events.contributions.models.persons import AuthorType
-from indico.modules.events.models.events import EventType
-from indico.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
-from indico.util.date_time import iterdays
-from indico.web.flask.util import url_for
+from fossir.modules.events.contributions.models.persons import AuthorType
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
+from fossir.util.date_time import iterdays
+from fossir.web.flask.util import url_for
 
 
 class TimetableSerializer(object):
@@ -152,7 +138,7 @@ class TimetableSerializer(object):
         return data
 
     def serialize_contribution_entry(self, entry):
-        from indico.modules.events.api import SerializerBase
+        from fossir.modules.events.api import SerializerBase
 
         block = entry.parent.session_block if entry.parent else None
         contribution = entry.contribution
@@ -240,7 +226,7 @@ class TimetableSerializer(object):
                 'endDate': self._get_entry_date_dt(entry.end_dt, tzinfo)}
 
     def _get_entry_data(self, entry):
-        from indico.modules.events.timetable.operations import can_swap_entry
+        from fossir.modules.events.timetable.operations import can_swap_entry
         data = {}
         data.update(self._get_date_data(entry))
         data['id'] = self._get_entry_key(entry)

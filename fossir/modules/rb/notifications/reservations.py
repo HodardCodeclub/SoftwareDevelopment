@@ -1,8 +1,8 @@
 from flask import render_template
 
-from indico.core.notifications import email_sender, make_email
-from indico.util.date_time import format_datetime
-from indico.util.string import to_unicode
+from fossir.core.notifications import email_sender, make_email
+from fossir.util.date_time import format_datetime
+from fossir.util.string import to_unicode
 
 
 class ReservationNotification(object):
@@ -20,7 +20,7 @@ class ReservationNotification(object):
         ).strip()
 
     def _make_body(self, mail_params, **body_params):
-        from indico.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
+        from fossir.modules.rb.models.reservations import RepeatFrequency, RepeatMapping
         template_params = dict(mail_params, **body_params)
         template_params['RepeatFrequency'] = RepeatFrequency
         template_params['RepeatMapping'] = RepeatMapping
@@ -43,7 +43,7 @@ class ReservationNotification(object):
         return make_email(to_list=to_list, subject=subject, body=body)
 
     def compose_email_to_vc_support(self, **mail_params):
-        from indico.modules.rb import rb_settings
+        from fossir.modules.rb import rb_settings
 
         if self.reservation.is_accepted and self.reservation.uses_vc:
             to_list = rb_settings.get('vc_support_emails')
@@ -53,7 +53,7 @@ class ReservationNotification(object):
                 return make_email(to_list=to_list, subject=subject, body=body)
 
     def compose_email_to_assistance(self, **mail_params):
-        from indico.modules.rb import rb_settings
+        from fossir.modules.rb import rb_settings
 
         if self.reservation.room.notification_for_assistance:
             if self.reservation.needs_assistance or mail_params.get('assistance_cancelled'):

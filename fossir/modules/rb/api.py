@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from datetime import datetime
 
@@ -23,20 +9,20 @@ from sqlalchemy import Date, Time, or_
 from sqlalchemy.sql import cast
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.errors import IndicoError
-from indico.modules.auth import Identity
-from indico.modules.rb.models.locations import Location
-from indico.modules.rb.models.reservations import ConflictingOccurrences, RepeatFrequency, RepeatMapping, Reservation
-from indico.modules.rb.models.rooms import Room
-from indico.modules.rb.util import rb_check_user_access
-from indico.modules.users import User
-from indico.util.date_time import utc_to_server
-from indico.web.http_api import HTTPAPIHook
-from indico.web.http_api.metadata import ical
-from indico.web.http_api.responses import HTTPAPIError
-from indico.web.http_api.util import get_query_parameter
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.errors import fossirError
+from fossir.modules.auth import Identity
+from fossir.modules.rb.models.locations import Location
+from fossir.modules.rb.models.reservations import ConflictingOccurrences, RepeatFrequency, RepeatMapping, Reservation
+from fossir.modules.rb.models.rooms import Room
+from fossir.modules.rb.util import rb_check_user_access
+from fossir.modules.users import User
+from fossir.util.date_time import utc_to_server
+from fossir.web.http_api import HTTPAPIHook
+from fossir.web.http_api.metadata import ical
+from fossir.web.http_api.responses import HTTPAPIError
+from fossir.web.http_api.util import get_query_parameter
 
 
 class RoomBookingHookBase(HTTPAPIHook):
@@ -227,7 +213,7 @@ class BookRoomHook(HTTPAPIHook):
             reservation = Reservation.create_from_data(self._room, data, user)
         except ConflictingOccurrences:
             raise HTTPAPIError('Failed to create the booking due to conflicts with other bookings')
-        except IndicoError as e:
+        except fossirError as e:
             raise HTTPAPIError('Failed to create the booking: {}'.format(e))
         db.session.add(reservation)
         db.session.flush()
@@ -340,7 +326,7 @@ def _ical_serialize_reservation(cal, data, now):
     end_dt_utc = datetime.combine(data['startDT'].date(), data['endDT'].timetz()).astimezone(pytz.utc)
 
     event = icalendar.Event()
-    event.add('uid', 'indico-resv-%s@cern.ch' % data['id'])
+    event.add('uid', 'fossir-resv-%s@cern.ch' % data['id'])
     event.add('dtstamp', now)
     event.add('dtstart', start_dt_utc)
     event.add('dtend', end_dt_utc)

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -34,24 +20,24 @@ from flask import current_app
 from sqlalchemy import inspect
 from terminaltables import AsciiTable
 
-import indico
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.core.storage.backend import get_storage
-from indico.modules.events import Event, EventLogKind, EventLogRealm
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.contributions.models.principals import ContributionPrincipal
-from indico.modules.events.models.persons import EventPerson
-from indico.modules.events.models.principals import EventPrincipal
-from indico.modules.events.registration.models.registrations import Registration
-from indico.modules.events.sessions import Session
-from indico.modules.events.sessions.models.principals import SessionPrincipal
-from indico.modules.users import User
-from indico.modules.users.util import get_user_by_email
-from indico.util.console import cformat
-from indico.util.date_time import now_utc
-from indico.util.string import strict_unicode
+import fossir
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.core.storage.backend import get_storage
+from fossir.modules.events import Event, EventLogKind, EventLogRealm
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.contributions.models.principals import ContributionPrincipal
+from fossir.modules.events.models.persons import EventPerson
+from fossir.modules.events.models.principals import EventPrincipal
+from fossir.modules.events.registration.models.registrations import Registration
+from fossir.modules.events.sessions import Session
+from fossir.modules.events.sessions.models.principals import SessionPrincipal
+from fossir.modules.users import User
+from fossir.modules.users.util import get_user_by_email
+from fossir.util.console import cformat
+from fossir.util.date_time import now_utc
+from fossir.util.string import strict_unicode
 
 
 _notset = object()
@@ -165,7 +151,7 @@ class EventExporter(object):
     def serialize(self):
         metadata = {
             'timestamp': now_utc(),
-            'indico_version': indico.__version__,
+            'fossir_version': fossir.__version__,
             'objects': list(self._serialize_objects(Event.__table__, Event.id == self.event.id)),
             'users': self.users
         }
@@ -477,9 +463,9 @@ class EventImporter(object):
                 click.secho('Skipping missing users', fg='magenta')
 
     def deserialize(self):
-        if not self.force and self.data['indico_version'] != indico.__version__:
+        if not self.force and self.data['fossir_version'] != fossir.__version__:
             click.secho('Version mismatch: trying to import event exported with {} to version {}'
-                        .format(self.data['indico_version'], indico.__version__), fg='red')
+                        .format(self.data['fossir_version'], fossir.__version__), fg='red')
             return None
         self._load_users(self.data)
         for tablename, tabledata in self.data['objects']:
@@ -497,7 +483,7 @@ class EventImporter(object):
                     click.secho('  - {}.{} ({})'.format(table.fullname, col, pk_value), fg='yellow')
             raise Exception('Not all deferred idrefs have been consumed')
         event = Event.get(self.event_id)
-        event.log(EventLogRealm.event, EventLogKind.other, 'Event', 'Event imported from another Indico instance')
+        event.log(EventLogRealm.event, EventLogKind.other, 'Event', 'Event imported from another fossir instance')
         self._associate_users_by_email(event)
         db.session.flush()
         return event

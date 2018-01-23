@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
@@ -21,14 +6,14 @@ from warnings import warn
 from flask_multipass import MultipassException
 from werkzeug.utils import cached_property
 
-from indico.core.auth import multipass
-from indico.core.db import db
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.legacy.common.cache import GenericCache
-from indico.modules.auth import Identity
-from indico.modules.groups.models.groups import LocalGroup
-from indico.util.caching import memoize_request
-from indico.util.string import return_ascii
+from fossir.core.auth import multipass
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.legacy.common.cache import GenericCache
+from fossir.modules.auth import Identity
+from fossir.modules.groups.models.groups import LocalGroup
+from fossir.util.caching import memoize_request
+from fossir.util.string import return_ascii
 
 
 class GroupProxy(object):
@@ -51,7 +36,7 @@ class GroupProxy(object):
 
     def __new__(cls, name_or_id, provider=None, _group=None):
         """Creates the correct GroupProxy for the group type"""
-        if provider is None or provider == 'indico':
+        if provider is None or provider == 'fossir':
             obj = object.__new__(_LocalGroupProxy)
             obj.id = int(name_or_id)
         else:
@@ -131,7 +116,7 @@ class GroupProxy(object):
         :param providers: ``None`` to search in all providers and
                           local groups. May be a set specifying
                           providers to search in. For local groups, the
-                          ``'indico'`` provider name may be used.
+                          ``'fossir'`` provider name may be used.
         """
         name = name.strip()
         if not name:
@@ -141,7 +126,7 @@ class GroupProxy(object):
         else:
             criterion = db.func.lower(LocalGroup.name).contains(name.lower())
         result = set()
-        if providers is None or 'indico' in providers:
+        if providers is None or 'fossir' in providers:
             result |= {g.proxy for g in LocalGroup.find(criterion)}
         result |= {GroupProxy(g.name, g.provider.name, _group=g)
                    for g in multipass.search_groups(name, providers=providers, exact=exact)}
@@ -156,7 +141,7 @@ class _LocalGroupProxy(GroupProxy):
 
     @property
     def locator(self):
-        return {'provider': 'indico', 'group_id': self.id}
+        return {'provider': 'fossir', 'group_id': self.id}
 
     @property
     def name(self):
@@ -173,7 +158,7 @@ class _LocalGroupProxy(GroupProxy):
 
     @cached_property
     def as_legacy_group(self):
-        from indico.modules.groups.legacy import LocalGroupWrapper
+        from fossir.modules.groups.legacy import LocalGroupWrapper
         return LocalGroupWrapper(self.id)
 
     def has_member(self, user):
@@ -225,7 +210,7 @@ class _MultipassGroupProxy(GroupProxy):
 
     @cached_property
     def as_legacy_group(self):
-        from indico.modules.groups.legacy import LDAPGroupWrapper
+        from fossir.modules.groups.legacy import LDAPGroupWrapper
         return LDAPGroupWrapper(self.name)
 
     @property
@@ -250,7 +235,7 @@ class _MultipassGroupProxy(GroupProxy):
 
     @memoize_request
     def get_members(self):
-        from indico.modules.users.models.users import User
+        from fossir.modules.users.models.users import User
         if self.group is None:
             warn('Tried to get members for invalid group {}'.format(self))
             return set()

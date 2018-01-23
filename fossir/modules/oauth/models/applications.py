@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,12 +8,12 @@ from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.ext.declarative import declared_attr
 from werkzeug.urls import url_parse
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIntEnum
-from indico.modules.oauth import logger
-from indico.util.i18n import _
-from indico.util.string import return_ascii
-from indico.util.struct.enum import IndicoEnum
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIntEnum
+from fossir.modules.oauth import logger
+from fossir.util.i18n import _
+from fossir.util.string import return_ascii
+from fossir.util.struct.enum import fossirEnum
 
 
 SCOPES = {'read:user': _("User information (read only)"),
@@ -36,7 +22,7 @@ SCOPES = {'read:user': _("User information (read only)"),
           'registrants': _('Event registrants')}
 
 
-class SystemAppType(int, IndicoEnum):
+class SystemAppType(int, fossirEnum):
     none = 0
     checkin = 1
     flower = 2
@@ -57,7 +43,7 @@ class SystemAppType(int, IndicoEnum):
         flower: {'is_trusted': True,
                  'name': 'Flower',
                  'description': 'Flower allows monitoring Celery tasks. If flower is installed, this app is used to '
-                                'restrict access to Indico administrators.'}
+                                'restrict access to fossir administrators.'}
     }
 
     @property
@@ -70,7 +56,7 @@ class SystemAppType(int, IndicoEnum):
 
 
 class OAuthApplication(db.Model):
-    """OAuth applications registered in Indico"""
+    """OAuth applications registered in fossir"""
 
     __tablename__ = 'applications'
 

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import itertools
 from datetime import date, datetime, time, timedelta
@@ -20,19 +6,19 @@ from operator import itemgetter
 
 import pytest
 
-from indico.core.errors import IndicoError
-from indico.modules.rb import rb_settings
-from indico.modules.rb.models.blocked_rooms import BlockedRoom
-from indico.modules.rb.models.photos import Photo
-from indico.modules.rb.models.reservations import RepeatFrequency
-from indico.modules.rb.models.room_bookable_hours import BookableHours
-from indico.modules.rb.models.rooms import Room
-from indico.testing.util import bool_matrix
-from indico.util.date_time import get_day_end, get_day_start
-from indico.util.struct.iterables import powerset
+from fossir.core.errors import fossirError
+from fossir.modules.rb import rb_settings
+from fossir.modules.rb.models.blocked_rooms import BlockedRoom
+from fossir.modules.rb.models.photos import Photo
+from fossir.modules.rb.models.reservations import RepeatFrequency
+from fossir.modules.rb.models.room_bookable_hours import BookableHours
+from fossir.modules.rb.models.rooms import Room
+from fossir.testing.util import bool_matrix
+from fossir.util.date_time import get_day_end, get_day_start
+from fossir.util.struct.iterables import powerset
 
 
-pytest_plugins = 'indico.modules.rb.testing.fixtures'
+pytest_plugins = 'fossir.modules.rb.testing.fixtures'
 _notset = object()
 
 
@@ -719,7 +705,7 @@ def test_check_advance_days(create_user, dummy_room, is_admin, is_owner, max_adv
         assert dummy_room.check_advance_days(end_date, user)
     else:
         assert not dummy_room.check_advance_days(end_date, user, quiet=True)
-        with pytest.raises(IndicoError):
+        with pytest.raises(fossirError):
             dummy_room.check_advance_days(end_date, user)
 
 
@@ -742,7 +728,7 @@ def test_check_bookable_hours(db, dummy_room, create_user, is_admin, is_owner, f
         assert dummy_room.check_bookable_hours(booking_hours[0], booking_hours[1], user)
     else:
         assert not dummy_room.check_bookable_hours(booking_hours[0], booking_hours[1], user, quiet=True)
-        with pytest.raises(IndicoError):
+        with pytest.raises(fossirError):
             dummy_room.check_bookable_hours(booking_hours[0], booking_hours[1], user)
 
 

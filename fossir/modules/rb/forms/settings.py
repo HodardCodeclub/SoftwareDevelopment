@@ -1,27 +1,13 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from wtforms.fields.core import BooleanField, IntegerField, StringField
 from wtforms.validators import InputRequired, NumberRange
 
-from indico.util.i18n import _
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.fields import EmailListField, PrincipalListField
+from fossir.util.i18n import _
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.fields import EmailListField, PrincipalListField
 
 
 GOOGLE_API_KEY_DOCS = 'https://developers.google.com/maps/documentation/javascript/get-api-key'
@@ -29,7 +15,7 @@ GOOGLE_API_KEY_DESC = _('When using the "map of rooms" widget, you need to regis
                         '<a href="{link}">Google Maps API key</a>.').format(link=GOOGLE_API_KEY_DOCS)
 
 
-class SettingsForm(IndicoForm):
+class SettingsForm(fossirForm):
     admin_principals = PrincipalListField(_('Administrators'), groups=True)
     authorized_principals = PrincipalListField(_('Authorized users/groups'), groups=True)
     assistance_emails = EmailListField(_('Assistance email addresses (one per line)'))
