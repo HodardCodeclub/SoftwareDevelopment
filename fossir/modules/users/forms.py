@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,21 +10,21 @@ from wtforms.fields.html5 import EmailField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 
-from indico.core.config import config
-from indico.modules.auth.forms import LocalRegistrationForm, _check_existing_email
-from indico.modules.users import User
-from indico.modules.users.models.emails import UserEmail
-from indico.modules.users.models.users import NameFormat, UserTitle
-from indico.util.i18n import _, get_all_locales
-from indico.web.forms.base import IndicoForm, SyncedInputsMixin
-from indico.web.forms.fields import IndicoEnumSelectField, PrincipalField, PrincipalListField
-from indico.web.forms.util import inject_validators
-from indico.web.forms.validators import HiddenUnless, used_if_not_synced
-from indico.web.forms.widgets import SwitchWidget, SyncedInputWidget
+from fossir.core.config import config
+from fossir.modules.auth.forms import LocalRegistrationForm, _check_existing_email
+from fossir.modules.users import User
+from fossir.modules.users.models.emails import UserEmail
+from fossir.modules.users.models.users import NameFormat, UserTitle
+from fossir.util.i18n import _, get_all_locales
+from fossir.web.forms.base import fossirForm, SyncedInputsMixin
+from fossir.web.forms.fields import fossirEnumSelectField, PrincipalField, PrincipalListField
+from fossir.web.forms.util import inject_validators
+from fossir.web.forms.validators import HiddenUnless, used_if_not_synced
+from fossir.web.forms.widgets import SwitchWidget, SyncedInputWidget
 
 
-class UserDetailsForm(SyncedInputsMixin, IndicoForm):
-    title = IndicoEnumSelectField(_('Title'), enum=UserTitle)
+class UserDetailsForm(SyncedInputsMixin, fossirForm):
+    title = fossirEnumSelectField(_('Title'), enum=UserTitle)
     first_name = StringField(_('First name'), [used_if_not_synced, DataRequired()], widget=SyncedInputWidget())
     last_name = StringField(_('Family name'), [used_if_not_synced, DataRequired()], widget=SyncedInputWidget())
     affiliation = StringField(_('Affiliation'), widget=SyncedInputWidget())
@@ -46,7 +32,7 @@ class UserDetailsForm(SyncedInputsMixin, IndicoForm):
     phone = StringField(_('Phone number'), widget=SyncedInputWidget())
 
 
-class UserPreferencesForm(IndicoForm):
+class UserPreferencesForm(fossirForm):
     lang = SelectField(_('Language'))
     timezone = SelectField(_('Timezone'))
 
@@ -60,7 +46,7 @@ class UserPreferencesForm(IndicoForm):
         widget=SwitchWidget(),
         description=_('Show past events by default.'))
 
-    name_format = IndicoEnumSelectField(_('Name format'), enum=NameFormat,
+    name_format = fossirEnumSelectField(_('Name format'), enum=NameFormat,
                                         description=_('Default format in which names are displayed'))
 
     use_previewer_pdf = BooleanField(
@@ -76,7 +62,7 @@ class UserPreferencesForm(IndicoForm):
             self.timezone.choices.append((self.timezone.object_data, self.timezone.object_data))
 
 
-class UserEmailsForm(IndicoForm):
+class UserEmailsForm(fossirForm):
     email = EmailField(_('Add new email address'), [DataRequired()], filters=[lambda x: x.lower() if x else x])
 
     def validate_email(self, field):
@@ -84,7 +70,7 @@ class UserEmailsForm(IndicoForm):
             raise ValidationError(_('This email address is already in use.'))
 
 
-class SearchForm(IndicoForm):
+class SearchForm(fossirForm):
     last_name = StringField(_('Family name'))
     first_name = StringField(_('First name'))
     email = StringField(_('Email'), filters=[lambda x: x.lower() if x else x])
@@ -95,14 +81,14 @@ class SearchForm(IndicoForm):
     external = BooleanField(_('External'))
 
 
-class MergeForm(IndicoForm):
+class MergeForm(fossirForm):
     source_user = PrincipalField(_('Source user'), [DataRequired()],
                                  description=_('The user that will be merged into the target one'))
     target_user = PrincipalField(_('Target user'), [DataRequired()],
                                  description=_('The user that will remain active in the end'))
 
 
-class AdminUserSettingsForm(IndicoForm):
+class AdminUserSettingsForm(fossirForm):
     notify_account_creation = BooleanField(_('Registration notifications'), widget=SwitchWidget(),
                                            description=_('Send an email to all administrators whenever someone '
                                                          'registers a new local account.'))
@@ -125,5 +111,5 @@ class AdminAccountRegistrationForm(LocalRegistrationForm):
             del self.create_identity
 
 
-class AdminsForm(IndicoForm):
+class AdminsForm(fossirForm):
     admins = PrincipalListField(_('Admins'), [DataRequired()])

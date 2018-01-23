@@ -7,16 +7,16 @@ root:
   handlers: [other]
 
 loggers:
-  indico:
-    handlers: [indico, email]
+  fossir:
+    handlers: [fossir, email]
   celery:
     handlers: [celery, email, stderr]
 
 handlers:
-  indico:
+  fossir:
     class: logging.FileHandler
-    filename: indico.log
-    filters: [indico]
+    filename: fossir.log
+    filters: [fossir]
     formatter: default
   celery:
     class: logging.FileHandler
@@ -33,7 +33,7 @@ handlers:
     class: logging.StreamHandler
     formatter: default
   email:
-    class: indico.core.logger.FormattedSubjectSMTPHandler
+    class: fossir.core.logger.FormattedSubjectSMTPHandler
     formatter: email
     level: ERROR
 
@@ -47,10 +47,10 @@ formatters:
     format: "%(asctime)s  %(request_id)s  %(name)s - %(levelname)s %(filename)s:%(lineno)d -- %(message)s\n\n"
 
 filters:
-  indico:
-    name: indico
+  fossir:
+    name: fossir
   celery:
     name: celery
   other:
-    (): indico.core.logger.BlacklistFilter
-    names: [indico, celery]
+    (): fossir.core.logger.BlacklistFilter
+    names: [fossir, celery]

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import ast
 import re
@@ -31,8 +17,8 @@ from flask_pluginengine import current_plugin
 from speaklater import is_lazy_string, make_lazy_string
 from werkzeug.utils import cached_property
 
-from indico.util.caching import memoize_request
-from indico.util.string import trim_inner_whitespace
+from fossir.util.caching import memoize_request
+from fossir.util.string import trim_inner_whitespace
 
 
 LOCALE_ALIASES = dict(LOCALE_ALIASES, en='en_GB')
@@ -46,14 +32,14 @@ def get_translation_domain(plugin_name=_use_context):
     """Get the translation domain for the given plugin
 
     If `plugin_name` is omitted, the plugin will be taken from current_plugin.
-    If `plugin_name` is None, the core translation domain ('indico') will be used.
+    If `plugin_name` is None, the core translation domain ('fossir') will be used.
     """
     if plugin_name is None:
         return get_domain()
     else:
         plugin = None
         if has_app_context():
-            from indico.core.plugins import plugin_engine
+            from fossir.core.plugins import plugin_engine
             plugin = plugin_engine.get_plugin(plugin_name) if plugin_name is not _use_context else current_plugin
         if plugin:
             return plugin.translation_domain
@@ -62,7 +48,7 @@ def get_translation_domain(plugin_name=_use_context):
 
 
 def gettext_unicode(*args, **kwargs):
-    from indico.util.string import inject_unicode_debug
+    from fossir.util.string import inject_unicode_debug
     func_name = kwargs.pop('func_name', 'ugettext')
     plugin_name = kwargs.pop('plugin_name', None)
     force_unicode = kwargs.pop('force_unicode', False)
@@ -116,7 +102,7 @@ def smart_func(func_name, plugin_name=None, force_unicode=False):
     if plugin_name is _use_context:
         _wrap.__name__ = '<smart {}>'.format(func_name)
     else:
-        _wrap.__name__ = '<smart {} bound to {}>'.format(func_name, plugin_name or 'indico')
+        _wrap.__name__ = '<smart {} bound to {}>'.format(func_name, plugin_name or 'fossir')
     return _wrap
 
 
@@ -155,7 +141,7 @@ class NullDomain(Domain):
         return self.null
 
 
-class IndicoLocale(Locale):
+class fossirLocale(Locale):
     """
     Extends the Babel Locale class with some utility methods
     """
@@ -168,13 +154,13 @@ class IndicoLocale(Locale):
 
     @cached_property
     def time_formats(self):
-        formats = super(IndicoLocale, self).time_formats
+        formats = super(fossirLocale, self).time_formats
         for k, v in formats.items():
             v.format = v.format.replace(':%(ss)s', '')
         return formats
 
 
-class IndicoTranslations(Translations):
+class fossirTranslations(Translations):
     """
     Routes translations through the 'smart' translators defined above
     """
@@ -188,28 +174,28 @@ class IndicoTranslations(Translations):
               {}
         """).strip().format(*frame)
         msg = ('Using the gettext function (`_`) patched into the builtins is disallowed.\n'
-               'Please import it from `indico.util.i18n` instead.\n'
+               'Please import it from `fossir.util.i18n` instead.\n'
                'The offending code was found in this location:\n{}').format(frame_msg)
-        if 'indico/legacy/' in frame[0]:
+        if 'fossir/legacy/' in frame[0]:
             # legacy code gets off with a warning
             warnings.warn(msg, RuntimeWarning)
         else:
             raise RuntimeError(msg)
 
     def ugettext(self, message):
-        from indico.core.config import config
+        from fossir.core.config import config
         if config.DEBUG:
             self._check_stack()
         return gettext(message)
 
     def ungettext(self, msgid1, msgid2, n):
-        from indico.core.config import config
+        from fossir.core.config import config
         if config.DEBUG:
             self._check_stack()
         return ngettext(msgid1, msgid2, n)
 
 
-IndicoTranslations().install(unicode=True)
+fossirTranslations().install(unicode=True)
 
 
 @babel.localeselector
@@ -220,7 +206,7 @@ def set_best_lang(check_session=True):
     language, we will try to guess it from the browser settings and only
     after that fall back to the server's default.
     """
-    from indico.core.config import config
+    from fossir.core.config import config
 
     if not has_request_context():
         return 'en_GB' if current_app.config['TESTING'] else config.DEFAULT_LOCALE
@@ -250,7 +236,7 @@ def set_best_lang(check_session=True):
 
 @memoize_request
 def get_current_locale():
-    return IndicoLocale.parse(set_best_lang())
+    return fossirLocale.parse(set_best_lang())
 
 
 def get_all_locales():
@@ -286,7 +272,7 @@ def parse_locale(locale):
     """
     Get a Locale object from a locale id
     """
-    return IndicoLocale.parse(locale)
+    return fossirLocale.parse(locale)
 
 
 def extract_node(node, keywords, commentTags, options, parents=[None]):

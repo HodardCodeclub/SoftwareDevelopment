@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division, unicode_literals
 
@@ -21,13 +6,13 @@ from datetime import date, timedelta
 
 from sqlalchemy.orm import joinedload, load_only
 
-from indico.modules.events import Event
-from indico.modules.events.abstracts.util import get_events_with_abstract_persons
-from indico.modules.events.contributions.util import get_events_with_linked_contributions
-from indico.modules.events.registration.util import get_events_registered
-from indico.modules.events.surveys.util import get_events_with_submitted_surveys
-from indico.util.date_time import now_utc, utc_to_server
-from indico.util.struct.iterables import window
+from fossir.modules.events import Event
+from fossir.modules.events.abstracts.util import get_events_with_abstract_persons
+from fossir.modules.events.contributions.util import get_events_with_linked_contributions
+from fossir.modules.events.registration.util import get_events_registered
+from fossir.modules.events.surveys.util import get_events_with_submitted_surveys
+from fossir.util.date_time import now_utc, utc_to_server
+from fossir.util.struct.iterables import window
 
 
 def _get_blocks(events, attended):

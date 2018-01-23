@@ -1,35 +1,20 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
 from flask import render_template, session
 
-from indico.core import signals
-from indico.core.logger import Logger
-from indico.core.notifications import make_email, send_email
-from indico.core.settings import SettingsProxy
-from indico.core.settings.converters import EnumConverter
-from indico.modules.users.ext import ExtraUserPreferences
-from indico.modules.users.models.settings import UserSetting, UserSettingsProxy
-from indico.modules.users.models.users import NameFormat, User
-from indico.util.i18n import _
-from indico.web.flask.templating import get_template_module, template_hook
-from indico.web.flask.util import url_for
-from indico.web.menu import SideMenuItem, TopMenuItem
+from fossir.core import signals
+from fossir.core.logger import Logger
+from fossir.core.notifications import make_email, send_email
+from fossir.core.settings import SettingsProxy
+from fossir.core.settings.converters import EnumConverter
+from fossir.modules.users.ext import ExtraUserPreferences
+from fossir.modules.users.models.settings import UserSetting, UserSettingsProxy
+from fossir.modules.users.models.users import NameFormat, User
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_template_module, template_hook
+from fossir.web.flask.util import url_for
+from fossir.web.menu import SideMenuItem, TopMenuItem
 
 
 __all__ = ('ExtraUserPreferences', 'User', 'UserSetting', 'UserSettingsProxy', 'user_settings')
@@ -90,15 +75,15 @@ def _inject_login_as_header(**kwargs):
 
 @signals.users.registration_requested.connect
 def _registration_requested(req, **kwargs):
-    from indico.modules.users.util import get_admin_emails
+    from fossir.modules.users.util import get_admin_emails
     tpl = get_template_module('users/emails/profile_requested_admins.txt', req=req)
     send_email(make_email(get_admin_emails(), template=tpl))
 
 
 @signals.users.registered.connect
 def _registered(user, identity, from_moderation, **kwargs):
-    from indico.modules.users.util import get_admin_emails
-    if (from_moderation or identity is None or identity.provider != 'indico' or
+    from fossir.modules.users.util import get_admin_emails
+    if (from_moderation or identity is None or identity.provider != 'fossir' or
             not user_management_settings.get('notify_account_creation')):
         return
     tpl = get_template_module('users/emails/profile_registered_admins.txt', user=user)

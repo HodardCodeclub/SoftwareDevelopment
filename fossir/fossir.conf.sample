@@ -1,5 +1,5 @@
 #--------------------------
-# Indico configuration file
+# fossir configuration file
 #--------------------------
 #
 # This file is only read when the application is initialized.
@@ -12,7 +12,7 @@
 # SQLAlchemy DB
 #------------------------------------------------------------------------------
 
-SQLALCHEMY_DATABASE_URI = 'postgresql:///indico'
+SQLALCHEMY_DATABASE_URI = 'postgresql:///fossir'
 
 # Size of the connection pool (default = 5)
 # SQLALCHEMY_POOL_SIZE = 5
@@ -40,7 +40,7 @@ SECRET_KEY = ''
 # Development
 #------------------------------------------------------------------------------
 # Enable debug mode to get unminified assets, verbose error messages in the
-# browser and various other things that are useful when developing indico or
+# browser and various other things that are useful when developing fossir or
 # tracking down errors but should not be enabled for production systems.
 #DEBUG = False
 #
@@ -59,12 +59,12 @@ SECRET_KEY = ''
 #------------------------------------------------------------------------------
 # URLs
 #------------------------------------------------------------------------------
-# BaseURL is the url where Indico will be accessed.
+# BaseURL is the url where fossir will be accessed.
 # Except for development systems this should be a https URL and your web server
 # should be configured to redirect all HTTP requests to HTTPS.
-BASE_URL = 'https://indico.yourdomain.tld'
+BASE_URL = 'https://fossir.yourdomain.tld'
 
-# If you upgraded from an older Indico version (pre-2.0) and want to preserve
+# If you upgraded from an older fossir version (pre-2.0) and want to preserve
 # older URLs you should enable this option to avoid breaking links in search
 # engines and other websites.
 #ROUTE_OLD_URLS = False
@@ -73,10 +73,10 @@ BASE_URL = 'https://indico.yourdomain.tld'
 #------------------------------------------------------------------------------
 # DIRECTORIES
 #------------------------------------------------------------------------------
-LOG_DIR    = '/opt/indico/log'
-TEMP_DIR   = '/opt/indico/tmp'
-ASSETS_DIR = '/opt/indico/assets'
-CACHE_DIR  = '/opt/indico/cache'
+LOG_DIR    = '/opt/fossir/log'
+TEMP_DIR   = '/opt/fossir/tmp'
+ASSETS_DIR = '/opt/fossir/assets'
+CACHE_DIR  = '/opt/fossir/cache'
 # You can use 'redis', 'memcached' or 'files'. The files backend caches objects in
 # CacheDir while the Memcached backend uses one or more memcached servers.
 #CACHE_BACKEND         = 'files'
@@ -104,7 +104,7 @@ SMTP_USE_TLS = False
 SUPPORT_EMAIL = "root@localhost"
 
 
-# PublicSupportEmail is an email address that will be shown in Indico and where
+# PublicSupportEmail is an email address that will be shown in fossir and where
 # users are expected to find help when they have using the website.
 
 PUBLIC_SUPPORT_EMAIL = "root@localhost"
@@ -135,7 +135,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 #------------------------------------------------------------------------------
 # AUTOMATIC MAINTENANCE
 #------------------------------------------------------------------------------
-# Indico can automatically delete events older than a specified number of days.
+# fossir can automatically delete events older than a specified number of days.
 # This is set on a per-category basis:
 #
 # CATEGORY_CLEANUP = {
@@ -145,7 +145,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 #------------------------------------------------------------------------------
 # STATIC FILE DELIVERY
 #------------------------------------------------------------------------------
-# Indico supports the use of the X-Sendfile and X-Accel-Redirect headers:
+# fossir supports the use of the X-Sendfile and X-Accel-Redirect headers:
 #
 # http://blog.lighttpd.net/articles/2006/07/02/x-sendfile
 # http://wiki.nginx.org/X-accel
@@ -158,15 +158,15 @@ MAX_UPLOAD_FILE_SIZE = 0
 #
 # X-Accel-Redirect (nginx):
 # STATIC_FILE_METHOD = ('xaccelredirect', {
-#     '/opt/indico/archive': '/.xsf/archive',
-#     '/opt/indico/cache': '/.xsf/cache',
-#     '/opt/indico/htdocs': '/.xsf/htdocs'
+#     '/opt/fossir/archive': '/.xsf/archive',
+#     '/opt/fossir/cache': '/.xsf/cache',
+#     '/opt/fossir/htdocs': '/.xsf/htdocs'
 # })
 # Because of the way nginx works (using URLs instead of paths) you also need to map the .xsf urls to
 # the paths in your nginx config (for each entry in the dict above):
 # location /.xsf/archive/ {
 #     internal;
-#     alias /opt/indico/archive/;
+#     alias /opt/fossir/archive/;
 # }
 # DO NOT forget the "internal;" statement - it prevents users from accessing those URLs directly.
 
@@ -177,7 +177,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 # the lifetime to 0 the cookie will expire when the browser is closed.
 #SESSION_LIFETIME = 86400 * 31
 
-# If indico is behind a proxy, the user's IP needs to be retrieved from the
+# If fossir is behind a proxy, the user's IP needs to be retrieved from the
 # HTTP_X_FORWARDED_FOR header. To enable this behavior, set UseProxy to True.
 # Note that this MUST NOT be enabled if the machine is accessible directly or
 # users will be able to spoof their IP address!
@@ -225,8 +225,8 @@ MAX_UPLOAD_FILE_SIZE = 0
 # anything here. Having local identities enabled is sufficient:
 # LOCAL_IDENTITIES = True
 
-# If you do not want people to register Indico accounts on their own you can
-# disable that here.  Administrators can still create new indico accounts.
+# If you do not want people to register fossir accounts on their own you can
+# disable that here.  Administrators can still create new fossir accounts.
 # LOCAL_REGISTRATION = True
 
 # If you want to allow people to register themselves, but approve them before
@@ -237,9 +237,9 @@ MAX_UPLOAD_FILE_SIZE = 0
 # page can be configured here:
 # EXTERNAL_REGISTRATION_URL = ''
 
-# For advanced authentication and user information retrieval, Indico uses the
+# For advanced authentication and user information retrieval, fossir uses the
 # Flask-Multipass library, so you can use any registered multipass auth/identity
-# provider in Indico.  Using such providers requires additional configuration.
+# provider in fossir.  Using such providers requires additional configuration.
 # Please note that the name of an identity provider MUST NOT be changed once
 # it has been used, as it is referenced internally. Changing the title is fine
 # though.
@@ -255,7 +255,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 # - `default`
 #    This must be set to `True` for exactly one form-based authentication
 #    provide in case you have more than one form-based provider.  If omitted,
-#    the default login form will be for local indico accounts (if enabled).
+#    the default login form will be for local fossir accounts (if enabled).
 #
 # Identity providers:
 # - `default_group_provider`
@@ -270,7 +270,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 #   through an email verification step the first time they login/signup.
 # - `moderated`
 #   If set to True, account creation after logging in through this provider
-#   requires approval by an Indico administrator.  This results in the same
+#   requires approval by an fossir administrator.  This results in the same
 #   workflow as the `LocalModeration` setting for local identities.
 # - `synced_fields`
 #   This may be set in no more than one identity provider and enables user
@@ -278,7 +278,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 #   can be synchronized. The following attributes are supported:
 #   'first_name', 'last_name', 'affiliation', 'phone', 'address'
 #
-# Indico uses the following identity info keys from multipass, so you need
+# fossir uses the following identity info keys from multipass, so you need
 # to configure the mappings in your identity providers accordingly:
 # 'first_name', 'last_name', 'email', 'affiliation', 'phone', 'address'
 # All keys are optional, so if a provider does not contain data for a field,
@@ -310,9 +310,9 @@ MAX_UPLOAD_FILE_SIZE = 0
 # CELERY
 #------------------------------------------------------------------------------
 
-# Indico uses Celery to run time-consuming background tasks and periodic jobs.
+# fossir uses Celery to run time-consuming background tasks and periodic jobs.
 # You must configure a Celery "broker" which is used to  communicate between
-# Indico and the worker(s).
+# fossir and the worker(s).
 # We recommend Redis as it is very easy to set up. For details, see the Celery
 # documentation:
 # http://celery.readthedocs.org/en/latest/getting-started/brokers/redis.html
@@ -323,7 +323,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 #CELERY_RESULT_BACKEND = None
 #
 # By default, all periodic tasks are enabled and use a schedule that is
-# considered appropriate by the Indico developers.  You can override this
+# considered appropriate by the fossir developers.  You can override this
 # for specific tasks using the `ScheduledTaskOverride` dict.  The key is the
 # name of the task and the value can be one of the following:
 # - `None` or `False`: Disables the task completely
@@ -340,10 +340,10 @@ MAX_UPLOAD_FILE_SIZE = 0
 #CELERY_CONFIG = {}
 #
 # Your Celery workers can be monitored using Flower.  To use it, simply start it
-# using `indico celery flower`; by default it will listen on the same host as
+# using `fossir celery flower`; by default it will listen on the same host as
 # specified in BaseURL (non-SSL) on port 5555.  Authentication is done using
-# OAuth so only indico administrators can access flower.  You need to configure
-# the allowed auth callback URLs in the Indico administration area; otherwise
+# OAuth so only fossir administrators can access flower.  You need to configure
+# the allowed auth callback URLs in the fossir administration area; otherwise
 # authentication will fail with an OAuth error.
 # To get a link to Flower in the administration menu, set `FlowerURL` to the URL
 # under which your Flower instance is accessible:
@@ -354,7 +354,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 # Storage
 # ------------------------------------------------------------------------------
 
-# Indico needs to store various files such as event attachments somewhere. You
+# fossir needs to store various files such as event attachments somewhere. You
 # need to configure the storage backends here.  By default only a filesystem
 # based storage backend is available, but plugins could add additional backends.
 # You can define multiple backends, but once a backend has been used, you MUST
@@ -362,7 +362,7 @@ MAX_UPLOAD_FILE_SIZE = 0
 # To define a filesystem-based backend, use the string `fs:/base/path`.
 # Other backends may accept different options - see the documentation of these
 # backends for details.
-#STORAGE_BACKENDS = {'default': 'fs:/opt/indico/archive'}
+#STORAGE_BACKENDS = {'default': 'fs:/opt/fossir/archive'}
 #
 # You need to set the storage backend used for event attachments to backend that
 # has been defined in StorageBackends.  Note that this only affects new uploads.
@@ -380,13 +380,13 @@ MAX_UPLOAD_FILE_SIZE = 0
 
 # It is possible to override specific templates and add CSS and JavaScript
 # for advanced customizations.  When using this, be advised that depending on
-# the modifications you perform things may break after an Indico update.  Make
-# sure to test all your modifications whenever you update Indico!
+# the modifications you perform things may break after an fossir update.  Make
+# sure to test all your modifications whenever you update fossir!
 #
 # Set the base directory for customizations.
-#CUSTOMIZATION_DIR = '/opt/indico/custom'
+#CUSTOMIZATION_DIR = '/opt/fossir/custom'
 #
-# By enabling customization debugging indico will log all customizable
+# By enabling customization debugging fossir will log all customizable
 # templates the first time they are accessed.
 # The log message contains the path where you need to store the template. This
 # path is relative to `<CustomizationDir>/templates/`.
@@ -407,9 +407,9 @@ MAX_UPLOAD_FILE_SIZE = 0
 # referenced in templates through the `assets.custom` endpoint.
 #
 # If you have a custom logo, specify the URL to it here.  If unset, the default
-# indico logo is used.
+# fossir logo is used.
 #LOGO_URL = ''
 #
-# If you have your own custom Indico documentation site, you can use this
+# If you have your own custom fossir documentation site, you can use this
 # setting to override the "Help" link at the bottom of the page.
 #HELP_URL = ''

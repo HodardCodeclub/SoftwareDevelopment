@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,10 +7,10 @@ from io import BytesIO
 
 import pytest
 
-from indico.core import signals
-from indico.core.storage.backend import Storage
-from indico.modules.attachments.models.attachments import Attachment, AttachmentFile, AttachmentType
-from indico.modules.attachments.models.folders import AttachmentFolder
+from fossir.core import signals
+from fossir.core.storage.backend import Storage
+from fossir.modules.attachments.models.attachments import Attachment, AttachmentFile, AttachmentType
+from fossir.modules.attachments.models.folders import AttachmentFolder
 
 
 @signals.get_storage_backends.connect

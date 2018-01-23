@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from collections import OrderedDict
 from datetime import time as dt_time
@@ -29,9 +15,9 @@ from dateutil.relativedelta import relativedelta as _relativedelta
 from dateutil.rrule import DAILY, FR, MO, SA, SU, TH, TU, WE, rrule
 from flask import has_request_context, request, session
 
-from indico.core.config import config
-from indico.util.i18n import _, get_current_locale, ngettext, parse_locale
-from indico.util.string import inject_unicode_debug
+from fossir.core.config import config
+from fossir.util.i18n import _, get_current_locale, ngettext, parse_locale
+from fossir.util.string import inject_unicode_debug
 
 
 class relativedelta(_relativedelta):

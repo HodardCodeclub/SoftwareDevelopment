@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,15 +7,15 @@ import re
 from flask import render_template
 from flask_pluginengine import render_plugin_template
 
-from indico.core import signals
-from indico.modules.events.contributions import Contribution
-from indico.modules.events.sessions.models.blocks import SessionBlock
-from indico.modules.vc.forms import VCPluginSettingsFormBase
-from indico.modules.vc.models.vc_rooms import VCRoomLinkType
-from indico.util.decorators import classproperty
-from indico.util.string import remove_accents
-from indico.web.flask.templating import get_overridable_template_name
-from indico.web.forms.base import FormDefaults
+from fossir.core import signals
+from fossir.modules.events.contributions import Contribution
+from fossir.modules.events.sessions.models.blocks import SessionBlock
+from fossir.modules.vc.forms import VCPluginSettingsFormBase
+from fossir.modules.vc.models.vc_rooms import VCRoomLinkType
+from fossir.util.decorators import classproperty
+from fossir.util.string import remove_accents
+from fossir.web.flask.templating import get_overridable_template_name
+from fossir.web.forms.base import FormDefaults
 
 
 PREFIX_RE = re.compile('^vc_')
@@ -39,9 +25,9 @@ class VCPluginMixin(object):
     settings_form = VCPluginSettingsFormBase
     default_settings = {'notification_emails': []}
     acl_settings = {'acl', 'managers'}
-    #: the :class:`IndicoForm` to use for the videoconference room form
+    #: the :class:`fossirForm` to use for the videoconference room form
     vc_room_form = None
-    #: the :class:`IndicoForm` to use for the videoconference room attach form
+    #: the :class:`fossirForm` to use for the videoconference room attach form
     vc_room_attach_form = None
     #: the readable name of the VC plugin
     friendly_name = None
@@ -67,7 +53,7 @@ class VCPluginMixin(object):
     @classproperty
     @staticmethod
     def category():
-        from indico.core.plugins import PluginCategory
+        from fossir.core.plugins import PluginCategory
         return PluginCategory.videoconference
 
     def get_vc_room_form_defaults(self, event):
@@ -149,7 +135,7 @@ class VCPluginMixin(object):
         :param event: the event the videoconference room is for
         :param existing_vc_room: a vc_room from which to retrieve data for the form
         :param \*\*kwargs: extra data to pass to the form if an existing vc room is passed
-        :return: an instance of an :class:`IndicoForm` subclass
+        :return: an instance of an :class:`fossirForm` subclass
         """
         if existing_vc_room and existing_event_vc_room:
             kwargs = {

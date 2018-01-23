@@ -2,8 +2,8 @@
 """Extension to python-markdown to support LaTeX (rather than html) output.
 
 Authored by Rufus Pollock: <http://www.rufuspollock.org/>
-Reworked by Julian Wulfheide (ju.wulfheide@gmail.com) and
-Indico Project (indico-team@cern.ch)
+Reworked by Hodard Hazwinayo (hodardhazwinayo@gmail.com) and
+fossir Project (fossir-team@UR/CST/SoICT/IS department 2014-2018 promotion)
 
 Usage:
 ======
@@ -223,7 +223,7 @@ def latex_render_error(message):
     :returns: LaTeX code for error box
     """
     return textwrap.dedent(r"""
-       \begin{tcolorbox}[width=\textwidth,colback=red!5!white,colframe=red!75!black,title={Indico rendering error}]
+       \begin{tcolorbox}[width=\textwidth,colback=red!5!white,colframe=red!75!black,title={fossir rendering error}]
           \begin{verbatim}%s\end{verbatim}
        \end{tcolorbox}""" % message)
 
@@ -271,7 +271,7 @@ def latex_render_image(src, alt, strict=False):
                     extension = IMAGE_FORMAT_EXTENSIONS.get(image.format, '.png')
                 except IOError:
                     raise ImageURLException("Cannot read image data. Maybe not an image file?")
-            with NamedTemporaryFile(prefix='indico-latex-', suffix=extension, delete=False) as tempfile:
+            with NamedTemporaryFile(prefix='fossir-latex-', suffix=extension, delete=False) as tempfile:
                 tempfile.write(resp.content)
     except ImageURLException, e:
         if strict:

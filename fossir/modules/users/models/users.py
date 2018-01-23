@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -26,19 +12,19 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import object_session
 from werkzeug.utils import cached_property
 
-from indico.core.auth import multipass
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIntEnum
-from indico.core.db.sqlalchemy.custom.unaccent import define_unaccented_lowercase_index
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.core.db.sqlalchemy.util.models import get_default_values
-from indico.modules.users.models.affiliations import UserAffiliation
-from indico.modules.users.models.emails import UserEmail
-from indico.modules.users.models.favorites import favorite_category_table, favorite_user_table
-from indico.util.i18n import _
-from indico.util.locators import locator_property
-from indico.util.string import format_full_name, format_repr, return_ascii
-from indico.util.struct.enum import RichIntEnum
+from fossir.core.auth import multipass
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIntEnum
+from fossir.core.db.sqlalchemy.custom.unaccent import define_unaccented_lowercase_index
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.core.db.sqlalchemy.util.models import get_default_values
+from fossir.modules.users.models.affiliations import UserAffiliation
+from fossir.modules.users.models.emails import UserEmail
+from fossir.modules.users.models.favorites import favorite_category_table, favorite_user_table
+from fossir.util.i18n import _
+from fossir.util.locators import locator_property
+from fossir.util.string import format_full_name, format_repr, return_ascii
+from fossir.util.struct.enum import RichIntEnum
 
 
 class UserTitle(RichIntEnum):
@@ -155,7 +141,7 @@ def format_display_full_name(user, obj):
 
 
 class User(PersonMixin, db.Model):
-    """Indico users"""
+    """fossir users"""
 
     # Useful when dealing with both users and groups in the same code
     is_group = False
@@ -414,7 +400,7 @@ class User(PersonMixin, db.Model):
     @property
     def as_avatar(self):
         # TODO: remove this after DB is free of Avatars
-        from indico.modules.users.legacy import AvatarUserWrapper
+        from fossir.modules.users.legacy import AvatarUserWrapper
         avatar = AvatarUserWrapper(self.id)
 
         # avoid garbage collection
@@ -425,18 +411,18 @@ class User(PersonMixin, db.Model):
 
     @property
     def avatar_css(self):
-        from indico.modules.users.util import get_color_for_username
+        from fossir.modules.users.util import get_color_for_username
         return 'background-color: {};'.format(get_color_for_username(self.full_name))
 
     @property
     def external_identities(self):
         """The external identities of the user"""
-        return {x for x in self.identities if x.provider != 'indico'}
+        return {x for x in self.identities if x.provider != 'fossir'}
 
     @property
     def local_identities(self):
         """The local identities of the user"""
-        return {x for x in self.identities if x.provider == 'indico'}
+        return {x for x in self.identities if x.provider == 'fossir'}
 
     @property
     def local_identity(self):
@@ -456,7 +442,7 @@ class User(PersonMixin, db.Model):
     @cached_property
     def settings(self):
         """Returns the user settings proxy for this user"""
-        from indico.modules.users import user_settings
+        from fossir.modules.users import user_settings
         return user_settings.bind(self)
 
     @property
@@ -464,7 +450,7 @@ class User(PersonMixin, db.Model):
         """The fields of the user whose values are currently synced.
 
         This set is always a subset of the synced fields define in
-        synced fields of the idp in 'indico.conf'.
+        synced fields of the idp in 'fossir.conf'.
         """
         synced_fields = self.settings.get('synced_fields')
         # If synced_fields is missing or None, then all fields are synced

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,20 +7,20 @@ from operator import itemgetter
 
 from sqlalchemy.orm import contains_eager, joinedload, load_only, undefer
 
-from indico.core import signals
-from indico.core.auth import multipass
-from indico.core.db import db
-from indico.core.db.sqlalchemy.custom.unaccent import unaccent_match
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.modules.categories import Category
-from indico.modules.categories.models.principals import CategoryPrincipal
-from indico.modules.events import Event
-from indico.modules.users import User, logger
-from indico.modules.users.models.affiliations import UserAffiliation
-from indico.modules.users.models.emails import UserEmail
-from indico.modules.users.models.suggestions import SuggestedCategory
-from indico.util.event import truncate_path
-from indico.util.string import crc32
+from fossir.core import signals
+from fossir.core.auth import multipass
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.custom.unaccent import unaccent_match
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.modules.categories import Category
+from fossir.modules.categories.models.principals import CategoryPrincipal
+from fossir.modules.events import Event
+from fossir.modules.users import User, logger
+from fossir.modules.users.models.affiliations import UserAffiliation
+from fossir.modules.users.models.emails import UserEmail
+from fossir.modules.users.models.suggestions import SuggestedCategory
+from fossir.util.event import truncate_path
+from fossir.util.string import crc32
 
 
 # colors for user-specific avatar bubbles
@@ -44,7 +30,7 @@ user_colors = ['#e06055', '#ff8a65', '#e91e63', '#f06292', '#673ab7', '#ba68c8',
 
 
 def get_admin_emails():
-    """Get the email addresses of all Indico admins"""
+    """Get the email addresses of all fossir admins"""
     return {u.email for u in User.find(is_admin=True, is_deleted=False)}
 
 
@@ -109,14 +95,14 @@ def get_linked_events(user, dt, limit=None):
     :param dt: Only include events taking place on/after that date
     :param limit: Max number of events
     """
-    from indico.modules.events.abstracts.util import (get_events_with_abstract_reviewer_convener,
+    from fossir.modules.events.abstracts.util import (get_events_with_abstract_reviewer_convener,
                                                       get_events_with_abstract_persons)
-    from indico.modules.events.contributions.util import get_events_with_linked_contributions
-    from indico.modules.events.papers.util import get_events_with_paper_roles
-    from indico.modules.events.registration.util import get_events_registered
-    from indico.modules.events.sessions.util import get_events_with_linked_sessions
-    from indico.modules.events.surveys.util import get_events_with_submitted_surveys
-    from indico.modules.events.util import (get_events_managed_by, get_events_created_by,
+    from fossir.modules.events.contributions.util import get_events_with_linked_contributions
+    from fossir.modules.events.papers.util import get_events_with_paper_roles
+    from fossir.modules.events.registration.util import get_events_registered
+    from fossir.modules.events.sessions.util import get_events_with_linked_sessions
+    from fossir.modules.events.surveys.util import get_events_with_submitted_surveys
+    from fossir.modules.events.util import (get_events_managed_by, get_events_created_by,
                                             get_events_with_linked_event_persons)
 
     links = OrderedDict()
@@ -192,7 +178,7 @@ def search_users(exact=False, include_deleted=False, include_pending=False, exte
                      address
     :return: A set of matching users. If `external` was set, it may
              contain both :class:`~flask_multipass.IdentityInfo` objects
-             for external users not yet in Indico and :class:`.User`
+             for external users not yet in fossir and :class:`.User`
              objects for existing users.
     """
     unspecified = object()

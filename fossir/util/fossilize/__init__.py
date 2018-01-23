@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 """
 ``fossilize`` allows us to "serialize" complex python objects into dictionaries
@@ -314,7 +300,7 @@ class Fossilizable(object):
                         try:
                             methodResult = attr()
                         except:
-                            logging.getLogger('indico.fossilize').error("Problem fossilizing '%r' with '%s'",
+                            logging.getLogger('fossir.fossilize').error("Problem fossilizing '%r' with '%s'",
                                                                         obj, interfaceArg)
                             raise
                     else:
@@ -356,7 +342,7 @@ class Fossilizable(object):
                 try:
                     methodResult = convertFunction(methodResult, **converterArgs)
                 except:
-                    logging.getLogger('indico.fossilize').error("Problem fossilizing '%r' with '%s' (%s)",
+                    logging.getLogger('fossir.fossilize').error("Problem fossilizing '%r' with '%s' (%s)",
                                                                 obj, interfaceArg, methodName)
                     raise
 

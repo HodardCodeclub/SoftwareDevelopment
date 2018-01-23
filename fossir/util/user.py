@@ -1,24 +1,10 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from functools import wraps
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.principals import EmailPrincipal
-from indico.legacy.common.cache import GenericCache
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.principals import EmailPrincipal
+from fossir.legacy.common.cache import GenericCache
 
 
 def iter_acl(acl):
@@ -39,9 +25,9 @@ def iter_acl(acl):
 
 def principal_from_fossil(fossil, allow_pending=False, allow_groups=True, allow_missing_groups=False,
                           allow_emails=False, allow_networks=False, existing_data=None):
-    from indico.modules.networks.models.networks import IPNetworkGroup
-    from indico.modules.groups import GroupProxy
-    from indico.modules.users import User
+    from fossir.modules.networks.models.networks import IPNetworkGroup
+    from fossir.modules.groups import GroupProxy
+    from fossir.modules.users import User
 
     if existing_data is None:
         existing_data = set()
@@ -63,8 +49,8 @@ def principal_from_fossil(fossil, allow_pending=False, allow_groups=True, allow_
             # check if there is not already a (pending) user with that e-mail
             # we need to check for non-pending users too since the search may
             # show a user from external results even though the email belongs
-            # to an indico account in case some of the search criteria did not
-            # match the indico account
+            # to an fossir account in case some of the search criteria did not
+            # match the fossir account
             user = User.find_first(User.all_emails.contains(email), ~User.is_deleted)
             if not user:
                 user = User(first_name=data.get('first_name') or '', last_name=data.get('last_name') or '',
@@ -107,7 +93,7 @@ def unify_user_args(fn):
     :class:`AvatarUserWrapper` will be converted to a :class:`User`.
     """
     def _convert(arg):
-        from indico.modules.users.legacy import AvatarUserWrapper
+        from fossir.modules.users.legacy import AvatarUserWrapper
         return arg.user if isinstance(arg, AvatarUserWrapper) else arg
 
     @wraps(fn)

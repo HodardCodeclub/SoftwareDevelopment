@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,18 +9,18 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.event import listen
 from sqlalchemy.ext.hybrid import Comparator, hybrid_property
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy import PyIntEnum
-from indico.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
-from indico.core.logger import Logger
-from indico.modules.vc.notifications import notify_deleted
-from indico.util.caching import memoize_request
-from indico.util.date_time import now_utc
-from indico.util.string import return_ascii
-from indico.util.struct.enum import IndicoEnum
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy import PyIntEnum
+from fossir.core.db.sqlalchemy.custom.utcdatetime import UTCDateTime
+from fossir.core.logger import Logger
+from fossir.modules.vc.notifications import notify_deleted
+from fossir.util.caching import memoize_request
+from fossir.util.date_time import now_utc
+from fossir.util.string import return_ascii
+from fossir.util.struct.enum import fossirEnum
 
 
-class VCRoomLinkType(int, IndicoEnum):
+class VCRoomLinkType(int, fossirEnum):
     event = 1
     contribution = 2
     block = 3
@@ -58,7 +44,7 @@ def _make_checks():
         yield db.CheckConstraint(condition, 'valid_{}_link'.format(link_type.name))
 
 
-class VCRoomStatus(int, IndicoEnum):
+class VCRoomStatus(int, fossirEnum):
     created = 1
     deleted = 2
 
@@ -127,7 +113,7 @@ class VCRoom(db.Model):
 
     @property
     def plugin(self):
-        from indico.modules.vc.util import get_vc_plugins
+        from fossir.modules.vc.util import get_vc_plugins
         return get_vc_plugins().get(self.type)
 
     @property
@@ -310,7 +296,7 @@ class VCRoomEventAssociation(db.Model):
     def find_for_event(cls, event, include_hidden=False, include_deleted=False, only_linked_to_event=False, **kwargs):
         """Returns a Query that retrieves the videoconference rooms for an event
 
-        :param event: an indico Event
+        :param event: an fossir Event
         :param only_linked_to_event: only retrieve the vc rooms linked to the whole event
         :param kwargs: extra kwargs to pass to ``find()``
         """

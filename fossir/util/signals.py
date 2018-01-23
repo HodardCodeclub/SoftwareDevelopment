@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from itertools import izip_longest
 from types import GeneratorType
@@ -44,7 +30,7 @@ def values_from_signal(signal_response, single_value=False, skip_none=True, as_l
     """
     values = []
     for func, value in signal_response:
-        plugin = getattr(func, 'indico_plugin', None)
+        plugin = getattr(func, 'fossir_plugin', None)
         if not single_value and isinstance(value, multi_value_types):
             value_list = list(value)
             if value_list:

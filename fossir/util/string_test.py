@@ -1,25 +1,11 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from enum import Enum
 from itertools import count
 
 import pytest
 
-from indico.util.string import (camelize, camelize_keys, crc32, format_repr, make_unique_token, normalize_phone_number,
+from fossir.util.string import (camelize, camelize_keys, crc32, format_repr, make_unique_token, normalize_phone_number,
                                 render_markdown, sanitize_email, seems_html, slugify, snakify, snakify_keys, strip_tags,
                                 text_to_repr, to_unicode)
 
@@ -44,7 +30,7 @@ def test_to_unicode(input, output):
 
 
 def test_make_unique_token(monkeypatch):
-    monkeypatch.setattr('indico.util.string.uuid4', lambda _counter=count(): str(next(_counter)))
+    monkeypatch.setattr('fossir.util.string.uuid4', lambda _counter=count(): str(next(_counter)))
     tokens = {'1', '3'}
 
     def _get_token():
@@ -221,7 +207,7 @@ def test_sanitize_email(input, output):
     ("Escaping works just fine! $ *a* $", "<p>Escaping works just fine! $ *a* $</p>"),
     ('![Just a cat](http://myserver.example.com/cat.png)', '<p><img alt="Just a cat" '
      'src="http://myserver.example.com/cat.png"></p>'),
-    ("<https://getindico.io>", '<p><a href="https://getindico.io">https://getindico.io</a></p>')
+    ("<https://getfossir.io>", '<p><a href="https://getfossir.io">https://getfossir.io</a></p>')
 ))
 def test_markdown(input, output):
     assert render_markdown(input,  extensions=('tables',)) == output

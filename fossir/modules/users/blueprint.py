@@ -1,35 +1,21 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import request
 
-from indico.modules.users.api import fetch_authenticated_user
-from indico.modules.users.controllers import (RHAcceptRegistrationRequest, RHAdmins, RHPersonalData,
+from fossir.modules.users.api import fetch_authenticated_user
+from fossir.modules.users.controllers import (RHAcceptRegistrationRequest, RHAdmins, RHPersonalData,
                                               RHRegistrationRequestList, RHRejectRegistrationRequest, RHUserDashboard,
                                               RHUserEmails, RHUserEmailsDelete, RHUserEmailsSetPrimary,
                                               RHUserEmailsVerify, RHUserFavorites, RHUserFavoritesCategoryAPI,
                                               RHUserFavoritesUserRemove, RHUserFavoritesUsersAdd, RHUserPreferences,
                                               RHUsersAdmin, RHUsersAdminCreate, RHUsersAdminMerge,
                                               RHUsersAdminMergeCheck, RHUsersAdminSettings, RHUserSuggestionsRemove)
-from indico.web.flask.wrappers import IndicoBlueprint
+from fossir.web.flask.wrappers import fossirBlueprint
 
 
-_bp = IndicoBlueprint('users', __name__, template_folder='templates', virtual_template_folder='users',
+_bp = fossirBlueprint('users', __name__, template_folder='templates', virtual_template_folder='users',
                       url_prefix='/user')
 
 # Admins

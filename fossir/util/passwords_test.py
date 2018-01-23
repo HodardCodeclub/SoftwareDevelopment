@@ -1,24 +1,10 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from hashlib import md5 as _md5
 
 import pytest
 
-from indico.util.passwords import BCryptPassword, PasswordProperty
+from fossir.util.passwords import BCryptPassword, PasswordProperty
 
 
 def md5(s):
@@ -42,7 +28,7 @@ def mock_bcrypt(mocker):
         assert isinstance(salt, str), 'hashpw expects bytes'
         return md5(value)
 
-    bcrypt = mocker.patch('indico.util.passwords.bcrypt')
+    bcrypt = mocker.patch('fossir.util.passwords.bcrypt')
     bcrypt.gensalt.return_value = 'salt'
     bcrypt.hashpw.side_effect = _hashpw
     bcrypt.checkpw = lambda pwd, pwdhash: md5(pwd) == pwdhash

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -35,7 +21,7 @@ from email.utils import formataddr, formatdate, getaddresses, parseaddr
 from speaklater import is_lazy_string
 from werkzeug.urls import url_parse
 
-from indico.util.string import to_unicode
+from fossir.util.string import to_unicode
 
 
 def force_text(val):
@@ -72,7 +58,7 @@ class BadHeaderError(ValueError):
 
 
 # Copied from Python 3.2+ standard library, with the following modification:
-# * Uses hostname from indico's BASE_URL as the default domain
+# * Uses hostname from fossir's BASE_URL as the default domain
 def make_msgid(idstring=None, domain=None):
     """Returns a string suitable for RFC 2822 compliant Message-ID, e.g:
 
@@ -83,7 +69,7 @@ def make_msgid(idstring=None, domain=None):
     portion of the message id after the '@'.  It defaults to the locally
     defined hostname.
     """
-    from indico.core.config import config
+    from fossir.core.config import config
     timeval = int(time.time() * 100)
     pid = os.getpid()
     randint = random.getrandbits(64)
@@ -286,7 +272,7 @@ class EmailMessage(object):
         self.connection = connection
 
     def get_connection(self, fail_silently=False):
-        from indico.util.emails.backend import EmailBackend
+        from fossir.util.emails.backend import EmailBackend
         if not self.connection:
             return EmailBackend(fail_silently=fail_silently)
         return self.connection

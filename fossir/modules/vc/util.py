@@ -1,32 +1,17 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
 from sqlalchemy.orm import contains_eager
 
-from indico.core.plugins import plugin_engine
-from indico.modules.events import Event
-from indico.modules.events.sessions.models.blocks import SessionBlock
-from indico.util.i18n import _
+from fossir.core.plugins import plugin_engine
+from fossir.modules.events import Event
+from fossir.modules.events.sessions.models.blocks import SessionBlock
+from fossir.util.i18n import _
 
 
 def get_vc_plugins():
     """Returns a dict containing the available videoconference plugins."""
-    from indico.modules.vc import VCPluginMixin
+    from fossir.modules.vc import VCPluginMixin
     return {p.service_name: p for p in plugin_engine.get_active_plugins().itervalues() if isinstance(p, VCPluginMixin)}
 
 
@@ -56,7 +41,7 @@ def find_event_vc_rooms(from_dt=None, to_dt=None, distinct=False):
                      more than once (even if it's linked more than once to
                      that event)
     """
-    from indico.modules.vc.models.vc_rooms import VCRoomEventAssociation
+    from fossir.modules.vc.models.vc_rooms import VCRoomEventAssociation
     event_strategy = contains_eager('event')
     event_strategy.joinedload('own_room').noload('owner')
     event_strategy.joinedload('own_venue')

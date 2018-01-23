@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import os
 import re
@@ -26,23 +12,23 @@ import pytest
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
-from indico.core.db import db as db_
-from indico.core.db.sqlalchemy.util.management import create_all_tables, delete_all_tables
-from indico.util.process import silent_check_call
-from indico.web.flask.app import configure_db
+from fossir.core.db import db as db_
+from fossir.core.db.sqlalchemy.util.management import create_all_tables, delete_all_tables
+from fossir.util.process import silent_check_call
+from fossir.web.flask.app import configure_db
 
 
 @pytest.fixture(scope='session')
 def postgresql():
     """Provides a clean temporary PostgreSQL server/database.
 
-    If the environment variable `INDICO_TEST_DATABASE_URI` is set, this fixture
+    If the environment variable `fossir_TEST_DATABASE_URI` is set, this fixture
     will do nothing and simply return the connection string from that variable
     """
 
     # Use existing database
-    if 'INDICO_TEST_DATABASE_URI' in os.environ:
-        yield os.environ['INDICO_TEST_DATABASE_URI']
+    if 'fossir_TEST_DATABASE_URI' in os.environ:
+        yield os.environ['fossir_TEST_DATABASE_URI']
         return
 
     db_name = 'test'
@@ -57,7 +43,7 @@ def postgresql():
         pytest.skip('PostgreSQL version is too old: {}'.format(version_output))
 
     # Prepare server instance and a test database
-    temp_dir = tempfile.mkdtemp(prefix='indicotestpg.')
+    temp_dir = tempfile.mkdtemp(prefix='fossirtestpg.')
     postgres_args = '-h "" -k "{}"'.format(temp_dir)
     try:
         silent_check_call(['initdb', '--encoding', 'UTF8', temp_dir])
@@ -95,7 +81,7 @@ def database(app, postgresql):
     """
     app.config['SQLALCHEMY_DATABASE_URI'] = postgresql
     configure_db(app)
-    if 'INDICO_TEST_DATABASE_URI' in os.environ and os.environ.get('INDICO_TEST_DATABASE_HAS_TABLES') == '1':
+    if 'fossir_TEST_DATABASE_URI' in os.environ and os.environ.get('fossir_TEST_DATABASE_HAS_TABLES') == '1':
         yield db_
         return
     with app.app_context():

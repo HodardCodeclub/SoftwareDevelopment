@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 """
 String manipulation functions
@@ -298,7 +284,7 @@ def sanitize_for_platypus(text):
     return etree.tostring(doc)
 
 
-# TODO: reference implementation from indico.legacy
+# TODO: reference implementation from fossir.legacy
 # but, it's not totally correct according to RFC, see test cases
 # However, this regex is pretty good in term of practicality
 # but it may be updated to cover all cases
@@ -611,7 +597,7 @@ def inject_unicode_debug(s, level=1):
     # strange/broken behavior in certain form fields.
 
     try:
-        unicode_debug_level = int(os.environ.get('INDICO_UNICODE_DEBUG', '0'))
+        unicode_debug_level = int(os.environ.get('fossir_UNICODE_DEBUG', '0'))
     except ValueError:
         unicode_debug_level = 0
 
@@ -680,8 +666,8 @@ def handle_legacy_description(field, obj, get_render_mode=attrgetter('render_mod
        :param field: the WTForms field to be checked
        :param obj: the object whose render mode/description will be checked
     """
-    from indico.core.db.sqlalchemy.descriptions import RenderMode
-    from indico.util.i18n import _
+    from fossir.core.db.sqlalchemy.descriptions import RenderMode
+    from fossir.util.i18n import _
     if get_render_mode(obj) == RenderMode.html:
         field.warning = _(u"This text has been automatically converted from HTML to Markdown. "
                           u"Please double-check that it's properly displayed.")

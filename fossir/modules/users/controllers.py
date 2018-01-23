@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -27,35 +13,35 @@ from sqlalchemy.orm import joinedload, load_only, subqueryload, undefer
 from sqlalchemy.orm.exc import StaleDataError
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.queries import get_n_matching
-from indico.core.notifications import make_email, send_email
-from indico.legacy.common.cache import GenericCache
-from indico.modules.admin import RHAdminBase
-from indico.modules.auth import Identity
-from indico.modules.auth.models.registration_requests import RegistrationRequest
-from indico.modules.auth.util import register_user
-from indico.modules.categories import Category
-from indico.modules.events import Event
-from indico.modules.users import User, logger, user_management_settings
-from indico.modules.users.forms import (AdminAccountRegistrationForm, AdminsForm, AdminUserSettingsForm, MergeForm,
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.queries import get_n_matching
+from fossir.core.notifications import make_email, send_email
+from fossir.legacy.common.cache import GenericCache
+from fossir.modules.admin import RHAdminBase
+from fossir.modules.auth import Identity
+from fossir.modules.auth.models.registration_requests import RegistrationRequest
+from fossir.modules.auth.util import register_user
+from fossir.modules.categories import Category
+from fossir.modules.events import Event
+from fossir.modules.users import User, logger, user_management_settings
+from fossir.modules.users.forms import (AdminAccountRegistrationForm, AdminsForm, AdminUserSettingsForm, MergeForm,
                                         SearchForm, UserDetailsForm, UserEmailsForm, UserPreferencesForm)
-from indico.modules.users.models.emails import UserEmail
-from indico.modules.users.operations import create_user
-from indico.modules.users.util import (get_linked_events, get_related_categories, get_suggested_categories, merge_users,
+from fossir.modules.users.models.emails import UserEmail
+from fossir.modules.users.operations import create_user
+from fossir.modules.users.util import (get_linked_events, get_related_categories, get_suggested_categories, merge_users,
                                        search_users, serialize_user)
-from indico.modules.users.views import WPUser, WPUsersAdmin
-from indico.util.date_time import now_utc, timedelta_split
-from indico.util.event import truncate_path
-from indico.util.i18n import _
-from indico.util.signals import values_from_signal
-from indico.util.string import make_unique_token
-from indico.web.flask.templating import get_template_module
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.rh import RHProtected
-from indico.web.util import jsonify_data, jsonify_form, jsonify_template
+from fossir.modules.users.views import WPUser, WPUsersAdmin
+from fossir.util.date_time import now_utc, timedelta_split
+from fossir.util.event import truncate_path
+from fossir.util.i18n import _
+from fossir.util.signals import values_from_signal
+from fossir.util.string import make_unique_token
+from fossir.web.flask.templating import get_template_module
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.rh import RHProtected
+from fossir.web.util import jsonify_data, jsonify_form, jsonify_template
 
 
 IDENTITY_ATTRIBUTES = {'first_name', 'last_name', 'email', 'affiliation', 'full_name'}
@@ -270,7 +256,7 @@ class RHUserEmailsVerify(RHUserBase):
             return False, None
         user = User.get(data['user_id'])
         if not user or user != self.user:
-            flash(_('This token is for a different Indico user. Please login with the correct account'), 'error')
+            flash(_('This token is for a different fossir user. Please login with the correct account'), 'error')
             return False, None
         existing = UserEmail.find_first(is_user_deleted=False, email=data['email'])
         if existing and not existing.user.is_pending:
@@ -324,7 +310,7 @@ class RHUserEmailsSetPrimary(RHUserBase):
 
 
 class RHAdmins(RHAdminBase):
-    """Show Indico administrators"""
+    """Show fossir administrators"""
 
     def _process(self):
         admins = set(User.query
@@ -408,7 +394,7 @@ class RHUsersAdminCreate(RHAdminBase):
         if form.validate_on_submit():
             data = form.data
             if data.pop('create_identity', False):
-                identity = Identity(provider='indico', identifier=data.pop('username'), password=data.pop('password'))
+                identity = Identity(provider='fossir', identifier=data.pop('username'), password=data.pop('password'))
             else:
                 identity = None
                 data.pop('username', None)
@@ -433,9 +419,9 @@ def _get_merge_problems(source, target):
             source.last_name.strip().lower() != target.last_name.strip().lower()):
         warnings.append(_("Users' names seem to be different!"))
     if source.is_pending:
-        warnings.append(_("Source user has never logged in to Indico!"))
+        warnings.append(_("Source user has never logged in to fossir!"))
     if target.is_pending:
-        warnings.append(_("Target user has never logged in to Indico!"))
+        warnings.append(_("Target user has never logged in to fossir!"))
     if source.is_deleted:
         errors.append(_("Source user has been deleted!"))
     if target.is_deleted:

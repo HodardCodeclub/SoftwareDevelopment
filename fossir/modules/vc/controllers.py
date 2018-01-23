@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,23 +10,23 @@ from sqlalchemy import func, inspect
 from sqlalchemy.orm import joinedload, lazyload
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from indico.core.db import db
-from indico.core.logger import Logger
-from indico.modules.events.controllers.base import RHDisplayEventBase
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.vc.exceptions import VCRoomError, VCRoomNotFoundError
-from indico.modules.vc.forms import VCRoomListFilterForm
-from indico.modules.vc.models.vc_rooms import VCRoom, VCRoomEventAssociation, VCRoomLinkType, VCRoomStatus
-from indico.modules.vc.notifications import notify_created
-from indico.modules.vc.util import find_event_vc_rooms, get_managed_vc_plugins, get_vc_plugins, resolve_title
-from indico.modules.vc.views import WPVCEventPage, WPVCManageEvent, WPVCService
-from indico.util.date_time import as_utc, get_day_end, get_day_start, now_utc
-from indico.util.i18n import _
-from indico.util.struct.iterables import group_list
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.rh import RHProtected
-from indico.web.util import _pop_injected_js, jsonify_data, jsonify_template
+from fossir.core.db import db
+from fossir.core.logger import Logger
+from fossir.modules.events.controllers.base import RHDisplayEventBase
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.vc.exceptions import VCRoomError, VCRoomNotFoundError
+from fossir.modules.vc.forms import VCRoomListFilterForm
+from fossir.modules.vc.models.vc_rooms import VCRoom, VCRoomEventAssociation, VCRoomLinkType, VCRoomStatus
+from fossir.modules.vc.notifications import notify_created
+from fossir.modules.vc.util import find_event_vc_rooms, get_managed_vc_plugins, get_vc_plugins, resolve_title
+from fossir.modules.vc.views import WPVCEventPage, WPVCManageEvent, WPVCService
+from fossir.util.date_time import as_utc, get_day_end, get_day_start, now_utc
+from fossir.util.i18n import _
+from fossir.util.struct.iterables import group_list
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.rh import RHProtected
+from fossir.web.util import _pop_injected_js, jsonify_data, jsonify_template
 
 
 def process_vc_room_association(plugin, event, vc_room, form, event_vc_room=None, allow_same_room=False):

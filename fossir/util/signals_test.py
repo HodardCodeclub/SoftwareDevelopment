@@ -1,23 +1,9 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import pytest
 from mock import MagicMock
 
-from indico.util.signals import named_objects_from_signal, values_from_signal
+from fossir.util.signals import named_objects_from_signal, values_from_signal
 
 
 def _make_signal_response(objects):
@@ -71,7 +57,7 @@ def test_values_from_signal_multi_value_types():
 
 def test_values_from_signal_return_plugins():
     vals = ('a', 'b', 'c')
-    signal_response = _make_signal_response(vals) + [(MagicMock(indico_plugin='foo'), 'd')]
+    signal_response = _make_signal_response(vals) + [(MagicMock(fossir_plugin='foo'), 'd')]
     assert values_from_signal(signal_response, return_plugins=True) == set(zip([None] * 3, vals) + [('foo', 'd')])
     assert values_from_signal(signal_response) == set(vals + ('d',))
 
@@ -86,7 +72,7 @@ def test_named_objects_from_signal(name_attr):
 def test_named_objects_from_signal_plugin_attr():
     objects = [type('Dummy', (object,), {'name': name}) for name in ('a', 'b')]
     signal_response = _make_signal_response(objects)
-    signal_response[-1] = (MagicMock(indico_plugin='foo'), signal_response[-1][1])
+    signal_response[-1] = (MagicMock(fossir_plugin='foo'), signal_response[-1][1])
     rv = named_objects_from_signal(signal_response, plugin_attr='plugin')
     assert rv == {'a': objects[0], 'b': objects[1]}
     assert rv['a'].plugin is None

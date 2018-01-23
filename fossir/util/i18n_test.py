@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import os
 
@@ -25,8 +11,8 @@ from flask_babelex import get_domain
 from speaklater import _LazyString
 from werkzeug.http import LanguageAccept
 
-from indico.core.plugins import IndicoPlugin, plugin_engine
-from indico.util.i18n import _, babel, gettext_context, make_bound_gettext, ngettext, session_language, ungettext
+from fossir.core.plugins import fossirPlugin, plugin_engine
+from fossir.util.i18n import _, babel, gettext_context, make_bound_gettext, ngettext, session_language, ungettext
 
 
 DICTIONARIES = {
@@ -58,7 +44,7 @@ class MockTranslations(Translations):
         self._catalog = DICTIONARIES[babel.locale_selector_func()]
 
 
-class MockPlugin(IndicoPlugin):
+class MockPlugin(fossirPlugin):
     def init(self):
         pass
 
@@ -68,7 +54,7 @@ def mock_translations(monkeypatch, request_context):
     domain = get_domain()
     locales = {'fr_FR': 'French',
                'en_GB': 'English'}
-    monkeypatch.setattr('indico.util.i18n.get_all_locales', lambda: locales)
+    monkeypatch.setattr('fossir.util.i18n.get_all_locales', lambda: locales)
     monkeypatch.setattr(domain, 'get_translations', MockTranslations)
 
 
@@ -85,10 +71,10 @@ def test_straight_translation():
 
 @pytest.mark.usefixtures('mock_translations')
 def test_lazy_translation(monkeypatch):
-    monkeypatch.setattr('indico.util.i18n.has_request_context', lambda: False)
+    monkeypatch.setattr('fossir.util.i18n.has_request_context', lambda: False)
     a = _(u'Fetch the cow')
     b = _(u'The wheels')
-    monkeypatch.setattr('indico.util.i18n.has_request_context', lambda: True)
+    monkeypatch.setattr('fossir.util.i18n.has_request_context', lambda: True)
 
     assert isinstance(a, _LazyString)
     assert isinstance(b, _LazyString)

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,7 +7,7 @@ import socket
 import ssl
 import threading
 
-from indico.util.emails.message import sanitize_address
+from fossir.util.emails.message import sanitize_address
 
 
 # The following code is taken almost verbatim from `django.core.mail`,
@@ -97,7 +83,7 @@ class EmailBackend(BaseEmailBackend):
                  use_tls=None, fail_silently=False, use_ssl=False, timeout=None,
                  ssl_keyfile=None, ssl_certfile=None,
                  **kwargs):
-        from indico.core.config import config
+        from fossir.core.config import config
         super(EmailBackend, self).__init__(fail_silently=fail_silently)
         self.host = host or config.SMTP_SERVER[0]
         self.port = port or config.SMTP_SERVER[1]

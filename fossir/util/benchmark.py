@@ -1,7 +1,7 @@
 import time
 from math import isinf
 
-from indico.util.console import cformat
+from fossir.util.console import cformat
 
 
 class Benchmark(object):
