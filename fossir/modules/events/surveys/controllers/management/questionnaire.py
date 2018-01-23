@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,21 +10,21 @@ from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import NotFound
 
-from indico.core.db import db
-from indico.modules.events.surveys import logger
-from indico.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
-from indico.modules.events.surveys.fields import get_field_types
-from indico.modules.events.surveys.forms import ImportQuestionnaireForm, SectionForm, TextForm
-from indico.modules.events.surveys.models.items import (SurveyItem, SurveyItemType, SurveyQuestion, SurveySection,
+from fossir.core.db import db
+from fossir.modules.events.surveys import logger
+from fossir.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
+from fossir.modules.events.surveys.fields import get_field_types
+from fossir.modules.events.surveys.forms import ImportQuestionnaireForm, SectionForm, TextForm
+from fossir.modules.events.surveys.models.items import (SurveyItem, SurveyItemType, SurveyQuestion, SurveySection,
                                                         SurveyText)
-from indico.modules.events.surveys.models.surveys import Survey
-from indico.modules.events.surveys.operations import add_survey_question, add_survey_section, add_survey_text
-from indico.modules.events.surveys.util import make_survey_form
-from indico.modules.events.surveys.views import WPManageSurvey
-from indico.util.i18n import _
-from indico.web.flask.templating import get_template_module
-from indico.web.forms.base import FormDefaults
-from indico.web.util import jsonify_data, jsonify_form, jsonify_template
+from fossir.modules.events.surveys.models.surveys import Survey
+from fossir.modules.events.surveys.operations import add_survey_question, add_survey_section, add_survey_text
+from fossir.modules.events.surveys.util import make_survey_form
+from fossir.modules.events.surveys.views import WPManageSurvey
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_template_module
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_form, jsonify_template
 
 
 class RHManageSurveyQuestionnaire(RHManageSurveyBase):

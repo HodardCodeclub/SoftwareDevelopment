@@ -1,36 +1,22 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, render_template, session
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.logger import Logger
-from indico.core.roles import ManagementRole
-from indico.modules.events import Event
-from indico.modules.events.features.base import EventFeature
-from indico.modules.events.layout.util import MenuEntryData
-from indico.modules.events.models.events import EventType
-from indico.modules.events.registration.settings import RegistrationSettingsProxy
-from indico.util.i18n import _, ngettext
-from indico.web.flask.templating import template_hook
-from indico.web.flask.util import url_for
-from indico.web.menu import SideMenuItem
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.logger import Logger
+from fossir.core.roles import ManagementRole
+from fossir.modules.events import Event
+from fossir.modules.events.features.base import EventFeature
+from fossir.modules.events.layout.util import MenuEntryData
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.registration.settings import RegistrationSettingsProxy
+from fossir.util.i18n import _, ngettext
+from fossir.web.flask.templating import template_hook
+from fossir.web.flask.util import url_for
+from fossir.web.menu import SideMenuItem
 
 
 logger = Logger.get('events.registration')
@@ -62,7 +48,7 @@ def _extend_event_management_menu(sender, event, **kwargs):
 
 @template_hook('conference-home-info')
 def _inject_regform_announcement(event, **kwargs):
-    from indico.modules.events.registration.util import get_registrations_with_tickets, get_event_regforms
+    from fossir.modules.events.registration.util import get_registrations_with_tickets, get_event_regforms
     if event.has_feature('registration'):
         all_regforms = get_event_regforms(event, session.user)
         user_registrations = sum(regform[1] for regform in all_regforms)
@@ -76,7 +62,7 @@ def _inject_regform_announcement(event, **kwargs):
 
 @template_hook('event-header')
 def _inject_event_header(event, **kwargs):
-    from indico.modules.events.registration.util import get_event_regforms
+    from fossir.modules.events.registration.util import get_event_regforms
     if event.has_feature('registration'):
         all_regforms = get_event_regforms(event, session.user, with_registrations=True)
         open_and_registered_regforms = [regform for regform, registration in all_regforms
@@ -90,8 +76,8 @@ def _inject_event_header(event, **kwargs):
 
 @signals.event.sidemenu.connect
 def _extend_event_menu(sender, **kwargs):
-    from indico.modules.events.registration.models.forms import RegistrationForm
-    from indico.modules.events.registration.models.registrations import Registration
+    from fossir.modules.events.registration.models.forms import RegistrationForm
+    from fossir.modules.events.registration.models.registrations import Registration
 
     def _visible_registration(event):
         if not event.has_feature('registration'):
@@ -118,7 +104,7 @@ def _extend_event_menu(sender, **kwargs):
 @signals.users.registered.connect
 @signals.users.email_added.connect
 def _associate_registrations(user, **kwargs):
-    from indico.modules.events.registration.models.registrations import Registration
+    from fossir.modules.events.registration.models.registrations import Registration
     reg_alias = db.aliased(Registration)
     subquery = db.session.query(reg_alias).filter(reg_alias.user_id == user.id,
                                                   reg_alias.registration_form_id == Registration.registration_form_id,
@@ -153,7 +139,7 @@ def _get_event_management_url(event, **kwargs):
 
 @signals.get_placeholders.connect_via('registration-invitation-email')
 def _get_invitation_placeholders(sender, invitation, **kwargs):
-    from indico.modules.events.registration.placeholders.invitations import (FirstNamePlaceholder, LastNamePlaceholder,
+    from fossir.modules.events.registration.placeholders.invitations import (FirstNamePlaceholder, LastNamePlaceholder,
                                                                              InvitationLinkPlaceholder)
     yield FirstNamePlaceholder
     yield LastNamePlaceholder
@@ -162,7 +148,7 @@ def _get_invitation_placeholders(sender, invitation, **kwargs):
 
 @signals.get_placeholders.connect_via('registration-email')
 def _get_registration_placeholders(sender, regform, registration, **kwargs):
-    from indico.modules.events.registration.placeholders.registrations import (IDPlaceholder, LastNamePlaceholder,
+    from fossir.modules.events.registration.placeholders.registrations import (IDPlaceholder, LastNamePlaceholder,
                                                                                FirstNamePlaceholder, LinkPlaceholder,
                                                                                EventTitlePlaceholder,
                                                                                EventLinkPlaceholder, FieldPlaceholder)
@@ -187,7 +173,7 @@ def _get_management_roles(sender, **kwargs):
 
 @signals.event_management.get_cloners.connect
 def _get_registration_cloners(sender, **kwargs):
-    from indico.modules.events.registration.clone import RegistrationFormCloner, RegistrationCloner
+    from fossir.modules.events.registration.clone import RegistrationFormCloner, RegistrationCloner
     yield RegistrationFormCloner
     yield RegistrationCloner
 

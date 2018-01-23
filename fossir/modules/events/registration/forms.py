@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -27,22 +13,22 @@ from wtforms.fields.html5 import DecimalField, EmailField
 from wtforms.validators import DataRequired, InputRequired, NumberRange, Optional, ValidationError
 from wtforms.widgets.html5 import NumberInput
 
-from indico.core.config import config
-from indico.modules.designer import PageLayout, PageOrientation, PageSize, TemplateType
-from indico.modules.designer.util import get_default_template_on_category, get_inherited_templates
-from indico.modules.events.features.util import is_feature_enabled
-from indico.modules.events.payment import payment_settings
-from indico.modules.events.registration.models.forms import ModificationMode
-from indico.modules.events.registration.models.invitations import RegistrationInvitation
-from indico.modules.events.registration.models.registrations import Registration
-from indico.util.i18n import _
-from indico.util.placeholders import get_missing_placeholders, render_placeholder_info
-from indico.web.forms.base import IndicoForm, generated_data
-from indico.web.forms.fields import (EmailListField, IndicoDateTimeField, IndicoEnumSelectField, JSONField,
+from fossir.core.config import config
+from fossir.modules.designer import PageLayout, PageOrientation, PageSize, TemplateType
+from fossir.modules.designer.util import get_default_template_on_category, get_inherited_templates
+from fossir.modules.events.features.util import is_feature_enabled
+from fossir.modules.events.payment import payment_settings
+from fossir.modules.events.registration.models.forms import ModificationMode
+from fossir.modules.events.registration.models.invitations import RegistrationInvitation
+from fossir.modules.events.registration.models.registrations import Registration
+from fossir.util.i18n import _
+from fossir.util.placeholders import get_missing_placeholders, render_placeholder_info
+from fossir.web.forms.base import fossirForm, generated_data
+from fossir.web.forms.fields import (EmailListField, fossirDateTimeField, fossirEnumSelectField, JSONField,
                                      PrincipalListField)
-from indico.web.forms.fields.simple import HiddenFieldList, IndicoEmailRecipientsField
-from indico.web.forms.validators import HiddenUnless, IndicoEmail, LinkedDateTime
-from indico.web.forms.widgets import CKEditorWidget, SwitchWidget
+from fossir.web.forms.fields.simple import HiddenFieldList, fossirEmailRecipientsField
+from fossir.web.forms.validators import HiddenUnless, fossirEmail, LinkedDateTime
+from fossir.web.forms.widgets import CKEditorWidget, SwitchWidget
 
 
 def _check_if_payment_required(form, field):
@@ -52,7 +38,7 @@ def _check_if_payment_required(form, field):
         raise ValidationError(_('You have to enable payment feature in order to set the registration fee.'))
 
 
-class RegistrationFormForm(IndicoForm):
+class RegistrationFormForm(fossirForm):
     _price_fields = ('currency', 'base_price')
     _registrant_notification_fields = ('notification_sender_address',
                                        'message_pending', 'message_unpaid', 'message_complete')
@@ -69,13 +55,13 @@ class RegistrationFormForm(IndicoForm):
     require_login = BooleanField(_("Only logged-in users"), widget=SwitchWidget(),
                                  description=_("Users must be logged in to register"))
     require_user = BooleanField(_("Registrant must have account"), widget=SwitchWidget(),
-                                description=_("Registrations emails must be associated with an Indico account"))
+                                description=_("Registrations emails must be associated with an fossir account"))
     limit_registrations = BooleanField(_("Limit registrations"), widget=SwitchWidget(),
                                        description=_("Whether there is a limit of registrations"))
     registration_limit = IntegerField(_("Capacity"), [HiddenUnless('limit_registrations'), DataRequired(),
                                                       NumberRange(min=1)],
                                       description=_("Maximum number of registrations"))
-    modification_mode = IndicoEnumSelectField(_("Modification allowed"), enum=ModificationMode,
+    modification_mode = fossirEnumSelectField(_("Modification allowed"), enum=ModificationMode,
                                               description=_("Will users be able to modify their data? When?"))
     publish_registrations_enabled = BooleanField(_('Publish registrations'), widget=SwitchWidget(),
                                                  description=_("Registrations from this form will be displayed in the "
@@ -90,7 +76,7 @@ class RegistrationFormForm(IndicoForm):
                               widget=NumberInput(step='0.01'),
                               description=_("A fixed fee all users have to pay when registering."))
     currency = SelectField(_('Currency'), [DataRequired()], description=_('The currency for new registrations'))
-    notification_sender_address = StringField(_('Notification sender address'), [IndicoEmail()],
+    notification_sender_address = StringField(_('Notification sender address'), [fossirEmail()],
                                               filters=[lambda x: (x or None)])
     message_pending = TextAreaField(_("Message for pending registrations"),
                                     description=_("Text included in emails sent to pending registrations"))
@@ -107,7 +93,7 @@ class RegistrationFormForm(IndicoForm):
 
     def __init__(self, *args, **kwargs):
         self.event = kwargs.pop('event')
-        super(IndicoForm, self).__init__(*args, **kwargs)
+        super(fossirForm, self).__init__(*args, **kwargs)
         self._set_currencies()
         self.notification_sender_address.description = _('Email address set as the sender of all '
                                                          'notifications sent to users. If empty, '
@@ -118,12 +104,12 @@ class RegistrationFormForm(IndicoForm):
         self.currency.choices = sorted(currencies, key=lambda x: x[1].lower())
 
 
-class RegistrationFormScheduleForm(IndicoForm):
-    start_dt = IndicoDateTimeField(_("Start"), [Optional()], default_time=time(0, 0),
+class RegistrationFormScheduleForm(fossirForm):
+    start_dt = fossirDateTimeField(_("Start"), [Optional()], default_time=time(0, 0),
                                    description=_("Moment when registrations will be open"))
-    end_dt = IndicoDateTimeField(_("End"), [Optional(), LinkedDateTime('start_dt')], default_time=time(23, 59),
+    end_dt = fossirDateTimeField(_("End"), [Optional(), LinkedDateTime('start_dt')], default_time=time(23, 59),
                                  description=_("Moment when registrations will be closed"))
-    modification_end_dt = IndicoDateTimeField(_("Modification deadline"), [Optional(), LinkedDateTime('end_dt')],
+    modification_end_dt = fossirDateTimeField(_("Modification deadline"), [Optional(), LinkedDateTime('end_dt')],
                                               default_time=time(23, 59),
                                               description=_("Deadline until which registration information can be "
                                                             "modified (defaults to the end date if empty)"))
@@ -131,7 +117,7 @@ class RegistrationFormScheduleForm(IndicoForm):
     def __init__(self, *args, **kwargs):
         regform = kwargs.pop('regform')
         self.timezone = regform.event.timezone
-        super(IndicoForm, self).__init__(*args, **kwargs)
+        super(fossirForm, self).__init__(*args, **kwargs)
 
 
 class _UsersField(PrincipalListField):
@@ -149,7 +135,7 @@ class _UsersField(PrincipalListField):
         pass
 
 
-class InvitationFormBase(IndicoForm):
+class InvitationFormBase(fossirForm):
     _invitation_fields = ('skip_moderation',)
     _email_fields = ('email_from', 'email_subject', 'email_body')
     email_from = SelectField(_('From'), [DataRequired()])
@@ -224,14 +210,14 @@ class InvitationFormExisting(InvitationFormBase):
                                   .format(emails=', '.join(sorted(existing))))
 
 
-class EmailRegistrantsForm(IndicoForm):
+class EmailRegistrantsForm(fossirForm):
     from_address = SelectField(_("From"), [DataRequired()])
     cc_addresses = EmailListField(_("CC"),
                                   description=_("Beware, addresses in this field will receive one mail per "
                                                 "registrant."))
     subject = StringField(_("Subject"), [DataRequired()])
     body = TextAreaField(_("Email body"), [DataRequired()], widget=CKEditorWidget(simple=True))
-    recipients = IndicoEmailRecipientsField(_('Recipients'))
+    recipients = fossirEmailRecipientsField(_('Recipients'))
     copy_for_sender = BooleanField(_('Send copy to me'), widget=SwitchWidget(),
                                    description=_('Send copy of each email to my mailbox'))
     attach_ticket = BooleanField(_('Attach ticket'), widget=SwitchWidget(),
@@ -255,7 +241,7 @@ class EmailRegistrantsForm(IndicoForm):
         return super(EmailRegistrantsForm, self).is_submitted() and 'submitted' in request.form
 
 
-class TicketsForm(IndicoForm):
+class TicketsForm(fossirForm):
     tickets_enabled = BooleanField(_('Enable Tickets'), widget=SwitchWidget(),
                                    description=_('Create tickets for registrations using this registration form.'))
     ticket_on_email = BooleanField(_('Send with an e-mail'), [HiddenUnless('tickets_enabled',
@@ -289,7 +275,7 @@ class TicketsForm(IndicoForm):
         self.ticket_template_id.choices = badge_templates
 
 
-class ParticipantsDisplayForm(IndicoForm):
+class ParticipantsDisplayForm(fossirForm):
     """Form to customize the display of the participant list."""
     json = JSONField()
 
@@ -314,7 +300,7 @@ class ParticipantsDisplayForm(IndicoForm):
             raise ValidationError(exc.message)
 
 
-class ParticipantsDisplayFormColumnsForm(IndicoForm):
+class ParticipantsDisplayFormColumnsForm(fossirForm):
     """Form to customize the columns for a particular registration form on the participant list."""
     json = JSONField()
 
@@ -334,17 +320,17 @@ class ParticipantsDisplayFormColumnsForm(IndicoForm):
             raise ValidationError(exc.message)
 
 
-class RegistrationManagersForm(IndicoForm):
+class RegistrationManagersForm(fossirForm):
     """Form to manage users with privileges to modify registration-related items"""
 
     managers = PrincipalListField(_('Registration managers'), groups=True, allow_emails=True, allow_external=True,
                                   description=_('List of users allowed to modify registrations'))
 
 
-class CreateMultipleRegistrationsForm(IndicoForm):
-    """Form to create multiple registrations of Indico users at the same time."""
+class CreateMultipleRegistrationsForm(fossirForm):
+    """Form to create multiple registrations of fossir users at the same time."""
 
-    user_principals = PrincipalListField(_("Indico users"), [DataRequired()])
+    user_principals = PrincipalListField(_("fossir users"), [DataRequired()])
     notify_users = BooleanField(_("Send e-mail notifications"),
                                 default=True,
                                 description=_("Notify the users about the registration."),
@@ -362,15 +348,15 @@ class CreateMultipleRegistrationsForm(IndicoForm):
                 raise ValidationError(_("A registration for {} already exists.").format(user.full_name))
 
 
-class BadgeSettingsForm(IndicoForm):
+class BadgeSettingsForm(fossirForm):
     template = SelectField(_('Template'))
     save_values = BooleanField(_("Save values for next time"), widget=SwitchWidget(),
                                description=_("Save these values in the event settings"))
     dashed_border = BooleanField(_("Dashed border around each badge"), widget=SwitchWidget(),
                                  description=_("Display a dashed border around each badge"))
-    page_size = IndicoEnumSelectField(_('Page size'), enum=PageSize)
-    page_orientation = IndicoEnumSelectField(_('Page orientation'), enum=PageOrientation)
-    page_layout = IndicoEnumSelectField(_('Page layout'), enum=PageLayout,
+    page_size = fossirEnumSelectField(_('Page size'), enum=PageSize)
+    page_orientation = fossirEnumSelectField(_('Page orientation'), enum=PageOrientation)
+    page_layout = fossirEnumSelectField(_('Page layout'), enum=PageLayout,
                                         description=_('The single sided (foldable) option is only available if the '
                                                       'template orientation is the same as the page orientation and '
                                                       'its width is exactly half of the page width'))

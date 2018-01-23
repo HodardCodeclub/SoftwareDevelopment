@@ -1,42 +1,28 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask_pluginengine import plugin_context
 from wtforms.fields import SubmitField, TextAreaField
 
-from indico.core.db import db
-from indico.modules.events.requests.notifications import (notify_accepted_request, notify_new_modified_request,
+from fossir.core.db import db
+from fossir.modules.events.requests.notifications import (notify_accepted_request, notify_new_modified_request,
                                                           notify_rejected_request, notify_withdrawn_request)
-from indico.modules.events.requests.views import WPRequestsEventManagement
-from indico.util.date_time import now_utc
-from indico.util.i18n import _
-from indico.web.flask.templating import get_overridable_template_name, get_template_module
-from indico.web.forms.base import FormDefaults, IndicoForm
+from fossir.modules.events.requests.views import WPRequestsEventManagement
+from fossir.util.date_time import now_utc
+from fossir.util.i18n import _
+from fossir.web.flask.templating import get_overridable_template_name, get_template_module
+from fossir.web.forms.base import FormDefaults, fossirForm
 
 
-class RequestFormBase(IndicoForm):
+class RequestFormBase(fossirForm):
     def __init__(self, *args, **kwargs):
         self.event = kwargs.pop('event')
         self.request = kwargs.pop('request')
         super(RequestFormBase, self).__init__(*args, **kwargs)
 
 
-class RequestManagerForm(IndicoForm):
+class RequestManagerForm(fossirForm):
     action_buttons = {'action_save', 'action_accept', 'action_reject'}
 
     comment = TextAreaField(_('Comment'),
@@ -55,9 +41,9 @@ class RequestDefinitionBase(object):
     name = None
     #: the title of the request type as shown to users
     title = None
-    #: the :class:`IndicoForm` to use for the request form
+    #: the :class:`fossirForm` to use for the request form
     form = None
-    #: the :class:`IndicoForm` to use for the request manager form
+    #: the :class:`fossirForm` to use for the request manager form
     manager_form = RequestManagerForm
     #: default values to use if there's no existing request
     form_defaults = {}
@@ -78,7 +64,7 @@ class RequestDefinitionBase(object):
 
         :param event: the event the request is for
         :param existing_request: the :class:`Request` if there's an existing request of this type
-        :return: an instance of an :class:`IndicoForm` subclass
+        :return: an instance of an :class:`fossirForm` subclass
         """
         defaults = FormDefaults(existing_request.data if existing_request else cls.form_defaults)
         with plugin_context(cls.plugin):
@@ -89,7 +75,7 @@ class RequestDefinitionBase(object):
         """Creates the request management form
 
         :param req: the :class:`Request` of the request
-        :return: an instance of an :class:`IndicoForm` subclass
+        :return: an instance of an :class:`fossirForm` subclass
         """
         defaults = FormDefaults(req, **req.data)
         with plugin_context(cls.plugin):
@@ -147,7 +133,7 @@ class RequestDefinitionBase(object):
         :param req: the :class:`Request` of the request
         :param notify_event_managers: if event managers should be notified
         """
-        from indico.modules.events.requests.models.requests import RequestState
+        from fossir.modules.events.requests.models.requests import RequestState
         req.state = RequestState.withdrawn
         notify_withdrawn_request(req, notify_event_managers)
 
@@ -162,7 +148,7 @@ class RequestDefinitionBase(object):
         :param data: the form data from the management form
         :param user: the user processing the request
         """
-        from indico.modules.events.requests.models.requests import RequestState
+        from fossir.modules.events.requests.models.requests import RequestState
         cls.manager_save(req, data)
         req.state = RequestState.accepted
         req.processed_by_user = user
@@ -180,7 +166,7 @@ class RequestDefinitionBase(object):
         :param data: the form data from the management form
         :param user: the user processing the request
         """
-        from indico.modules.events.requests.models.requests import RequestState
+        from fossir.modules.events.requests.models.requests import RequestState
         cls.manager_save(req, data)
         req.state = RequestState.rejected
         req.processed_by_user = user

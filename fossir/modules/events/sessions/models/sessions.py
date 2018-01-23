@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,25 +7,25 @@ from operator import attrgetter
 
 from sqlalchemy.ext.declarative import declared_attr
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.attachments import AttachedItemsMixin
-from indico.core.db.sqlalchemy.colors import ColorMixin, ColorTuple
-from indico.core.db.sqlalchemy.descriptions import DescriptionMixin, RenderMode
-from indico.core.db.sqlalchemy.locations import LocationMixin
-from indico.core.db.sqlalchemy.notes import AttachedNotesMixin
-from indico.core.db.sqlalchemy.protection import ProtectionManagersMixin
-from indico.core.db.sqlalchemy.util.models import auto_table_args
-from indico.core.db.sqlalchemy.util.queries import increment_and_get
-from indico.modules.events.management.util import get_non_inheriting_objects
-from indico.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
-from indico.util.caching import memoize_request
-from indico.util.locators import locator_property
-from indico.util.string import format_repr, return_ascii
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.attachments import AttachedItemsMixin
+from fossir.core.db.sqlalchemy.colors import ColorMixin, ColorTuple
+from fossir.core.db.sqlalchemy.descriptions import DescriptionMixin, RenderMode
+from fossir.core.db.sqlalchemy.locations import LocationMixin
+from fossir.core.db.sqlalchemy.notes import AttachedNotesMixin
+from fossir.core.db.sqlalchemy.protection import ProtectionManagersMixin
+from fossir.core.db.sqlalchemy.util.models import auto_table_args
+from fossir.core.db.sqlalchemy.util.queries import increment_and_get
+from fossir.modules.events.management.util import get_non_inheriting_objects
+from fossir.modules.events.timetable.models.entries import TimetableEntry, TimetableEntryType
+from fossir.util.caching import memoize_request
+from fossir.util.locators import locator_property
+from fossir.util.string import format_repr, return_ascii
 
 
 def _get_next_friendly_id(context):
     """Get the next friendly id for a session."""
-    from indico.modules.events import Event
+    from fossir.modules.events import Event
     event_id = context.current_parameters['event_id']
     assert event_id is not None
     return increment_and_get(Event._last_friendly_session_id, Event.id == event_id)
@@ -167,7 +153,7 @@ class Session(DescriptionMixin, ColorMixin, ProtectionManagersMixin, LocationMix
     @property
     @memoize_request
     def start_dt(self):
-        from indico.modules.events.sessions.models.blocks import SessionBlock
+        from fossir.modules.events.sessions.models.blocks import SessionBlock
         start_dt = (self.event.timetable_entries
                     .with_entities(TimetableEntry.start_dt)
                     .join('session_block')
@@ -186,8 +172,8 @@ class Session(DescriptionMixin, ColorMixin, ProtectionManagersMixin, LocationMix
     @property
     @memoize_request
     def conveners(self):
-        from indico.modules.events.sessions.models.blocks import SessionBlock
-        from indico.modules.events.sessions.models.persons import SessionBlockPersonLink
+        from fossir.modules.events.sessions.models.blocks import SessionBlock
+        from fossir.modules.events.sessions.models.persons import SessionBlockPersonLink
 
         return (SessionBlockPersonLink.query
                 .join(SessionBlock)
@@ -209,7 +195,7 @@ class Session(DescriptionMixin, ColorMixin, ProtectionManagersMixin, LocationMix
 
     def can_manage_contributions(self, user, allow_admin=True):
         """Check whether a user can manage contributions within the session."""
-        from indico.modules.events.sessions.util import session_coordinator_priv_enabled
+        from fossir.modules.events.sessions.util import session_coordinator_priv_enabled
         if user is None:
             return False
         elif self.session.can_manage(user, allow_admin=allow_admin):
@@ -225,7 +211,7 @@ class Session(DescriptionMixin, ColorMixin, ProtectionManagersMixin, LocationMix
 
         This only applies to the blocks themselves, not to contributions inside them.
         """
-        from indico.modules.events.sessions.util import session_coordinator_priv_enabled
+        from fossir.modules.events.sessions.util import session_coordinator_priv_enabled
         if user is None:
             return False
         # full session manager can always manage blocks. this also includes event managers and higher.

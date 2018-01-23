@@ -1,31 +1,17 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
-from indico.modules.events.registration import api
-from indico.modules.events.registration.controllers import display
-from indico.modules.events.registration.controllers.compat import compat_registration
-from indico.modules.events.registration.controllers.management import (fields, invitations, regforms, reglists,
+from fossir.modules.events.registration import api
+from fossir.modules.events.registration.controllers import display
+from fossir.modules.events.registration.controllers.compat import compat_registration
+from fossir.modules.events.registration.controllers.management import (fields, invitations, regforms, reglists,
                                                                        sections, tickets)
-from indico.web.flask.util import make_compat_redirect_func
-from indico.web.flask.wrappers import IndicoBlueprint
+from fossir.web.flask.util import make_compat_redirect_func
+from fossir.web.flask.wrappers import fossirBlueprint
 
 
-_bp = IndicoBlueprint('event_registration', __name__, url_prefix='/event/<confId>', template_folder='templates',
+_bp = fossirBlueprint('event_registration', __name__, url_prefix='/event/<confId>', template_folder='templates',
                       virtual_template_folder='events/registration', event_feature='registration')
 
 # Management
@@ -178,14 +164,14 @@ _bp.add_url_rule('!/api/events/<int:event_id>/registrants', 'api_registrants',
 
 
 # Participants
-_bp_participation = IndicoBlueprint('event_participation', __name__, url_prefix='/event/<confId>',
+_bp_participation = fossirBlueprint('event_participation', __name__, url_prefix='/event/<confId>',
                                     template_folder='templates', virtual_template_folder='events/registration')
 _bp_participation.add_url_rule('/manage/participants/', 'manage', regforms.RHManageParticipants,
                                methods=('GET', 'POST'))
 
 
 # Legacy URLs
-_compat_bp = IndicoBlueprint('compat_event_registration', __name__, url_prefix='/event/<int:event_id>')
+_compat_bp = fossirBlueprint('compat_event_registration', __name__, url_prefix='/event/<int:event_id>')
 _compat_bp.add_url_rule('/registration/', 'registration', compat_registration)
 _compat_bp.add_url_rule('/registration/<path:path>', 'registration', compat_registration)
 _compat_bp.add_url_rule('/registration/registrants', 'registrants',

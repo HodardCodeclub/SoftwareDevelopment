@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -27,13 +13,13 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Table, TableStyle
 from sqlalchemy.orm import contains_eager, joinedload, load_only, noload
 
-from indico.core.db import db
-from indico.legacy.pdfinterface.base import Paragraph, PDFBase
-from indico.modules.events import Event
-from indico.modules.events.sessions.models.principals import SessionPrincipal
-from indico.modules.events.sessions.models.sessions import Session
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
+from fossir.core.db import db
+from fossir.legacy.pdfinterface.base import Paragraph, PDFBase
+from fossir.modules.events import Event
+from fossir.modules.events.sessions.models.principals import SessionPrincipal
+from fossir.modules.events.sessions.models.sessions import Session
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
 
 
 def can_manage_sessions(user, event, role=None):
@@ -114,7 +100,7 @@ def session_coordinator_priv_enabled(event, priv):
     :param event: The `Event` to check for
     :param priv: The name of the privilege
     """
-    from indico.modules.events.sessions import COORDINATOR_PRIV_SETTINGS, session_settings
+    from fossir.modules.events.sessions import COORDINATOR_PRIV_SETTINGS, session_settings
     return session_settings.get(event, COORDINATOR_PRIV_SETTINGS[priv])
 
 
@@ -164,8 +150,8 @@ def has_sessions_for_user(event, user):
 
 
 def serialize_session_for_ical(sess):
-    from indico.modules.events.contributions.util import serialize_contribution_for_ical
-    from indico.modules.events.util import serialize_person_link
+    from fossir.modules.events.contributions.util import serialize_contribution_for_ical
+    from fossir.modules.events.util import serialize_person_link
     return {
         '_fossil': 'sessionMetadataWithContributions',
         'id': sess.id,
@@ -182,14 +168,14 @@ def serialize_session_for_ical(sess):
 
 
 def get_session_ical_file(sess):
-    from indico.web.http_api.metadata.serializer import Serializer
+    from fossir.web.http_api.metadata.serializer import Serializer
     data = {'results': serialize_session_for_ical(sess) if sess.start_dt and sess.end_dt else []}
     serializer = Serializer.create('ics')
     return BytesIO(serializer(data))
 
 
 def get_session_timetable_pdf(sess, **kwargs):
-    from indico.legacy.pdfinterface.conference import TimeTablePlain, TimetablePDFFormat
+    from fossir.legacy.pdfinterface.conference import TimeTablePlain, TimetablePDFFormat
     pdf_format = TimetablePDFFormat(params={'coverPage': False})
     return TimeTablePlain(sess.event, session.user, showSessions=[sess.id], showDays=[],
                           sortingCrit=None, ttPDFFormat=pdf_format, pagesize='A4', fontsize='normal',

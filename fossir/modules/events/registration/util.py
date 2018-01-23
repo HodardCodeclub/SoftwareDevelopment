@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,31 +10,31 @@ from sqlalchemy.orm import joinedload, load_only, undefer
 from werkzeug.urls import url_parse
 from wtforms import BooleanField, ValidationError
 
-from indico.core import signals
-from indico.core.config import config
-from indico.core.db import db
-from indico.modules.events import EventLogKind, EventLogRealm
-from indico.modules.events.models.events import Event
-from indico.modules.events.payment.models.transactions import TransactionStatus
-from indico.modules.events.registration import logger
-from indico.modules.events.registration.badges import RegistrantsListToBadgesPDF, RegistrantsListToBadgesPDFFoldable
-from indico.modules.events.registration.fields.choices import (AccommodationField, ChoiceBaseField,
+from fossir.core import signals
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.modules.events import EventLogKind, EventLogRealm
+from fossir.modules.events.models.events import Event
+from fossir.modules.events.payment.models.transactions import TransactionStatus
+from fossir.modules.events.registration import logger
+from fossir.modules.events.registration.badges import RegistrantsListToBadgesPDF, RegistrantsListToBadgesPDFFoldable
+from fossir.modules.events.registration.fields.choices import (AccommodationField, ChoiceBaseField,
                                                                get_field_merged_options)
-from indico.modules.events.registration.models.form_fields import (RegistrationFormFieldData,
+from fossir.modules.events.registration.models.form_fields import (RegistrationFormFieldData,
                                                                    RegistrationFormPersonalDataField)
-from indico.modules.events.registration.models.forms import RegistrationForm
-from indico.modules.events.registration.models.invitations import InvitationState, RegistrationInvitation
-from indico.modules.events.registration.models.items import (PersonalDataType, RegistrationFormItemType,
+from fossir.modules.events.registration.models.forms import RegistrationForm
+from fossir.modules.events.registration.models.invitations import InvitationState, RegistrationInvitation
+from fossir.modules.events.registration.models.items import (PersonalDataType, RegistrationFormItemType,
                                                              RegistrationFormPersonalDataSection)
-from indico.modules.events.registration.models.registrations import Registration, RegistrationData, RegistrationState
-from indico.modules.events.registration.notifications import (notify_registration_creation,
+from fossir.modules.events.registration.models.registrations import Registration, RegistrationData, RegistrationState
+from fossir.modules.events.registration.notifications import (notify_registration_creation,
                                                               notify_registration_modification)
-from indico.modules.users.util import get_user_by_email
-from indico.util.date_time import format_date
-from indico.util.i18n import _
-from indico.util.spreadsheets import unique_col
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.widgets import SwitchWidget
+from fossir.modules.users.util import get_user_by_email
+from fossir.util.date_time import format_date
+from fossir.util.i18n import _
+from fossir.util.spreadsheets import unique_col
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.widgets import SwitchWidget
 
 
 def get_title_uuid(regform, title):
@@ -141,7 +127,7 @@ def check_registration_email(regform, email, registration=None, management=False
 def make_registration_form(regform, management=False, registration=None):
     """Creates a WTForm based on registration form fields"""
 
-    class RegistrationFormWTF(IndicoForm):
+    class RegistrationFormWTF(fossirForm):
         if management:
             notify_user = BooleanField(_("Send email"), widget=SwitchWidget())
 
@@ -481,8 +467,8 @@ def get_event_regforms(event, user, with_registrations=False):
 
 
 def generate_ticket(registration):
-    from indico.modules.designer.util import get_default_template_on_category
-    from indico.modules.events.registration.controllers.management.tickets import DEFAULT_TICKET_PRINTING_SETTINGS
+    from fossir.modules.designer.util import get_default_template_on_category
+    from fossir.modules.events.registration.controllers.management.tickets import DEFAULT_TICKET_PRINTING_SETTINGS
     template = (registration.registration_form.ticket_template or
                 get_default_template_on_category(registration.event.category))
     signals.event.designer.print_badge_template.send(template, regform=registration.registration_form)

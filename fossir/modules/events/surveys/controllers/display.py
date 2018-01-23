@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,19 +7,19 @@ from sqlalchemy.orm import joinedload
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import Forbidden, NotFound
 
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.session import no_autoflush
-from indico.modules.auth.util import redirect_to_login
-from indico.modules.events.controllers.base import RHDisplayEventBase
-from indico.modules.events.models.events import EventType
-from indico.modules.events.surveys.models.submissions import SurveyAnswer, SurveySubmission
-from indico.modules.events.surveys.models.surveys import Survey, SurveyState
-from indico.modules.events.surveys.util import (is_submission_in_progress, make_survey_form, query_active_surveys,
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.session import no_autoflush
+from fossir.modules.auth.util import redirect_to_login
+from fossir.modules.events.controllers.base import RHDisplayEventBase
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.surveys.models.submissions import SurveyAnswer, SurveySubmission
+from fossir.modules.events.surveys.models.surveys import Survey, SurveyState
+from fossir.modules.events.surveys.util import (is_submission_in_progress, make_survey_form, query_active_surveys,
                                                 save_submitted_survey_to_session, was_survey_submitted)
-from indico.modules.events.surveys.views import WPDisplaySurveyConference, WPDisplaySurveySimpleEvent
-from indico.util.date_time import now_utc
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
+from fossir.modules.events.surveys.views import WPDisplaySurveyConference, WPDisplaySurveySimpleEvent
+from fossir.util.date_time import now_utc
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
 
 
 def _can_redirect_to_single_survey(surveys):

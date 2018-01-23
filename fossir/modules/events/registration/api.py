@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -20,10 +6,10 @@ from flask import jsonify, request
 from sqlalchemy.orm import joinedload
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from indico.modules.events.models.events import Event
-from indico.modules.events.registration.util import build_registration_api_data, build_registrations_api_data
-from indico.modules.oauth import oauth
-from indico.web.rh import RH
+from fossir.modules.events.models.events import Event
+from fossir.modules.events.registration.util import build_registration_api_data, build_registrations_api_data
+from fossir.modules.oauth import oauth
+from fossir.web.rh import RH
 
 
 class RHAPIRegistrant(RH):

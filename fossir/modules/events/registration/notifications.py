@@ -1,29 +1,15 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import session
 
-from indico.core import signals
-from indico.core.notifications import make_email, send_email
-from indico.modules.events.registration.models.registrations import RegistrationState
-from indico.util.placeholders import replace_placeholders
-from indico.util.signals import values_from_signal
-from indico.web.flask.templating import get_template_module
+from fossir.core import signals
+from fossir.core.notifications import make_email, send_email
+from fossir.modules.events.registration.models.registrations import RegistrationState
+from fossir.util.placeholders import replace_placeholders
+from fossir.util.signals import values_from_signal
+from fossir.web.flask.templating import get_template_module
 
 
 def notify_invitation(invitation, email_subject, email_body, from_address):
@@ -36,7 +22,7 @@ def notify_invitation(invitation, email_subject, email_body, from_address):
 
 
 def _notify_registration(registration, template, to_managers=False):
-    from indico.modules.events.registration.util import get_ticket_attachments
+    from fossir.modules.events.registration.util import get_ticket_attachments
     attachments = None
     regform = registration.registration_form
     tickets_handled = values_from_signal(signals.event.is_ticketing_handled.send(regform), single_value=True)

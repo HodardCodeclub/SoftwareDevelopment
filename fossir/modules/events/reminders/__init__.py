@@ -1,33 +1,18 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
 from flask import session
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.models import get_simple_column_attrs
-from indico.core.logger import Logger
-from indico.modules.events import Event
-from indico.modules.events.cloning import EventCloner
-from indico.util.date_time import now_utc
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
-from indico.web.menu import SideMenuItem
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.models import get_simple_column_attrs
+from fossir.core.logger import Logger
+from fossir.modules.events import Event
+from fossir.modules.events.cloning import EventCloner
+from fossir.util.date_time import now_utc
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
+from fossir.web.menu import SideMenuItem
 
 
 logger = Logger.get('events.reminders')
@@ -35,7 +20,7 @@ logger = Logger.get('events.reminders')
 
 @signals.import_tasks.connect
 def _import_tasks(sender, **kwargs):
-    import indico.modules.events.reminders.tasks
+    import fossir.modules.events.reminders.tasks
 
 
 @signals.menu.items.connect_via('event-management-sidemenu')
@@ -47,7 +32,7 @@ def _extend_event_management_menu(sender, event, **kwargs):
 
 @signals.event.times_changed.connect_via(Event)
 def _event_times_changed(sender, obj, **kwargs):
-    from indico.modules.events.reminders.models.reminders import EventReminder
+    from fossir.modules.events.reminders.models.reminders import EventReminder
     event = obj
     for reminder in event.reminders.filter(EventReminder.is_relative, ~EventReminder.is_sent):
         new_dt = event.start_dt - reminder.event_start_delta
@@ -58,7 +43,7 @@ def _event_times_changed(sender, obj, **kwargs):
 
 @signals.users.merged.connect
 def _merge_users(target, source, **kwargs):
-    from indico.modules.events.reminders.models.reminders import EventReminder
+    from fossir.modules.events.reminders.models.reminders import EventReminder
     EventReminder.find(creator_id=source.id).update({EventReminder.creator_id: target.id})
 
 

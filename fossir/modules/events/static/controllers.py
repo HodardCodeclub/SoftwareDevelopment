@@ -1,30 +1,16 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import redirect, request, session
 from werkzeug.exceptions import NotFound
 
-from indico.core.db import db
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.events.static.models.static import StaticSite, StaticSiteState
-from indico.modules.events.static.tasks import build_static_site
-from indico.modules.events.static.views import WPStaticSites
-from indico.web.flask.util import url_for
+from fossir.core.db import db
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.events.static.models.static import StaticSite, StaticSiteState
+from fossir.modules.events.static.tasks import build_static_site
+from fossir.modules.events.static.views import WPStaticSites
+from fossir.web.flask.util import url_for
 
 
 class RHStaticSiteBase(RHManageEventBase):

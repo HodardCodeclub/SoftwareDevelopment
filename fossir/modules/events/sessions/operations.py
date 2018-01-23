@@ -1,32 +1,18 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import session
 
-from indico.core import signals
-from indico.core.db import db
-from indico.modules.events.logs.models.entries import EventLogKind, EventLogRealm
-from indico.modules.events.logs.util import make_diff_log
-from indico.modules.events.models.events import EventType
-from indico.modules.events.sessions import COORDINATOR_PRIV_SETTINGS, COORDINATOR_PRIV_TITLES, logger, session_settings
-from indico.modules.events.sessions.models.blocks import SessionBlock
-from indico.modules.events.sessions.models.sessions import Session
-from indico.util.i18n import orig_string
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.modules.events.logs.models.entries import EventLogKind, EventLogRealm
+from fossir.modules.events.logs.util import make_diff_log
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.sessions import COORDINATOR_PRIV_SETTINGS, COORDINATOR_PRIV_TITLES, logger, session_settings
+from fossir.modules.events.sessions.models.blocks import SessionBlock
+from fossir.modules.events.sessions.models.sessions import Session
+from fossir.util.i18n import orig_string
 
 
 def create_session(event, data):
@@ -85,7 +71,7 @@ def delete_session(event_session):
 
 def update_session_block(session_block, data):
     """Update a session block with data passed in the `data` argument"""
-    from indico.modules.events.timetable.operations import update_timetable_entry
+    from fossir.modules.events.timetable.operations import update_timetable_entry
 
     start_dt = data.pop('start_dt', None)
     if start_dt is not None:
@@ -99,8 +85,8 @@ def update_session_block(session_block, data):
 
 
 def delete_session_block(session_block):
-    from indico.modules.events.contributions.operations import delete_contribution
-    from indico.modules.events.timetable.operations import delete_timetable_entry
+    from fossir.modules.events.contributions.operations import delete_contribution
+    from fossir.modules.events.timetable.operations import delete_timetable_entry
     session_ = session_block.session
     unschedule_contribs = session_.event.type_ == EventType.conference
     for contribution in session_block.contributions[:]:

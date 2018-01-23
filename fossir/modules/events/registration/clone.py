@@ -1,33 +1,19 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
-from indico.core import signals
-from indico.core.db import db
-from indico.core.db.sqlalchemy.util.models import get_simple_column_attrs
-from indico.core.db.sqlalchemy.util.session import no_autoflush
-from indico.modules.events.cloning import EventCloner
-from indico.modules.events.features.util import is_feature_enabled
-from indico.modules.events.models.events import EventType
-from indico.modules.events.registration.models.form_fields import RegistrationFormFieldData
-from indico.modules.events.registration.models.forms import RegistrationForm
-from indico.modules.events.registration.models.items import RegistrationFormItem, RegistrationFormSection
-from indico.modules.events.registration.models.registrations import Registration, RegistrationData
-from indico.util.i18n import _
+from fossir.core import signals
+from fossir.core.db import db
+from fossir.core.db.sqlalchemy.util.models import get_simple_column_attrs
+from fossir.core.db.sqlalchemy.util.session import no_autoflush
+from fossir.modules.events.cloning import EventCloner
+from fossir.modules.events.features.util import is_feature_enabled
+from fossir.modules.events.models.events import EventType
+from fossir.modules.events.registration.models.form_fields import RegistrationFormFieldData
+from fossir.modules.events.registration.models.forms import RegistrationForm
+from fossir.modules.events.registration.models.items import RegistrationFormItem, RegistrationFormSection
+from fossir.modules.events.registration.models.registrations import Registration, RegistrationData
+from fossir.util.i18n import _
 
 
 class RegistrationFormCloner(EventCloner):

@@ -1,35 +1,21 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, jsonify, redirect, request
 from sqlalchemy.orm import defaultload, joinedload
 
-from indico.modules.events.logs import EventLogKind, EventLogRealm
-from indico.modules.events.surveys import logger
-from indico.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
-from indico.modules.events.surveys.models.items import SurveySection
-from indico.modules.events.surveys.models.submissions import SurveySubmission
-from indico.modules.events.surveys.models.surveys import Survey
-from indico.modules.events.surveys.util import generate_spreadsheet_from_survey
-from indico.modules.events.surveys.views import WPManageSurvey, WPSurveyResults
-from indico.util.i18n import _
-from indico.util.spreadsheets import send_csv, send_xlsx
-from indico.web.flask.util import url_for
+from fossir.modules.events.logs import EventLogKind, EventLogRealm
+from fossir.modules.events.surveys import logger
+from fossir.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
+from fossir.modules.events.surveys.models.items import SurveySection
+from fossir.modules.events.surveys.models.submissions import SurveySubmission
+from fossir.modules.events.surveys.models.surveys import Survey
+from fossir.modules.events.surveys.util import generate_spreadsheet_from_survey
+from fossir.modules.events.surveys.views import WPManageSurvey, WPSurveyResults
+from fossir.util.i18n import _
+from fossir.util.spreadsheets import send_csv, send_xlsx
+from fossir.web.flask.util import url_for
 
 
 class RHSurveyResults(RHManageSurveyBase):

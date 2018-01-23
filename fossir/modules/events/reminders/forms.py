@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,27 +9,27 @@ from wtforms.fields import BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, ValidationError
 from wtforms_components import TimeField
 
-from indico.modules.events.models.events import EventType
-from indico.util.date_time import now_utc
-from indico.util.i18n import _
-from indico.web.forms.base import IndicoForm, generated_data
-from indico.web.forms.fields import EmailListField, IndicoDateField, IndicoRadioField, TimeDeltaField
-from indico.web.forms.validators import HiddenUnless
+from fossir.modules.events.models.events import EventType
+from fossir.util.date_time import now_utc
+from fossir.util.i18n import _
+from fossir.web.forms.base import fossirForm, generated_data
+from fossir.web.forms.fields import EmailListField, fossirDateField, fossirRadioField, TimeDeltaField
+from fossir.web.forms.validators import HiddenUnless
 
 
-class ReminderForm(IndicoForm):
+class ReminderForm(fossirForm):
     default_widget_attrs = {'absolute_time': {'placeholder': 'HH:MM'}}
     recipient_fields = {'recipients', 'send_to_participants'}
     schedule_fields = {'schedule_type', 'absolute_date', 'absolute_time', 'relative_delta'}
     schedule_recipient_fields = recipient_fields | schedule_fields
 
     # Schedule
-    schedule_type = IndicoRadioField(_('Type'), [DataRequired()],
+    schedule_type = fossirRadioField(_('Type'), [DataRequired()],
                                      choices=[('relative', _("Relative to the event start time")),
                                               ('absolute', _("Fixed date/time")),
                                               ('now', _('Send immediately'))])
     relative_delta = TimeDeltaField(_('Offset'), [HiddenUnless('schedule_type', 'relative'), DataRequired()])
-    absolute_date = IndicoDateField(_('Date'), [HiddenUnless('schedule_type', 'absolute'), DataRequired()])
+    absolute_date = fossirDateField(_('Date'), [HiddenUnless('schedule_type', 'absolute'), DataRequired()])
     absolute_time = TimeField(_('Time'), [HiddenUnless('schedule_type', 'absolute'), InputRequired()])
     # Recipients
     recipients = EmailListField(_('Email addresses'), description=_('One email address per line.'))

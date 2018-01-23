@@ -1,36 +1,22 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, jsonify, redirect, render_template, request, session
 
-from indico.core.db import db
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.events.reminders import logger
-from indico.modules.events.reminders.forms import ReminderForm
-from indico.modules.events.reminders.models.reminders import EventReminder
-from indico.modules.events.reminders.util import make_reminder_email
-from indico.modules.events.reminders.views import WPReminders
-from indico.util.date_time import format_datetime
-from indico.util.i18n import _
-from indico.util.string import to_unicode
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.util import jsonify_data, jsonify_template
+from fossir.core.db import db
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.events.reminders import logger
+from fossir.modules.events.reminders.forms import ReminderForm
+from fossir.modules.events.reminders.models.reminders import EventReminder
+from fossir.modules.events.reminders.util import make_reminder_email
+from fossir.modules.events.reminders.views import WPReminders
+from fossir.util.date_time import format_datetime
+from fossir.util.i18n import _
+from fossir.util.string import to_unicode
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_template
 
 
 class RHRemindersBase(RHManageEventBase):

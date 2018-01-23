@@ -1,37 +1,23 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, redirect, session
 
-from indico.core.db import db
-from indico.core.notifications import make_email, send_email
-from indico.modules.events.surveys import logger
-from indico.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
-from indico.modules.events.surveys.forms import InvitationForm, ScheduleSurveyForm, SurveyForm
-from indico.modules.events.surveys.models.items import SurveySection
-from indico.modules.events.surveys.models.surveys import Survey, SurveyState
-from indico.modules.events.surveys.views import WPManageSurvey
-from indico.util.i18n import _, ngettext
-from indico.util.placeholders import replace_placeholders
-from indico.web.flask.templating import get_template_module
-from indico.web.flask.util import url_for
-from indico.web.forms.base import FormDefaults
-from indico.web.util import jsonify_data, jsonify_form, jsonify_template
+from fossir.core.db import db
+from fossir.core.notifications import make_email, send_email
+from fossir.modules.events.surveys import logger
+from fossir.modules.events.surveys.controllers.management import RHManageSurveyBase, RHManageSurveysBase
+from fossir.modules.events.surveys.forms import InvitationForm, ScheduleSurveyForm, SurveyForm
+from fossir.modules.events.surveys.models.items import SurveySection
+from fossir.modules.events.surveys.models.surveys import Survey, SurveyState
+from fossir.modules.events.surveys.views import WPManageSurvey
+from fossir.util.i18n import _, ngettext
+from fossir.util.placeholders import replace_placeholders
+from fossir.web.flask.templating import get_template_module
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import FormDefaults
+from fossir.web.util import jsonify_data, jsonify_form, jsonify_template
 
 
 class RHManageSurveys(RHManageSurveysBase):

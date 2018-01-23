@@ -1,33 +1,19 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import flash, redirect, request, session
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
-from indico.core.db import db
-from indico.modules.events.management.controllers import RHManageEventBase
-from indico.modules.events.requests import get_request_definitions
-from indico.modules.events.requests.exceptions import RequestModuleError
-from indico.modules.events.requests.models.requests import Request, RequestState
-from indico.modules.events.requests.util import is_request_manager
-from indico.modules.events.requests.views import WPRequestsEventManagement
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
+from fossir.core.db import db
+from fossir.modules.events.management.controllers import RHManageEventBase
+from fossir.modules.events.requests import get_request_definitions
+from fossir.modules.events.requests.exceptions import RequestModuleError
+from fossir.modules.events.requests.models.requests import Request, RequestState
+from fossir.modules.events.requests.util import is_request_manager
+from fossir.modules.events.requests.views import WPRequestsEventManagement
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
 
 
 class EventOrRequestManagerMixin:

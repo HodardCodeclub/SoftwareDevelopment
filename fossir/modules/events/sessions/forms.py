@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -21,18 +7,18 @@ from datetime import timedelta
 from wtforms.fields import BooleanField, StringField, TextAreaField
 from wtforms.validators import DataRequired
 
-from indico.modules.events.sessions.fields import SessionBlockPersonLinkListField
-from indico.util.i18n import _
-from indico.web.flask.util import url_for
-from indico.web.forms.base import IndicoForm
-from indico.web.forms.colors import get_colors
-from indico.web.forms.fields import (AccessControlListField, IndicoLocationField, IndicoPalettePickerField,
-                                     IndicoProtectionField, PrincipalListField, TimeDeltaField)
-from indico.web.forms.validators import UsedIf
-from indico.web.forms.widgets import SwitchWidget
+from fossir.modules.events.sessions.fields import SessionBlockPersonLinkListField
+from fossir.util.i18n import _
+from fossir.web.flask.util import url_for
+from fossir.web.forms.base import fossirForm
+from fossir.web.forms.colors import get_colors
+from fossir.web.forms.fields import (AccessControlListField, fossirLocationField, fossirPalettePickerField,
+                                     fossirProtectionField, PrincipalListField, TimeDeltaField)
+from fossir.web.forms.validators import UsedIf
+from fossir.web.forms.widgets import SwitchWidget
 
 
-class SessionForm(IndicoForm):
+class SessionForm(fossirForm):
     title = StringField(_('Title'), [DataRequired()])
     code = StringField(_('Session code'), description=_('The code that will identify the session in the Book of '
                                                         'Abstracts.'))
@@ -41,9 +27,9 @@ class SessionForm(IndicoForm):
                                                    description=_('Duration that a contribution created within this '
                                                                  'session will have by default.'),
                                                    default=timedelta(minutes=20))
-    location_data = IndicoLocationField(_("Default location"),
+    location_data = fossirLocationField(_("Default location"),
                                         description=_("Default location for blocks inside the session."))
-    colors = IndicoPalettePickerField(_('Colours'), color_list=get_colors())
+    colors = fossirPalettePickerField(_('Colours'), color_list=get_colors())
     is_poster = BooleanField(_('Poster session'), widget=SwitchWidget(),
                              description=_('Whether the session is a poster session or contains normal presentations.'))
 
@@ -55,8 +41,8 @@ class SessionForm(IndicoForm):
             del self.code
 
 
-class SessionProtectionForm(IndicoForm):
-    protection_mode = IndicoProtectionField(_('Protection mode'), protected_object=lambda form: form.protected_object,
+class SessionProtectionForm(fossirForm):
+    protection_mode = fossirProtectionField(_('Protection mode'), protected_object=lambda form: form.protected_object,
                                             acl_message_url=lambda form: url_for('sessions.acl_message',
                                                                                  form.protected_object))
     acl = AccessControlListField(_('Access control list'),
@@ -72,21 +58,21 @@ class SessionProtectionForm(IndicoForm):
         super(SessionProtectionForm, self).__init__(*args, **kwargs)
 
 
-class SessionBlockForm(IndicoForm):
+class SessionBlockForm(fossirForm):
     title = StringField(_('Title'), description=_('Title of the session block'))
     person_links = SessionBlockPersonLinkListField(_('Conveners'))
-    location_data = IndicoLocationField(_('Location'))
+    location_data = fossirLocationField(_('Location'))
 
     def __init__(self, *args, **kwargs):
         self.session_block = kwargs.pop('session_block', None)
         super(SessionBlockForm, self).__init__(*args, **kwargs)
 
 
-class MeetingSessionBlockForm(IndicoForm):
+class MeetingSessionBlockForm(fossirForm):
     session_title = StringField(_('Title'), [DataRequired()], description=_('Title of the session'))
     block_title = StringField(_('Block title'), description=_('Title of the session block'))
     block_person_links = SessionBlockPersonLinkListField(_('Conveners'))
-    block_location_data = IndicoLocationField(_('Location'))
+    block_location_data = fossirLocationField(_('Location'))
 
     def __init__(self, *args, **kwargs):
         self.event = kwargs.pop('event')
