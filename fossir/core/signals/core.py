@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from blinker import Namespace
 
@@ -32,7 +18,7 @@ only ``import`` these modules and do nothing else.
 """)
 
 after_process = _signals.signal('after-process', """
-Called after an Indico request has been processed.
+Called after an fossir request has been processed.
 """)
 
 get_storage_backends = _signals.signal('get-storage-backends', """
@@ -54,7 +40,7 @@ you that the operation the user was performing has been successful.
 """)
 
 form_validated = _signals.signal('form-validated', """
-Triggered when an IndicoForm was validated successfully.  The *sender*
+Triggered when an fossirForm was validated successfully.  The *sender*
 is the form object.
 
 This signal may return ``False`` to mark the form as invalid even
@@ -64,7 +50,7 @@ other way.
 """)
 
 model_committed = _signals.signal('model-committed', """
-Triggered when an IndicoModel class was committed.  The *sender* is
+Triggered when an fossirModel class was committed.  The *sender* is
 the model class, the model instance is passed as `obj` and the
 change type as a string (delete/insert/update) in the `change` kwarg.
 """)
