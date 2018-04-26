@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
@@ -29,9 +14,9 @@ from pprint import pformat
 import yaml
 from flask import current_app, has_request_context, request, session
 
-from indico.core.config import config
-from indico.util.i18n import set_best_lang
-from indico.web.util import get_request_info
+from fossir.core.config import config
+from fossir.util.i18n import set_best_lang
+from fossir.web.util import get_request_info
 
 
 try:
@@ -125,7 +110,7 @@ class Logger(object):
             if handler['class'] == 'logging.FileHandler' and handler['filename'][0] != '/':
                 # Make relative paths relative to the log dir
                 handler['filename'] = os.path.join(config.LOG_DIR, handler['filename'])
-            elif handler['class'] in ('logging.handlers.SMTPHandler', 'indico.core.logger.FormattedSubjectSMTPHandler'):
+            elif handler['class'] in ('logging.handlers.SMTPHandler', 'fossir.core.logger.FormattedSubjectSMTPHandler'):
                 # Configure email handlers with the data from the config
                 if not handler.get('mailhost'):
                     handler['mailhost'] = config.SMTP_SERVER
@@ -135,7 +120,7 @@ class Logger(object):
                 handler.setdefault('fromaddr', 'logger@{}'.format(config.WORKER_NAME))
                 handler.setdefault('toaddrs', [config.SUPPORT_EMAIL])
                 subject = ('Unexpected Exception occurred at {}: %(message)s'
-                           if handler['class'] == 'indico.core.logger.FormattedSubjectSMTPHandler' else
+                           if handler['class'] == 'fossir.core.logger.FormattedSubjectSMTPHandler' else
                            'Unexpected Exception occurred at {}')
                 handler.setdefault('subject', subject.format(config.WORKER_NAME))
         for formatter in data['formatters'].itervalues():
@@ -145,11 +130,11 @@ class Logger(object):
                 formatter['()'] = RequestInfoFormatter
         # Enable the database logger for our db_log util
         if config.DB_LOG:
-            data['loggers']['indico._db'] = {'level': 'DEBUG', 'propagate': False, 'handlers': ['_db']}
+            data['loggers']['fossir._db'] = {'level': 'DEBUG', 'propagate': False, 'handlers': ['_db']}
             data['handlers']['_db'] = {'class': 'logging.handlers.SocketHandler', 'host': '127.0.0.1', 'port': 9020}
         # If customization debugging is enabled, ensure we get the debug log messages from it
         if config.CUSTOMIZATION_DEBUG and config.CUSTOMIZATION_DIR:
-            data['loggers'].setdefault('indico.customization', {})['level'] = 'DEBUG'
+            data['loggers'].setdefault('fossir.customization', {})['level'] = 'DEBUG'
         logging.config.dictConfig(data)
         if config.SENTRY_DSN:
             if not has_sentry:
@@ -161,17 +146,17 @@ class Logger(object):
         """Get a logger with the given name.
 
         This behaves pretty much like `logging.getLogger`, except for
-        prefixing any logger name with ``indico.`` (if not already
+        prefixing any logger name with ``fossir.`` (if not already
         present).
         """
         if name is None:
-            name = 'indico'
-        elif name != 'indico' and not name.startswith('indico.'):
-            name = 'indico.' + name
+            name = 'fossir'
+        elif name != 'fossir' and not name.startswith('fossir.'):
+            name = 'fossir.' + name
         return logging.getLogger(name)
 
 
-class IndicoSentry(Sentry):
+class fossirSentry(Sentry):
     def get_user_info(self, request):
         if not has_request_context() or not session.user:
             return None
@@ -180,7 +165,7 @@ class IndicoSentry(Sentry):
                 'name': session.user.full_name}
 
     def before_request(self, *args, **kwargs):
-        super(IndicoSentry, self).before_request()
+        super(fossirSentry, self).before_request()
         if not has_request_context():
             return
         self.client.extra_context({'Endpoint': str(request.url_rule.endpoint) if request.url_rule else None,
@@ -189,14 +174,14 @@ class IndicoSentry(Sentry):
 
 
 def init_sentry(app):
-    sentry = IndicoSentry(wrap_wsgi=False, register_signal=True, logging=False)
+    sentry = fossirSentry(wrap_wsgi=False, register_signal=True, logging=False)
     sentry.init_app(app)
-    # setup logging manually and exclude uncaught indico exceptions.
+    # setup logging manually and exclude uncaught fossir exceptions.
     # these are logged manually in the flask error handler logic so
     # we get the X-Sentry-ID header which is not populated in the
     # logging handlers
     handler = SentryHandler(sentry.client, level=getattr(logging, config.SENTRY_LOGGING_LEVEL))
-    handler.addFilter(BlacklistFilter({'indico.flask', 'celery.redirected'}))
+    handler.addFilter(BlacklistFilter({'fossir.flask', 'celery.redirected'}))
     setup_logging(handler)
     # connect to the celery logger
     register_logger_signal(sentry.client)

@@ -1,27 +1,13 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 """
-Module containing the Indico exception class hierarchy
+Module containing the fossir exception class hierarchy
 """
 
 from werkzeug.exceptions import BadRequest, Forbidden, HTTPException, NotFound
 
-from indico.util.i18n import _
-from indico.util.string import to_unicode
+from fossir.util.i18n import _
+from fossir.util.string import to_unicode
 
 
 def get_error_description(exception):
@@ -44,7 +30,7 @@ def get_error_description(exception):
         return to_unicode(description)
 
 
-class IndicoError(Exception):
+class fossirError(Exception):
     """A generic error that results in a HTTP 500 error.
 
     This error is not logged, so it should only be used rarely and in
@@ -56,10 +42,10 @@ class IndicoError(Exception):
     """
 
 
-class NoReportError(IndicoError):
+class NoReportError(fossirError):
     """A generic error that cannot be reported by users.
 
-    This behaves exactly like :exc:`IndicoError` except that users
+    This behaves exactly like :exc:`fossirError` except that users
     cannot sent an error report.
 
     Its `wrap_exc` method can be wrapped to raise any other HTTP error

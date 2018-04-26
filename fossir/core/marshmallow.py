@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -25,13 +11,13 @@ from marshmallow_enum import EnumField
 from marshmallow_sqlalchemy import ModelConverter
 from sqlalchemy.orm import ColumnProperty
 
-from indico.core.db.sqlalchemy import PyIntEnum, UTCDateTime
+from fossir.core.db.sqlalchemy import PyIntEnum, UTCDateTime
 
 
 mm = Marshmallow()
 
 
-class IndicoModelConverter(ModelConverter):
+class fossirModelConverter(ModelConverter):
     SQLA_TYPE_MAPPING = ModelConverter.SQLA_TYPE_MAPPING.copy()
     SQLA_TYPE_MAPPING.update({
         UTCDateTime: fields.DateTime,
@@ -39,7 +25,7 @@ class IndicoModelConverter(ModelConverter):
     })
 
     def _get_field_kwargs_for_property(self, prop):
-        kwargs = super(IndicoModelConverter, self)._get_field_kwargs_for_property(prop)
+        kwargs = super(fossirModelConverter, self)._get_field_kwargs_for_property(prop)
         if isinstance(prop, ColumnProperty) and hasattr(prop.columns[0].type, 'marshmallow_get_field_kwargs'):
             kwargs.update(prop.columns[0].type.marshmallow_get_field_kwargs())
         return kwargs
@@ -59,7 +45,7 @@ class IndicoModelConverter(ModelConverter):
         # generate all fields from the models and leave it up to mm itself to
         # exclude fields we don't care about
         kwargs['fields'] = ()
-        fields = super(IndicoModelConverter, self).fields_for_model(model, *args, **kwargs)
+        fields = super(fossirModelConverter, self).fields_for_model(model, *args, **kwargs)
         for key, field in fields.items():
             new_key = _get_from_mro('marshmallow_aliases', key)
             if new_key:
@@ -70,14 +56,14 @@ class IndicoModelConverter(ModelConverter):
         return fields
 
 
-class _IndicoSchemaOpts(SchemaOpts):
+class _fossirSchemaOpts(SchemaOpts):
     def __init__(self, meta):
-        super(_IndicoSchemaOpts, self).__init__(meta)
-        self.model_converter = getattr(meta, 'model_converter', IndicoModelConverter)
+        super(_fossirSchemaOpts, self).__init__(meta)
+        self.model_converter = getattr(meta, 'model_converter', fossirModelConverter)
 
 
-class IndicoModelSchema(mm.ModelSchema):
-    OPTIONS_CLASS = _IndicoSchemaOpts
+class fossirModelSchema(mm.ModelSchema):
+    OPTIONS_CLASS = _fossirSchemaOpts
 
 
-mm.ModelSchema = IndicoModelSchema
+mm.ModelSchema = fossirModelSchema

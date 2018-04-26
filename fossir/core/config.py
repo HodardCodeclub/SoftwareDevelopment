@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import, unicode_literals
 
@@ -31,24 +16,24 @@ from flask.helpers import get_root_path
 from werkzeug.datastructures import ImmutableDict
 from werkzeug.urls import url_parse
 
-from indico.util.caching import make_hashable
-from indico.util.fs import resolve_link
-from indico.util.packaging import package_is_editable
-from indico.util.string import crc32, snakify
+from fossir.util.caching import make_hashable
+from fossir.util.fs import resolve_link
+from fossir.util.packaging import package_is_editable
+from fossir.util.string import crc32, snakify
 
 
 DEFAULTS = {
-    'ASSETS_DIR': '/opt/indico/assets',
+    'ASSETS_DIR': '/opt/fossir/assets',
     'ATTACHMENT_STORAGE': 'default',
     'AUTH_PROVIDERS': {},
     'BASE_URL': None,
     'CACHE_BACKEND': 'files',
-    'CACHE_DIR': '/opt/indico/cache',
+    'CACHE_DIR': '/opt/fossir/cache',
     'CATEGORY_CLEANUP': {},
     'CELERY_BROKER': None,
     'CELERY_CONFIG': {},
     'CELERY_RESULT_BACKEND': None,
-    'COMMUNITY_HUB_URL': 'https://hub.getindico.io',
+    'COMMUNITY_HUB_URL': 'https://hub.getfossir.io',
     'CUSTOMIZATION_DEBUG': False,
     'CUSTOMIZATION_DIR': None,
     'CUSTOM_COUNTRIES': {},
@@ -59,14 +44,14 @@ DEFAULTS = {
     'ENABLE_ROOMBOOKING': False,
     'EXTERNAL_REGISTRATION_URL': '',
     'FLOWER_URL': None,
-    'HELP_URL': 'https://learn.getindico.io',
+    'HELP_URL': 'https://learn.getfossir.io',
     'IDENTITY_PROVIDERS': {},
     'LOCAL_IDENTITIES': True,
     'LOCAL_MODERATION': False,
     'LOCAL_REGISTRATION': True,
     'LOGGING_CONFIG_FILE': 'logging.yaml',
     'LOGO_URL': None,
-    'LOG_DIR': '/opt/indico/log',
+    'LOG_DIR': '/opt/fossir/log',
     'MAX_UPLOAD_FILES_TOTAL_SIZE': 0,
     'MAX_UPLOAD_FILE_SIZE': 0,
     'MEMCACHED_SERVERS': [],
@@ -96,10 +81,10 @@ DEFAULTS = {
     'SQLALCHEMY_POOL_TIMEOUT': 10,
     'STATIC_FILE_METHOD': None,
     'STATIC_SITE_STORAGE': None,
-    'STORAGE_BACKENDS': {'default': 'fs:/opt/indico/archive'},
+    'STORAGE_BACKENDS': {'default': 'fs:/opt/fossir/archive'},
     'STRICT_LATEX': False,
     'SUPPORT_EMAIL': None,
-    'TEMP_DIR': '/opt/indico/tmp',
+    'TEMP_DIR': '/opt/fossir/tmp',
     'USE_PROXY': False,
     'WORKER_NAME': socket.getfqdn(),
     'XELATEX_PATH': 'xelatex',
@@ -115,34 +100,34 @@ INTERNAL_DEFAULTS = {
 
 
 def get_config_path():
-    """Get the path of the indico config file.
+    """Get the path of the fossir config file.
 
     This may return the location of a symlink.  Resolving a link is up
     to the caller if needed.
     """
-    # In certain environments (debian+uwsgi+no-systemd) Indico may run
+    # In certain environments (debian+uwsgi+no-systemd) fossir may run
     # with an incorrect $HOME (such as /root), resulting in the config
     # files being searched in the wrong place. By clearing $HOME, Python
     # will get the home dir from passwd which has the correct path.
     old_home = os.environ.pop('HOME', None)
     # env var has priority
     try:
-        return os.path.expanduser(os.environ['INDICO_CONFIG'])
+        return os.path.expanduser(os.environ['fossir_CONFIG'])
     except KeyError:
         pass
     # try finding the config in various common paths
-    paths = [os.path.expanduser('~/.indico.conf'), '/etc/indico.conf']
+    paths = [os.path.expanduser('~/.fossir.conf'), '/etc/fossir.conf']
     # Keeping HOME unset wouldn't be too bad but let's not have weird side-effects
     if old_home is not None:
         os.environ['HOME'] = old_home
     # If it's an editable setup (ie usually a dev instance) allow having
     # the config in the package's root path
-    if package_is_editable('indico'):
-        paths.insert(0, os.path.normpath(os.path.join(get_root_path('indico'), 'indico.conf')))
+    if package_is_editable('fossir'):
+        paths.insert(0, os.path.normpath(os.path.join(get_root_path('fossir'), 'fossir.conf')))
     for path in paths:
         if os.path.exists(path):
             return path
-    raise Exception('No indico config found. Point the INDICO_CONFIG env var to your config file or '
+    raise Exception('No fossir config found. Point the fossir_CONFIG env var to your config file or '
                     'move/symlink the config in one of the following locations: {}'.format(', '.join(paths)))
 
 
@@ -199,7 +184,7 @@ def load_config(only_defaults=False, override=None):
         path = get_config_path()
         config = _sanitize_data(_parse_config(path))
         data.update(config)
-        env_override = os.environ.get('INDICO_CONF_OVERRIDE')
+        env_override = os.environ.get('fossir_CONF_OVERRIDE')
         if env_override:
             data.update(_sanitize_data(ast.literal_eval(env_override)))
         resolved_path = resolve_link(path) if os.path.islink(path) else path
@@ -215,8 +200,8 @@ def load_config(only_defaults=False, override=None):
     return ImmutableDict(data)
 
 
-class IndicoConfig(object):
-    """Wrapper for the Indico configuration.
+class fossirConfig(object):
+    """Wrapper for the fossir configuration.
 
     It exposes all config keys as read-only attributes.
 
@@ -248,7 +233,7 @@ class IndicoConfig(object):
     @property
     def data(self):
         try:
-            return self._config or current_app.config['INDICO']
+            return self._config or current_app.config['fossir']
         except KeyError:
             raise RuntimeError('config not loaded')
 
@@ -277,5 +262,5 @@ class IndicoConfig(object):
         raise AttributeError('cannot change config at runtime')
 
 
-#: The global Indico configuration
-config = IndicoConfig()
+#: The global fossir configuration
+config = fossirConfig()

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -23,10 +9,10 @@ from types import GeneratorType
 
 from flask import g
 
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.logger import Logger
-from indico.util.string import to_unicode, truncate
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.logger import Logger
+from fossir.util.string import to_unicode, truncate
 
 
 logger = Logger.get('emails')
@@ -59,7 +45,7 @@ def send_email(email, event=None, module=None, user=None):
     :param module: The module name to show in the email log
     :param user: The user to show in the email log
     """
-    from indico.core.emails import do_send_email, send_email_task
+    from fossir.core.emails import do_send_email, send_email_task
     fn = send_email_task.delay if config.SMTP_USE_CELERY else do_send_email
     # we log the email immediately (as pending).  if we don't commit,
     # the log message will simply be thrown away later
@@ -71,7 +57,7 @@ def send_email(email, event=None, module=None, user=None):
 
 
 def _log_email(email, event, module, user):
-    from indico.modules.events.logs import EventLogKind, EventLogRealm
+    from fossir.modules.events.logs import EventLogKind, EventLogRealm
     if not event:
         return None
     log_data = {
@@ -103,7 +89,7 @@ def flush_email_queue():
     doing a commit/rollback of any other changes that might have
     been pending.
     """
-    from indico.core.emails import store_failed_email, update_email_log_state
+    from fossir.core.emails import store_failed_email, update_email_log_state
     queue = g.get('email_queue', [])
     if not queue:
         return

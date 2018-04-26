@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -25,14 +11,14 @@ import click
 from celery.exceptions import MaxRetriesExceededError, Retry
 from sqlalchemy.orm.attributes import flag_modified
 
-from indico.core.celery import celery
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.logger import Logger
-from indico.util.date_time import now_utc
-from indico.util.emails.backend import EmailBackend
-from indico.util.emails.message import EmailMessage
-from indico.util.string import truncate
+from fossir.core.celery import celery
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.logger import Logger
+from fossir.util.date_time import now_utc
+from fossir.util.emails.backend import EmailBackend
+from fossir.util.emails.message import EmailMessage
+from fossir.util.string import truncate
 
 
 logger = Logger.get('emails')
@@ -54,7 +40,7 @@ def send_email_task(task, email, log_entry=None):
                 update_email_log_state(log_entry, failed=True)
                 db.session.commit()
             # store the email in case the mail server is  unavailable for an
-            # extended period so someone can recover it using `indico shell`
+            # extended period so someone can recover it using `fossir shell`
             # and possibly retry sending it
             path = store_failed_email(email, log_entry)
             logger.error('Could not send email "%s" (attempt %d/%d); giving up [%s]; stored data in %s',
@@ -124,7 +110,7 @@ def store_failed_email(email, log_entry=None):
 
 def resend_failed_email(path):
     """Try re-sending an email that previously failed."""
-    from indico.modules.events.logs import EventLogEntry
+    from fossir.modules.events.logs import EventLogEntry
     with open(path, 'rb') as f:
         email, log_entry_id = cPickle.load(f)
     log_entry = EventLogEntry.get(log_entry_id) if log_entry_id is not None else None
