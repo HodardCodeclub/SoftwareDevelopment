@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import errno
 import os
@@ -26,8 +12,8 @@ from webassets import Bundle, Environment
 from webassets.filter import Filter, register_filter
 from webassets.filter.cssrewrite import CSSRewrite
 
-from indico.core.config import config
-from indico.modules.events.layout import theme_settings
+from fossir.core.config import config
+from fossir.modules.events.layout import theme_settings
 
 
 SASS_BASE_MODULES = ["sass/*.scss", "sass/base/*.scss", "sass/custom/*.scss", "sass/partials/*.scss",
@@ -41,11 +27,11 @@ class CSSCompressor(Filter):
         out.write(csscompressor.compress(_in.read(), max_linelen=500))
 
 
-class IndicoCSSRewrite(CSSRewrite):
-    name = 'indico_cssrewrite'
+class fossirCSSRewrite(CSSRewrite):
+    name = 'fossir_cssrewrite'
 
     def __init__(self):
-        super(IndicoCSSRewrite, self).__init__()
+        super(fossirCSSRewrite, self).__init__()
         self.base_url_path = urlparse(config.BASE_URL.rstrip('/')).path
 
     def replace_url(self, url):
@@ -55,20 +41,20 @@ class IndicoCSSRewrite(CSSRewrite):
         elif parsed.path.startswith('/'):
             # Prefix absolute urls with the base path. Like this we avoid
             # the mess that comes with relative URLs in CSS while still
-            # supporting Indico running in a subdirectory (e.g. /indico)
+            # supporting fossir running in a subdirectory (e.g. /fossir)
             return self.base_url_path + url
         else:
-            return super(IndicoCSSRewrite, self).replace_url(url)
+            return super(fossirCSSRewrite, self).replace_url(url)
 
 
 # XXX: DO NOT move this to decorators. this function returns None,
 # so super() calls using the decorated class name fail...
 register_filter(CSSCompressor)
-register_filter(IndicoCSSRewrite)
+register_filter(fossirCSSRewrite)
 
 
 def _get_htdocs_path():
-    return os.path.join(get_root_path('indico'), 'htdocs')
+    return os.path.join(get_root_path('fossir'), 'htdocs')
 
 
 def configure_pyscss(environment):
@@ -104,7 +90,7 @@ class LazyCacheEnvironment(Environment):
     del _get_cache
 
 
-class IndicoEnvironment(LazyCacheEnvironment):
+class fossirEnvironment(LazyCacheEnvironment):
     def init_app(self, app):
         self.config.update({'cache': get_webassets_cache_dir()})
         url_path = urlparse(config.BASE_URL).path
@@ -165,9 +151,9 @@ def _get_custom_files(subdir, pattern):
 
 
 def register_all_js(env):
-    indico_core = rjs_bundle(
-        'indico_core',
-        *namespace('js/indico/Core',
+    fossir_core = rjs_bundle(
+        'fossir_core',
+        *namespace('js/fossir/Core',
                    'Presentation.js',
                    'Data.js',
                    'Components.js',
@@ -190,16 +176,16 @@ def register_all_js(env):
                    'Dragndrop.js',
                    'keymap.js'))
 
-    indico_management = rjs_bundle(
-        'indico_management',
-        *namespace('js/indico/Management',
+    fossir_management = rjs_bundle(
+        'fossir_management',
+        *namespace('js/fossir/Management',
                    'RoomBooking.js',
                    'RoomBookingMapOfRooms.js'))
 
-    indico_room_booking = rjs_bundle(
-        'indico_room_booking',
+    fossir_room_booking = rjs_bundle(
+        'fossir_room_booking',
         'js/lib/rrule.js',
-        *namespace('js/indico/RoomBooking',
+        *namespace('js/fossir/RoomBooking',
                    'util.js',
                    'MapOfRooms.js',
                    'BookingForm.js',
@@ -207,20 +193,20 @@ def register_all_js(env):
                    'roomselector.js',
                    'validation.js'))
 
-    indico_legacy = rjs_bundle(
-        'indico_legacy',
-        *namespace('js/indico/Legacy',
+    fossir_legacy = rjs_bundle(
+        'fossir_legacy',
+        *namespace('js/fossir/Legacy',
                    'Widgets.js',
                    'Util.js'))
 
-    indico_common = rjs_bundle(
-        'indico_common',
-        *namespace('js/indico/Common',
+    fossir_common = rjs_bundle(
+        'fossir_common',
+        *namespace('js/fossir/Common',
                    'Export.js'))
 
-    indico_jquery = rjs_bundle(
-        'indico_jquery',
-        *namespace('js/indico/jquery',
+    fossir_jquery = rjs_bundle(
+        'fossir_jquery',
+        *namespace('js/fossir/jquery',
                    'defaults.js',
                    'global.js',
                    'declarative.js',
@@ -249,9 +235,9 @@ def register_all_js(env):
                    'track_role_widget.js',
                    'paper_email_settings_widget.js'))
 
-    indico_regform = rjs_bundle(
-        'indico_regform',
-        *namespace('js/indico/modules/registration/form',
+    fossir_regform = rjs_bundle(
+        'fossir_regform',
+        *namespace('js/fossir/modules/registration/form',
                    'form.js',
                    'section.js',
                    'field.js',
@@ -264,10 +250,10 @@ def register_all_js(env):
         'js/lib/angular-resource.js',
         'js/lib/angular-sanitize.js',
         'js/lib/sortable.js',
-        'js/indico/angular/app.js',
-        'js/indico/angular/directives.js',
-        'js/indico/angular/filters.js',
-        'js/indico/angular/services.js')
+        'js/fossir/angular/app.js',
+        'js/fossir/angular/directives.js',
+        'js/fossir/angular/filters.js',
+        'js/fossir/angular/services.js')
 
     ckeditor = rjs_bundle('ckeditor', 'js/lib/ckeditor/ckeditor.js', filters=None)
 
@@ -395,52 +381,52 @@ def register_all_js(env):
                    'Markdown.Sanitizer.js'))
 
     module_js = {
-        'global': rjs_bundle('modules_global', *namespace('js/indico/modules/global',
+        'global': rjs_bundle('modules_global', *namespace('js/fossir/modules/global',
                                                           'session_bar.js', 'impersonation.js')),
-        'bootstrap': rjs_bundle('modules_bootstrap', 'js/indico/modules/bootstrap.js'),
-        'cephalopod': rjs_bundle('modules_cephalopod', 'js/indico/modules/cephalopod.js'),
-        'categories': rjs_bundle('modules_categories', *namespace('js/indico/modules/categories', 'display.js',
+        'bootstrap': rjs_bundle('modules_bootstrap', 'js/fossir/modules/bootstrap.js'),
+        'cephalopod': rjs_bundle('modules_cephalopod', 'js/fossir/modules/cephalopod.js'),
+        'categories': rjs_bundle('modules_categories', *namespace('js/fossir/modules/categories', 'display.js',
                                                                   'calendar.js')),
         'categories_management': rjs_bundle('modules_categories_management',
-                                            'js/indico/modules/categories/management.js'),
-        'category_statistics': rjs_bundle('modules_category_statistics', 'js/indico/modules/categories/statistics.js'),
-        'vc': rjs_bundle('modules_vc', 'js/indico/modules/vc.js'),
-        'event_creation': rjs_bundle('modules_event_creation', 'js/indico/modules/events/creation.js'),
-        'event_display': rjs_bundle('modules_event_display', *namespace('js/indico/modules', 'events/display.js',
+                                            'js/fossir/modules/categories/management.js'),
+        'category_statistics': rjs_bundle('modules_category_statistics', 'js/fossir/modules/categories/statistics.js'),
+        'vc': rjs_bundle('modules_vc', 'js/fossir/modules/vc.js'),
+        'event_creation': rjs_bundle('modules_event_creation', 'js/fossir/modules/events/creation.js'),
+        'event_display': rjs_bundle('modules_event_display', *namespace('js/fossir/modules', 'events/display.js',
                                                                         'list_generator.js', 'static_filters.js',
                                                                         'social.js')),
-        'event_layout': rjs_bundle('modules_event_layout', 'js/indico/modules/events/layout.js'),
+        'event_layout': rjs_bundle('modules_event_layout', 'js/fossir/modules/events/layout.js'),
         'event_management': rjs_bundle('modules_event_management',
-                                       *namespace('js/indico/modules', 'events/management.js', 'events/badges.js',
+                                       *namespace('js/fossir/modules', 'events/management.js', 'events/badges.js',
                                                   'list_generator.js', 'static_filters.js')),
-        'attachments': rjs_bundle('modules_attachments', 'js/indico/modules/attachments.js'),
-        'surveys': rjs_bundle('modules_surveys', 'js/indico/modules/surveys.js'),
+        'attachments': rjs_bundle('modules_attachments', 'js/fossir/modules/attachments.js'),
+        'surveys': rjs_bundle('modules_surveys', 'js/fossir/modules/surveys.js'),
         'registration': rjs_bundle('modules_registration',
-                                   'js/indico/modules/registration/registration.js',
-                                   'js/indico/modules/registration/invitations.js',
-                                   'js/indico/modules/registration/reglists.js',
-                                   *namespace('js/indico/modules/registration/form', 'form.js', 'section.js',
+                                   'js/fossir/modules/registration/registration.js',
+                                   'js/fossir/modules/registration/invitations.js',
+                                   'js/fossir/modules/registration/reglists.js',
+                                   *namespace('js/fossir/modules/registration/form', 'form.js', 'section.js',
                                               'field.js',
                                               'sectiontoolbar.js', 'table.js')),
         'contributions': rjs_bundle('modules_contributions',
-                                    *namespace('js/indico/modules/contributions', 'common.js')),
-        'tracks': rjs_bundle('modules_tracks', 'js/indico/modules/tracks.js'),
+                                    *namespace('js/fossir/modules/contributions', 'common.js')),
+        'tracks': rjs_bundle('modules_tracks', 'js/fossir/modules/tracks.js'),
         'abstracts': rjs_bundle('modules_abstracts',
-                                'js/indico/modules/abstracts.js',
-                                'js/indico/jquery/rulelistwidget.js'),
-        'papers': rjs_bundle('modules_papers', 'js/indico/modules/papers.js'),
-        'reviews': rjs_bundle('modules_reviews', 'js/indico/modules/reviews.js'),
+                                'js/fossir/modules/abstracts.js',
+                                'js/fossir/jquery/rulelistwidget.js'),
+        'papers': rjs_bundle('modules_papers', 'js/fossir/modules/papers.js'),
+        'reviews': rjs_bundle('modules_reviews', 'js/fossir/modules/reviews.js'),
         'timetable': rjs_bundle('modules_timetable',
-                                *namespace('js/indico/modules/timetable/timetable', 'Management.js', 'Filter.js',
+                                *namespace('js/fossir/modules/timetable/timetable', 'Management.js', 'Filter.js',
                                            'Layout.js', 'Undo.js', 'Base.js', 'DragAndDrop.js', 'Draw.js',
                                            'Actions.js')),
-        'sessions': rjs_bundle('modules_sessions', 'js/indico/modules/sessions.js'),
-        'users': rjs_bundle('modules_users', 'js/indico/modules/users.js'),
-        'designer': rjs_bundle('modules_designer', 'js/indico/modules/designer.js'),
-        'event_cloning': rjs_bundle('modules_event_cloning', 'js/indico/modules/events/cloning.js')
+        'sessions': rjs_bundle('modules_sessions', 'js/fossir/modules/sessions.js'),
+        'users': rjs_bundle('modules_users', 'js/fossir/modules/users.js'),
+        'designer': rjs_bundle('modules_designer', 'js/fossir/modules/designer.js'),
+        'event_cloning': rjs_bundle('modules_event_cloning', 'js/fossir/modules/events/cloning.js')
     }
 
-    widgets_js = rjs_bundle('widgets', *namespace('js/indico/widgets',
+    widgets_js = rjs_bundle('widgets', *namespace('js/fossir/widgets',
                                                   'category_picker_widget.js',
                                                   'ckeditor_widget.js',
                                                   'color_picker_widget.js',
@@ -459,20 +445,20 @@ def register_all_js(env):
                                                   'synced_input_widget.js',
                                                   'typeahead_widget.js'))
 
-    base_js = Bundle(palette, jquery, angular, jed, utils, presentation, calendar, indico_jquery, moment,
-                     indico_core, indico_legacy, indico_common, clipboard_js, taggle_js, typewatch_js, fullcalendar_js,
+    base_js = Bundle(palette, jquery, angular, jed, utils, presentation, calendar, fossir_jquery, moment,
+                     fossir_core, fossir_legacy, fossir_common, clipboard_js, taggle_js, typewatch_js, fullcalendar_js,
                      outdated_browser_js, widgets_js, module_js['event_creation'], module_js['global'])
 
     env.register('jquery', jquery)
     env.register('utils', utils)
     env.register('presentation', presentation)
-    env.register('indico_core', indico_core)
-    env.register('indico_management', indico_management)
-    env.register('indico_roombooking', indico_room_booking)
-    env.register('indico_legacy', indico_legacy)
-    env.register('indico_common', indico_common)
-    env.register('indico_jquery', indico_jquery)
-    env.register('indico_regform', indico_regform)
+    env.register('fossir_core', fossir_core)
+    env.register('fossir_management', fossir_management)
+    env.register('fossir_roombooking', fossir_room_booking)
+    env.register('fossir_legacy', fossir_legacy)
+    env.register('fossir_common', fossir_common)
+    env.register('fossir_jquery', fossir_jquery)
+    env.register('fossir_regform', fossir_regform)
     env.register('base_js', base_js)
     env.register('statistics_js', statistics_js)
     env.register('mathjax_js', mathjax_js)
@@ -499,7 +485,7 @@ def register_theme_sass():
         if stylesheet:
             bundle = Bundle('css/events/common.css',
                             stylesheet,
-                            filters=('pyscss', 'indico_cssrewrite', 'csscompressor'),
+                            filters=('pyscss', 'fossir_cssrewrite', 'csscompressor'),
                             output='{}_%(version)s.css'.format(theme_id),
                             depends=SASS_BASE_MODULES)
             data['asset_env'] = env = ThemeEnvironment(theme_id, data)
@@ -508,7 +494,7 @@ def register_theme_sass():
             print_stylesheet = data.get('print_stylesheet')
             if print_stylesheet:
                 print_bundle = Bundle(bundle, print_stylesheet,
-                                      filters=('pyscss', 'indico_cssrewrite', 'csscompressor'),
+                                      filters=('pyscss', 'fossir_cssrewrite', 'csscompressor'),
                                       output="{}_print_%(version)s.css".format(theme_id),
                                       depends=SASS_BASE_MODULES)
                 env.register('print_sass', print_bundle)
@@ -516,7 +502,7 @@ def register_theme_sass():
 
 def register_all_css(env):
     fonts_sass = Bundle('sass/partials/_fonts.scss',
-                        filters=('pyscss', 'csscompressor'), output='css/indico_fonts_%(version)s.min.css')
+                        filters=('pyscss', 'csscompressor'), output='css/fossir_fonts_%(version)s.min.css')
 
     chartist_css = Bundle('css/lib/chartist.js/chartist.scss',
                           'css/lib/chartist.js/settings/_chartist-settings.scss',
@@ -551,15 +537,15 @@ def register_all_css(env):
                    'jquery.colorbox.css',
                    'jquery-ui-custom.css',
                    'jquery.colorpicker.css'),
-        filters=('csscompressor', 'indico_cssrewrite'),
+        filters=('csscompressor', 'fossir_cssrewrite'),
         output='css/base_%(version)s.min.css')
 
     conference_css = Bundle('css/Conf_Basic.css',
-                            filters=('csscompressor', 'indico_cssrewrite'),
+                            filters=('csscompressor', 'fossir_cssrewrite'),
                             output='css/conference_%(version)s.min.css')
 
     screen_sass = Bundle('sass/screen.scss',
-                         filters=('pyscss', 'indico_cssrewrite', 'csscompressor'),
+                         filters=('pyscss', 'fossir_cssrewrite', 'csscompressor'),
                          output="sass/screen_sass_%(version)s.css",
                          depends=SASS_BASE_MODULES)
 
@@ -581,4 +567,4 @@ def register_all_css(env):
                                            output='sass/custom_sass_%(version)s.css'))
 
 
-core_env = IndicoEnvironment()
+core_env = fossirEnvironment()

@@ -1,31 +1,17 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
 from flask import render_template
 from werkzeug.urls import url_parse
 
-from indico.core.auth import multipass
-from indico.core.config import config
-from indico.modules.auth.util import url_for_login
-from indico.modules.events.registration.util import url_rule_to_angular
-from indico.modules.rb.models.locations import Location
-from indico.web.assets import core_env
-from indico.web.flask.util import url_for, url_rule_to_js
+from fossir.core.auth import multipass
+from fossir.core.config import config
+from fossir.modules.auth.util import url_for_login
+from fossir.modules.events.registration.util import url_rule_to_angular
+from fossir.modules.rb.models.locations import Location
+from fossir.web.assets import core_env
+from fossir.web.flask.util import url_for, url_rule_to_js
 
 
 def generate_global_file():
@@ -38,7 +24,7 @@ def generate_global_file():
         'supports_groups': auth.supports_groups
     } for auth in multipass.identity_providers.itervalues() if auth.supports_search]
 
-    indico_vars = {
+    fossir_vars = {
         'Urls': {
             'Base': config.BASE_URL,
             'BasePath': url_parse(config.BASE_URL).path.rstrip('/'),
@@ -156,4 +142,4 @@ def generate_global_file():
         }
     }
 
-    return render_template('assets/vars_globals.js', indico_vars=indico_vars, config=config)
+    return render_template('assets/vars_globals.js', fossir_vars=fossir_vars, config=config)

@@ -1,37 +1,23 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 import os
 
 from flask import Response, current_app, json, redirect, render_template, send_from_directory, session
 from werkzeug.exceptions import NotFound
 
-from indico.core.config import config
-from indico.core.plugins import plugin_engine
-from indico.modules.events.layout import theme_settings
-from indico.modules.users.util import serialize_user
-from indico.util.i18n import po_to_json
-from indico.util.string import crc32
-from indico.web.assets.util import get_asset_path
-from indico.web.assets.vars_js import generate_global_file
-from indico.web.flask.util import send_file, url_for
-from indico.web.flask.wrappers import IndicoBlueprint
+from fossir.core.config import config
+from fossir.core.plugins import plugin_engine
+from fossir.modules.events.layout import theme_settings
+from fossir.modules.users.util import serialize_user
+from fossir.util.i18n import po_to_json
+from fossir.util.string import crc32
+from fossir.web.assets.util import get_asset_path
+from fossir.web.assets.vars_js import generate_global_file
+from fossir.web.flask.util import send_file, url_for
+from fossir.web.flask.wrappers import fossirBlueprint
 
 
-assets_blueprint = IndicoBlueprint('assets', __name__, url_prefix='/assets')
+assets_blueprint = fossirBlueprint('assets', __name__, url_prefix='/assets')
 assets_blueprint.add_url_rule('!/css/<path:filename>', 'css', build_only=True)
 assets_blueprint.add_url_rule('!/images/<path:filename>', 'image', build_only=True)
 assets_blueprint.add_url_rule('!/js/<path:filename>', 'js', build_only=True)
@@ -88,10 +74,10 @@ def i18n_locale(locale_name):
     cache_file = os.path.join(config.CACHE_DIR, 'assets_i18n_{}_{}.js'.format(locale_name, crc32(plugin_key)))
 
     if not os.path.exists(cache_file):
-        i18n_data = locale_data(root_path, locale_name, 'indico')
+        i18n_data = locale_data(root_path, locale_name, 'fossir')
         if not i18n_data:
-            # Dummy data, not having the indico domain would cause lots of failures
-            i18n_data = {'indico': {'': {'domain': 'indico',
+            # Dummy data, not having the fossir domain would cause lots of failures
+            i18n_data = {'fossir': {'': {'domain': 'fossir',
                                          'lang': locale_name}}}
 
         for pid, plugin in plugin_engine.get_active_plugins().iteritems():
@@ -134,4 +120,4 @@ def static_custom(filename):
 
 @assets_blueprint.route('!/favicon.ico')
 def favicon():
-    return redirect(url_for('.image', filename='indico.ico'))
+    return redirect(url_for('.image', filename='fossir.ico'))
