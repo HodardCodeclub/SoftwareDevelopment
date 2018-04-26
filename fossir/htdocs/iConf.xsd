@@ -1,7 +1,7 @@
 <xs:schema 
 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-xmlns:iconf="http://sunuds95.cern.ch:8000/fossir"
-targetNamespace="http://sunuds95.cern.ch:8000/fossir"
+xmlns:iconf="http://sunuds95.fossir.ch:8000/fossir"
+targetNamespace="http://sunuds95.fossir.ch:8000/fossir"
 elementFormDefault="qualified"
 attributeFormDefault="unqualified">
 

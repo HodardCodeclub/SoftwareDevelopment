@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -25,18 +11,18 @@ from tempfile import NamedTemporaryFile
 
 from werkzeug.security import safe_join
 
-from indico.core import signals
-from indico.core.config import config
-from indico.util.signals import named_objects_from_signal
-from indico.util.string import return_ascii
-from indico.web.flask.util import send_file
+from fossir.core import signals
+from fossir.core.config import config
+from fossir.util.signals import named_objects_from_signal
+from fossir.util.string import return_ascii
+from fossir.web.flask.util import send_file
 
 
 def get_storage(backend_name):
     """Returns an FS object for the given backend.
 
     The backend must be defined in the STORAGE_BACKENDS dict in the
-    indico config.  Once a backend has been used it is assumed to
+    fossir config.  Once a backend has been used it is assumed to
     stay there forever or at least as long as it is referenced
     somewhere.
 
@@ -142,7 +128,7 @@ class Storage(object):
         :param file_id: The ID of the file within the storage backend.
         """
         with self.open(file_id) as fd:
-            with NamedTemporaryFile(suffix='indico.tmp', dir=config.TEMP_DIR) as tmpfile:
+            with NamedTemporaryFile(suffix='fossir.tmp', dir=config.TEMP_DIR) as tmpfile:
                 self._copy_file(fd, tmpfile)
                 tmpfile.flush()
                 yield tmpfile.name
