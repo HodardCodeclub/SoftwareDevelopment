@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -26,12 +12,12 @@ from markupsafe import Markup
 from werkzeug.datastructures import CallbackDict
 from werkzeug.utils import cached_property
 
-from indico.core.config import config
-from indico.legacy.common.cache import GenericCache
-from indico.modules.users import User
-from indico.util.date_time import get_display_tz
-from indico.util.decorators import cached_writable_property
-from indico.util.i18n import _, set_best_lang
+from fossir.core.config import config
+from fossir.legacy.common.cache import GenericCache
+from fossir.modules.users import User
+from fossir.util.date_time import get_display_tz
+from fossir.util.decorators import cached_writable_property
+from fossir.util.i18n import _, set_best_lang
 
 
 class BaseSession(CallbackDict, SessionMixin):
@@ -56,7 +42,7 @@ class BaseSession(CallbackDict, SessionMixin):
 # - Even if you do need logic, keep it to core stuff. Otherwise it probably does not belong here!
 # - Always prefix the dict keys backing a property with an underscore (to prevent clashes with externally-set items)
 # - When you store something like the avatar that involves a DB lookup, use cached_writable_property
-class IndicoSession(BaseSession):
+class fossirSession(BaseSession):
     @cached_writable_property('_user')
     def user(self):
         user_id = self.get('_user_id')
@@ -126,10 +112,10 @@ class IndicoSession(BaseSession):
         return get_display_tz(as_timezone=True)
 
 
-class IndicoSessionInterface(SessionInterface):
+class fossirSessionInterface(SessionInterface):
     pickle_based = True
     serializer = cPickle
-    session_class = IndicoSession
+    session_class = fossirSession
     temporary_session_lifetime = timedelta(days=7)
 
     def __init__(self):

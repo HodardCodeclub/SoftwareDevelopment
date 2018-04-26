@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -28,12 +14,12 @@ from wtforms import Field, SelectField
 from wtforms.ext.dateutil.fields import DateField, DateTimeField
 from wtforms.validators import StopValidation
 
-from indico.core.config import config
-from indico.util.date_time import localize_as_utc, relativedelta
-from indico.util.i18n import _, get_current_locale
-from indico.web.forms.fields import JSONField
-from indico.web.forms.validators import DateTimeRange, LinkedDateTime
-from indico.web.forms.widgets import JinjaWidget
+from fossir.core.config import config
+from fossir.util.date_time import localize_as_utc, relativedelta
+from fossir.util.i18n import _, get_current_locale
+from fossir.web.forms.fields import JSONField
+from fossir.web.forms.validators import DateTimeRange, LinkedDateTime
+from fossir.web.forms.widgets import JinjaWidget
 
 
 class TimeDeltaField(Field):
@@ -184,19 +170,19 @@ class RelativeDeltaField(Field):
         return self.split_data
 
 
-class IndicoDateField(DateField):
+class fossirDateField(DateField):
     widget = JinjaWidget('forms/date_widget.html', single_line=True, single_kwargs=True)
 
     def __init__(self, *args, **kwargs):
-        super(IndicoDateField, self).__init__(*args, parse_kwargs={'dayfirst': True},
+        super(fossirDateField, self).__init__(*args, parse_kwargs={'dayfirst': True},
                                               display_format='%d/%m/%Y', **kwargs)
 
 
-class IndicoDateTimeField(DateTimeField):
+class fossirDateTimeField(DateTimeField):
     """Friendly datetime field that handles timezones and validations.
 
     Important: When the form has a `timezone` field it must be
-    declared before any `IndicoDateTimeField`.  Otherwise its
+    declared before any `fossirDateTimeField`.  Otherwise its
     value is not available in this field resulting in an error
     during form submission.
     """
@@ -209,7 +195,7 @@ class IndicoDateTimeField(DateTimeField):
         self.date_missing = False
         self.time_missing = False
         self.allow_clear = kwargs.pop('allow_clear', True)
-        super(IndicoDateTimeField, self).__init__(*args, parse_kwargs={'dayfirst': True}, **kwargs)
+        super(fossirDateTimeField, self).__init__(*args, parse_kwargs={'dayfirst': True}, **kwargs)
 
     def pre_validate(self, form):
         if self.date_missing:
@@ -228,7 +214,7 @@ class IndicoDateTimeField(DateTimeField):
                 self.time_missing = True
         if valuelist:
             valuelist = [' '.join(valuelist).strip()]
-        super(IndicoDateTimeField, self).process_formdata(valuelist)
+        super(fossirDateTimeField, self).process_formdata(valuelist)
         if self.data and not self.data.tzinfo:
             self.data = localize_as_utc(self.data, self.timezone)
 
@@ -329,19 +315,19 @@ class OccurrencesField(JSONField):
             return getattr(self.get_form(), 'timezone', session.tzinfo.zone)
 
 
-class IndicoTimezoneSelectField(SelectField):
+class fossirTimezoneSelectField(SelectField):
     def __init__(self, *args, **kwargs):
-        super(IndicoTimezoneSelectField, self).__init__(*args, **kwargs)
+        super(fossirTimezoneSelectField, self).__init__(*args, **kwargs)
         self.choices = [(v, v) for v in pytz.common_timezones]
         self.default = config.DEFAULT_TIMEZONE
 
     def process_data(self, value):
-        super(IndicoTimezoneSelectField, self).process_data(value)
+        super(fossirTimezoneSelectField, self).process_data(value)
         if self.data is not None and self.data not in pytz.common_timezones_set:
             self.choices.append((self.data, self.data))
 
 
-class IndicoWeekDayRepetitionField(Field):
+class fossirWeekDayRepetitionField(Field):
     """ Field that lets you select an ordinal day of the week."""
 
     widget = JinjaWidget('forms/week_day_repetition_widget.html', single_line=True)
@@ -361,7 +347,7 @@ class IndicoWeekDayRepetitionField(Field):
         self.week_day_options.append((-1, _('Any day')))
         self.day_number_missing = False
         self.week_day_missing = False
-        super(IndicoWeekDayRepetitionField, self).__init__(*args, **kwargs)
+        super(fossirWeekDayRepetitionField, self).__init__(*args, **kwargs)
 
     def process_formdata(self, valuelist):
         self.data = ()

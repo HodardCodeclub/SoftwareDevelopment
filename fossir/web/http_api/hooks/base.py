@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 """
 Base export interface
@@ -26,19 +11,19 @@ from types import GeneratorType
 import pytz
 from flask import current_app, request
 
-from indico.core.config import config
-from indico.core.db import db
-from indico.core.logger import Logger
-from indico.core.notifications import flush_email_queue, init_email_queue
-from indico.util.date_time import now_utc
-from indico.web.http_api.exceptions import ArgumentParseError, LimitExceededException
-from indico.web.http_api.metadata import Serializer
-from indico.web.http_api.metadata.atom import AtomSerializer
-from indico.web.http_api.metadata.html import HTML4Serializer
-from indico.web.http_api.metadata.ical import ICalSerializer
-from indico.web.http_api.metadata.jsonp import JSONPSerializer
-from indico.web.http_api.responses import HTTPAPIError
-from indico.web.http_api.util import get_query_parameter
+from fossir.core.config import config
+from fossir.core.db import db
+from fossir.core.logger import Logger
+from fossir.core.notifications import flush_email_queue, init_email_queue
+from fossir.util.date_time import now_utc
+from fossir.web.http_api.exceptions import ArgumentParseError, LimitExceededException
+from fossir.web.http_api.metadata import Serializer
+from fossir.web.http_api.metadata.atom import AtomSerializer
+from fossir.web.http_api.metadata.html import HTML4Serializer
+from fossir.web.http_api.metadata.ical import ICalSerializer
+from fossir.web.http_api.metadata.jsonp import JSONPSerializer
+from fossir.web.http_api.responses import HTTPAPIError
+from fossir.web.http_api.util import get_query_parameter
 
 
 class HTTPAPIHook(object):
@@ -48,7 +33,7 @@ class HTTPAPIHook(object):
 
     HOOK_LIST = []
     TYPES = None  # abstract
-    PREFIX = 'export'  # url prefix. must exist in indico.web.flask.blueprints.api, too! also used as function prefix
+    PREFIX = 'export'  # url prefix. must exist in fossir.web.flask.blueprints.api, too! also used as function prefix
     RE = None  # abstract
     METHOD_NAME = None  # overrides method name derived from prefix+type
     DEFAULT_DETAIL = None  # abstract

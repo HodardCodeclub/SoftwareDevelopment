@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -20,23 +6,23 @@ import json
 
 from wtforms import HiddenField
 
-from indico.core.db.sqlalchemy.principals import PrincipalType
-from indico.modules.groups import GroupProxy
-from indico.modules.groups.util import serialize_group
-from indico.modules.networks.models.networks import IPNetworkGroup
-from indico.modules.networks.util import serialize_ip_network_group
-from indico.modules.users.util import serialize_user
-from indico.util.user import principal_from_fossil
-from indico.web.forms.widgets import JinjaWidget
+from fossir.core.db.sqlalchemy.principals import PrincipalType
+from fossir.modules.groups import GroupProxy
+from fossir.modules.groups.util import serialize_group
+from fossir.modules.networks.models.networks import IPNetworkGroup
+from fossir.modules.networks.util import serialize_ip_network_group
+from fossir.modules.users.util import serialize_user
+from fossir.util.user import principal_from_fossil
+from fossir.web.forms.widgets import JinjaWidget
 
 
 class PrincipalListField(HiddenField):
-    """A field that lets you select a list Indico user/group ("principal")
+    """A field that lets you select a list fossir user/group ("principal")
 
     :param groups: If groups should be selectable.
     :param allow_networks: If ip networks should be selectable.
     :param allow_emails: If emails should be allowed.
-    :param allow_external: If "search users with no indico account"
+    :param allow_external: If "search users with no fossir account"
                            should be available.  Selecting such a user
                            will automatically create a pending user once
                            the form is submitted, even if other fields
@@ -52,7 +38,7 @@ class PrincipalListField(HiddenField):
         self.ip_networks = []
         if self.allow_networks:
             self.ip_networks = map(serialize_ip_network_group, IPNetworkGroup.query.filter_by(hidden=False))
-        # Whether it is allowed to search for external users with no indico account
+        # Whether it is allowed to search for external users with no fossir account
         self.allow_external = kwargs.pop('allow_external', False)
         # Whether the add user dialog is opened immediately when the field is displayed
         self.open_immediately = kwargs.pop('open_immediately', False)
@@ -84,7 +70,7 @@ class PrincipalListField(HiddenField):
             raise ValueError('Invalid principal: {} ({})'.format(principal, principal.principal_type))
 
     def _value(self):
-        from indico.modules.events.models.persons import PersonLinkBase
+        from fossir.modules.events.models.persons import PersonLinkBase
 
         def key(obj):
             if isinstance(obj, PersonLinkBase):
@@ -108,7 +94,7 @@ class AccessControlListField(PrincipalListField):
 
 
 class PrincipalField(PrincipalListField):
-    """A field that lets you select an Indico user/group ("principal")"""
+    """A field that lets you select an fossir user/group ("principal")"""
 
     widget = JinjaWidget('forms/principal_widget.html', single_line=True)
 

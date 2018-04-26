@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import division, unicode_literals
 
@@ -20,10 +6,10 @@ from wtforms.fields import SelectField
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, Optional, ValidationError
 
-from indico.util.i18n import _, ngettext
-from indico.web.fields.base import BaseField
-from indico.web.forms.fields import IndicoRadioField, IndicoSelectMultipleCheckboxField, MultiStringField
-from indico.web.forms.validators import HiddenUnless
+from fossir.util.i18n import _, ngettext
+from fossir.web.fields.base import BaseField
+from fossir.web.forms.fields import fossirRadioField, fossirSelectMultipleCheckboxField, MultiStringField
+from fossir.web.forms.validators import HiddenUnless
 
 
 class _ChoiceFieldBase(BaseField):
@@ -39,12 +25,12 @@ class _ChoiceFieldBase(BaseField):
 
 
 class SingleChoiceConfigForm(object):
-    display_type = IndicoRadioField(_('Display type'), [DataRequired()],
+    display_type = fossirRadioField(_('Display type'), [DataRequired()],
                                     description=_('Widget that will be used to render the available options'),
                                     choices=[('radio', _('Radio buttons')),
                                              ('select', _('Drop-down list'))],
                                     default='radio')
-    radio_display_type = IndicoRadioField(_('Alignment'),
+    radio_display_type = fossirRadioField(_('Alignment'),
                                           [DataRequired(), HiddenUnless('display_type', 'radio')],
                                           description=_('The arrangement of the options'),
                                           choices=[('vertical', _('Vertical')),
@@ -61,7 +47,7 @@ class _EmptyNoneSelectField(SelectField):
             self.data = None
 
 
-class _EmptyNoneRadioField(IndicoRadioField):
+class _EmptyNoneRadioField(fossirRadioField):
     def process_formdata(self, valuelist):
         super(_EmptyNoneRadioField, self).process_formdata(valuelist)
         if not self.data:
@@ -128,7 +114,7 @@ class MultiSelectField(_ChoiceFieldBase):
     name = 'multiselect'
     friendly_name = _('Select multiple')
     config_form = MultiSelectConfigForm
-    wtf_field_class = IndicoSelectMultipleCheckboxField
+    wtf_field_class = fossirSelectMultipleCheckboxField
     log_type = 'list'
 
     @property

@@ -1,18 +1,3 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
 
@@ -22,11 +7,11 @@ from wtforms.fields import BooleanField, RadioField
 from wtforms.validators import Length, NumberRange
 from wtforms.widgets.core import HiddenInput, Input, Select, TextArea
 
-from indico.util.struct.enum import RichEnum
-from indico.web.forms.fields import (IndicoEnumRadioField, IndicoQuerySelectMultipleCheckboxField,
-                                     IndicoSelectMultipleCheckboxField)
-from indico.web.forms.validators import ConfirmPassword, HiddenUnless, IndicoRegexp, SoftLength, WordCount
-from indico.web.forms.widgets import SelectizeWidget, TypeaheadWidget
+from fossir.util.struct.enum import RichEnum
+from fossir.web.forms.fields import (fossirEnumRadioField, fossirQuerySelectMultipleCheckboxField,
+                                     fossirSelectMultipleCheckboxField)
+from fossir.web.forms.validators import ConfirmPassword, HiddenUnless, fossirRegexp, SoftLength, WordCount
+from fossir.web.forms.widgets import SelectizeWidget, TypeaheadWidget
 
 
 def is_single_line_field(field):
@@ -60,7 +45,7 @@ def _attrs_for_validators(field, validators):
                 attrs['minlength'] = validator.min
             if validator.max >= 0:
                 attrs['maxlength'] = validator.max
-        elif isinstance(validator, IndicoRegexp) and validator.client_side:
+        elif isinstance(validator, fossirRegexp) and validator.client_side:
             attrs['pattern'] = validator.regex.pattern
         elif isinstance(validator, NumberRange):
             if validator.min is not None:
@@ -71,7 +56,7 @@ def _attrs_for_validators(field, validators):
             attrs['data-confirm-password'] = field.get_form()[validator.fieldname].name
         elif isinstance(validator, HiddenUnless):
             condition_field = field.get_form()[validator.field]
-            checked_only = isinstance(condition_field, (RadioField, BooleanField, IndicoEnumRadioField))
+            checked_only = isinstance(condition_field, (RadioField, BooleanField, fossirEnumRadioField))
             val = validator.value
             if val is None:
                 val = []
@@ -92,8 +77,8 @@ def render_field(field, widget_attrs, disabled=None):
         widget_attrs.pop('placeholder', None)
     args = _attrs_for_validators(field, field.validators)
     args['required'] = (field.flags.required and not field.flags.conditional and
-                        not isinstance(field, (IndicoSelectMultipleCheckboxField,
-                                               IndicoQuerySelectMultipleCheckboxField)))
+                        not isinstance(field, (fossirSelectMultipleCheckboxField,
+                                               fossirQuerySelectMultipleCheckboxField)))
     args.update(widget_attrs)
     if disabled is not None:
         args['disabled'] = disabled

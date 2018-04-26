@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -22,20 +8,20 @@ from markupsafe import escape
 from wtforms.fields import Field, HiddenField, PasswordField, RadioField, SelectMultipleField, TextAreaField
 from wtforms.widgets import CheckboxInput
 
-from indico.util.i18n import _
-from indico.util.string import is_valid_mail, sanitize_email
-from indico.web.forms.fields.util import is_preprocessed_formdata
-from indico.web.forms.widgets import HiddenInputs, JinjaWidget, PasswordWidget
+from fossir.util.i18n import _
+from fossir.util.string import is_valid_mail, sanitize_email
+from fossir.web.forms.fields.util import is_preprocessed_formdata
+from fossir.web.forms.widgets import HiddenInputs, JinjaWidget, PasswordWidget
 
 
-class IndicoSelectMultipleCheckboxField(SelectMultipleField):
+class fossirSelectMultipleCheckboxField(SelectMultipleField):
     widget = JinjaWidget('forms/checkbox_group_widget.html', single_kwargs=True)
     option_widget = CheckboxInput()
 
 
-class IndicoSelectMultipleCheckboxBooleanField(IndicoSelectMultipleCheckboxField):
+class fossirSelectMultipleCheckboxBooleanField(fossirSelectMultipleCheckboxField):
     def process_formdata(self, valuelist):
-        super(IndicoSelectMultipleCheckboxBooleanField, self).process_formdata(valuelist)
+        super(fossirSelectMultipleCheckboxBooleanField, self).process_formdata(valuelist)
         values = set(self.data)
         self.data = {x[0]: x[0] in values for x in self.choices}
 
@@ -45,12 +31,12 @@ class IndicoSelectMultipleCheckboxBooleanField(IndicoSelectMultipleCheckboxField
             yield (value, label, selected)
 
 
-class IndicoRadioField(RadioField):
+class fossirRadioField(RadioField):
     widget = JinjaWidget('forms/radio_buttons_widget.html', single_kwargs=True)
 
     def __init__(self, *args, **kwargs):
         self.option_orientation = kwargs.pop('orientation', 'vertical')
-        super(IndicoRadioField, self).__init__(*args, **kwargs)
+        super(fossirRadioField, self).__init__(*args, **kwargs)
 
 
 class JSONField(HiddenField):
@@ -121,24 +107,24 @@ class EmailListField(TextListField):
             raise ValueError(_('Invalid email address: {}').format(escape(line)))
 
 
-class IndicoPasswordField(PasswordField):
+class fossirPasswordField(PasswordField):
     """Password field which can show or hide the password."""
 
     widget = PasswordWidget()
 
     def __init__(self, *args, **kwargs):
         self.toggle = kwargs.pop('toggle', False)
-        super(IndicoPasswordField, self).__init__(*args, **kwargs)
+        super(fossirPasswordField, self).__init__(*args, **kwargs)
 
 
-class IndicoStaticTextField(Field):
+class fossirStaticTextField(Field):
     """Return an html element with text taken from this field's value"""
 
     widget = JinjaWidget('forms/static_text_widget.html')
 
     def __init__(self, *args, **kwargs):
         self.text_value = kwargs.pop('text', '')
-        super(IndicoStaticTextField, self).__init__(*args, **kwargs)
+        super(fossirStaticTextField, self).__init__(*args, **kwargs)
 
     def process_data(self, data):
         self.text_value = self.data = unicode(data)
@@ -147,7 +133,7 @@ class IndicoStaticTextField(Field):
         return self.text_value
 
 
-class IndicoEmailRecipientsField(Field):
+class fossirEmailRecipientsField(Field):
     widget = JinjaWidget('forms/email_recipients_widget.html', single_kwargs=True)
 
     def process_data(self, data):
@@ -156,5 +142,5 @@ class IndicoEmailRecipientsField(Field):
         self.count = len(data)
 
 
-class IndicoTagListField(HiddenFieldList):
+class fossirTagListField(HiddenFieldList):
     widget = JinjaWidget('forms/tag_list_widget.html', single_kwargs=True)

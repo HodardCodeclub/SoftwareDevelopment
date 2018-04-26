@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -30,14 +16,14 @@ from werkzeug.exceptions import NotFound
 from werkzeug.routing import BaseConverter, BuildError, UnicodeConverter
 from werkzeug.wrappers import Response as WerkzeugResponse
 
-from indico.util.caching import memoize
-from indico.util.fs import secure_filename
-from indico.util.locators import get_locator
-from indico.web.util import jsonify_data
+from fossir.util.caching import memoize
+from fossir.util.fs import secure_filename
+from fossir.util.locators import get_locator
+from fossir.web.util import jsonify_data
 
 
 def discover_blueprints():
-    """Discovers all blueprints inside the indico package
+    """Discovers all blueprints inside the fossir package
 
     Only blueprints in a ``blueprint.py`` module or inside a
     ``blueprints`` package are loaded. Any other files are not touched
@@ -46,13 +32,13 @@ def discover_blueprints():
     :return: a ``blueprints, compat_blueprints`` tuple containing two
              sets of blueprints
     """
-    package_root = get_root_path('indico')
+    package_root = get_root_path('fossir')
     modules = set()
     for root, dirs, files in os.walk(package_root):
         for name in files:
             if not name.endswith('.py') or name.endswith('_test.py'):
                 continue
-            segments = ['indico'] + os.path.relpath(root, package_root).replace(os.sep, '.').split('.') + [name[:-3]]
+            segments = ['fossir'] + os.path.relpath(root, package_root).replace(os.sep, '.').split('.') + [name[:-3]]
             if segments[-1] == 'blueprint':
                 modules.add('.'.join(segments))
             elif 'blueprints' in segments[:-1]:
@@ -85,7 +71,7 @@ def _convert_request_value(x):
 
 
 def create_flat_args():
-    """Creates a dict containing the GET/POST arguments in a style old indico code expects.
+    """Creates a dict containing the GET/POST arguments in a style old fossir code expects.
 
     Do not use this for anything new - use request.* directly instead!"""
     args = request.args.copy()
@@ -103,13 +89,13 @@ def create_flat_args():
 def make_view_func(obj):
     """Turns an object in to a view function.
 
-    This function is called on each view_func passed to IndicoBlueprint.add_url_route().
+    This function is called on each view_func passed to fossirBlueprint.add_url_route().
     It handles RH classes and normal functions.
     """
     if inspect.isclass(obj):
         # Some class
         if hasattr(obj, 'process'):
-            # Indico RH
+            # fossir RH
             def wrapper(**kwargs):
                 return obj().process()
         else:
@@ -193,7 +179,7 @@ def url_for(endpoint, *targets, **values):
         # mangled to a filename
         # we should really fine a better way to handle anything
         # related to offline site urls...
-        from indico.modules.events.static.util import url_to_static_filename
+        from fossir.modules.events.static.util import url_to_static_filename
         url = url_to_static_filename(endpoint, url)
     return url
 
@@ -271,7 +257,7 @@ def send_file(name, path_or_fd, mimetype, last_modified=None, no_cache=True, inl
 
     `name` is required and should be the filename visible to the user.
     `path_or_fd` is either the physical path to the file or a file-like object (e.g. a StringIO).
-    `mimetype` SHOULD be a proper MIME type such as image/png. It may also be an indico-style file type such as JPG.
+    `mimetype` SHOULD be a proper MIME type such as image/png. It may also be an fossir-style file type such as JPG.
     `last_modified` may contain a unix timestamp or datetime object indicating the last modification of the file.
     `no_cache` can be set to False to disable no-cache headers.
     `inline` defaults to true except for certain filetypes like XML and CSV. It SHOULD be set to false only when you
@@ -340,7 +326,7 @@ class ListConverter(BaseConverter):
 class ResponseUtil(object):
     """This class allows "modifying" a Response object before it is actually created.
 
-    The purpose of this is to allow e.g. an Indico RH to trigger a redirect but revoke
+    The purpose of this is to allow e.g. an fossir RH to trigger a redirect but revoke
     it later in case of an error or to simply have something to pass around to functions
     which want to modify headers while there is no response available.
     """

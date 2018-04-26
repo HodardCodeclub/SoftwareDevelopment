@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -32,9 +18,9 @@ from jinja2.loaders import BaseLoader, FileSystemLoader, TemplateNotFound, split
 from jinja2.utils import internalcode
 from markupsafe import Markup
 
-from indico.core import signals
-from indico.util.signals import values_from_signal
-from indico.util.string import natural_sort_key, render_markdown
+from fossir.core import signals
+from fossir.util.signals import values_from_signal
+from fossir.util.string import natural_sort_key, render_markdown
 
 
 indentation_re = re.compile(r'^ +', re.MULTILINE)
@@ -111,7 +97,7 @@ def get_overridable_template_name(name, plugin, core_prefix='', plugin_prefix=''
     """Returns template names for templates that may be overridden in a plugin.
 
     :param name: the name of the template
-    :param plugin: the :class:`IndicoPlugin` that may override it (can be none)
+    :param plugin: the :class:`fossirPlugin` that may override it (can be none)
     :param core_prefix: the path prefix of the template in the core
     :param plugin_prefix: the path prefix of the template in the plugin
     :return: template name or list of template names
@@ -136,7 +122,7 @@ def register_template_hook(name, receiver, priority=50, markup=True, plugin=None
     """Registers a function to be called when a template hook is invoked.
 
     The receiver function should always support arbitrary ``**kwargs``
-    to prevent breakage in future Indico versions which might add new
+    to prevent breakage in future fossir versions which might add new
     arguments to a hook::
 
         def receiver(something, **kwargs):
@@ -196,7 +182,7 @@ def call_template_hook(*name, **kwargs):
 
 class CustomizationLoader(BaseLoader):
     def __init__(self, fallback_loader, customization_dir, customization_debug=False):
-        from indico.core.logger import Logger
+        from fossir.core.logger import Logger
         self.logger = Logger.get('customization')
         self.debug = customization_debug
         self.fallback_loader = fallback_loader

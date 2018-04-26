@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -27,12 +13,12 @@ from wtforms.fields.core import FieldList
 from wtforms.form import FormMeta
 from wtforms.widgets.core import HiddenInput
 
-from indico.core import signals
-from indico.core.auth import multipass
-from indico.util.i18n import _
-from indico.util.signals import values_from_signal
-from indico.util.string import return_ascii, strip_whitespace
-from indico.web.flask.util import url_for
+from fossir.core import signals
+from fossir.core.auth import multipass
+from fossir.util.i18n import _
+from fossir.util.signals import values_from_signal
+from fossir.util.string import return_ascii, strip_whitespace
+from fossir.web.flask.util import url_for
 
 
 class _DataWrapper(object):
@@ -56,19 +42,19 @@ class generated_data(property):
         return _DataWrapper(self.fget(obj))
 
 
-class IndicoFormMeta(FormMeta):
+class fossirFormMeta(FormMeta):
     def __call__(cls, *args, **kwargs):
         # If we are instantiating a form that was just extended, don't
         # send the signal again - it's pointless to extend the extended
         # form and doing so could actually result in infinite recursion
         # if the signal receiver didn't specify a sender.
         if kwargs.pop('__extended', False):
-            return super(IndicoFormMeta, cls).__call__(*args, **kwargs)
+            return super(fossirFormMeta, cls).__call__(*args, **kwargs)
         extra_fields = values_from_signal(signals.add_form_fields.send(cls))
         # If there are no extra fields, we don't need any custom logic
         # and simply create an instance of the original form.
         if not extra_fields:
-            return super(IndicoFormMeta, cls).__call__(*args, **kwargs)
+            return super(fossirFormMeta, cls).__call__(*args, **kwargs)
         kwargs['__extended'] = True
         ext_cls = type(b'_Extended' + cls.__name__, (cls,), {})
         for name, field in extra_fields:
@@ -79,7 +65,7 @@ class IndicoFormMeta(FormMeta):
         return ext_cls(*args, **kwargs)
 
 
-class IndicoFormCSRF(CSRF):
+class fossirFormCSRF(CSRF):
     def generate_csrf_token(self, csrf_token_field):
         return session.csrf_token
 
@@ -95,12 +81,12 @@ class IndicoFormCSRF(CSRF):
         raise ValidationError(_('Invalid CSRF token'))
 
 
-class IndicoForm(FlaskForm):
-    __metaclass__ = IndicoFormMeta
+class fossirForm(FlaskForm):
+    __metaclass__ = fossirFormMeta
 
     class Meta:
         csrf = True
-        csrf_class = IndicoFormCSRF
+        csrf_class = fossirFormCSRF
 
         def bind_field(self, form, unbound_field, options):
             # We don't set default filters for query-based fields as it breaks them if no query_factory is set
@@ -123,7 +109,7 @@ class IndicoForm(FlaskForm):
             # change it for some reason we can always replace it everywhere
             kwargs['meta'] = kwargs.get('meta') or {}
             kwargs['meta'].setdefault('csrf', csrf_enabled)
-        super(IndicoForm, self).__init__(*args, **kwargs)
+        super(fossirForm, self).__init__(*args, **kwargs)
         self.ajax_response = None
 
     def process_ajax(self):
@@ -147,7 +133,7 @@ class IndicoForm(FlaskForm):
         return True
 
     def validate(self):
-        valid = super(IndicoForm, self).validate()
+        valid = super(fossirForm, self).validate()
         if not valid:
             return False
         if not all(values_from_signal(signals.form_validated.send(self), single_value=True)):
@@ -227,7 +213,7 @@ class IndicoForm(FlaskForm):
     def data(self):
         """Extends form.data with generated data from properties"""
         data = {k: v
-                for k, v in super(IndicoForm, self).data.iteritems()
+                for k, v in super(fossirForm, self).data.iteritems()
                 if k != self.meta.csrf_field_name and not k.startswith('ext__')}
         data.update(self.generated_data)
         return data

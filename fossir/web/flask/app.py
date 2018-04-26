@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -31,43 +17,43 @@ from werkzeug.local import LocalProxy
 from werkzeug.urls import url_parse
 from wtforms.widgets import html_params
 
-import indico
-from indico.core import signals
-from indico.core.auth import multipass
-from indico.core.celery import celery
-from indico.core.config import IndicoConfig, config, load_config
-from indico.core.db.sqlalchemy import db
-from indico.core.db.sqlalchemy.core import on_models_committed
-from indico.core.db.sqlalchemy.logging import apply_db_loggers
-from indico.core.db.sqlalchemy.util.models import import_all_models
-from indico.core.logger import Logger
-from indico.core.marshmallow import mm
-from indico.core.plugins import include_plugin_css_assets, include_plugin_js_assets, plugin_engine, url_for_plugin
-from indico.legacy.common.TemplateExec import mako
-from indico.modules.auth.providers import IndicoAuthProvider, IndicoIdentityProvider
-from indico.modules.auth.util import url_for_login, url_for_logout
-from indico.modules.oauth import oauth
-from indico.util import date_time as date_time_util
-from indico.util.i18n import _, babel, get_current_locale, gettext_context, ngettext_context
-from indico.util.mimetypes import icon_from_mimetype
-from indico.util.signals import values_from_signal
-from indico.util.string import RichMarkup, alpha_enum, crc32, sanitize_html, slugify
-from indico.web.assets import (core_env, include_css_assets, include_js_assets, register_all_css, register_all_js,
+import fossir
+from fossir.core import signals
+from fossir.core.auth import multipass
+from fossir.core.celery import celery
+from fossir.core.config import fossirConfig, config, load_config
+from fossir.core.db.sqlalchemy import db
+from fossir.core.db.sqlalchemy.core import on_models_committed
+from fossir.core.db.sqlalchemy.logging import apply_db_loggers
+from fossir.core.db.sqlalchemy.util.models import import_all_models
+from fossir.core.logger import Logger
+from fossir.core.marshmallow import mm
+from fossir.core.plugins import include_plugin_css_assets, include_plugin_js_assets, plugin_engine, url_for_plugin
+from fossir.legacy.common.TemplateExec import mako
+from fossir.modules.auth.providers import fossirAuthProvider, fossirIdentityProvider
+from fossir.modules.auth.util import url_for_login, url_for_logout
+from fossir.modules.oauth import oauth
+from fossir.util import date_time as date_time_util
+from fossir.util.i18n import _, babel, get_current_locale, gettext_context, ngettext_context
+from fossir.util.mimetypes import icon_from_mimetype
+from fossir.util.signals import values_from_signal
+from fossir.util.string import RichMarkup, alpha_enum, crc32, sanitize_html, slugify
+from fossir.web.assets import (core_env, include_css_assets, include_js_assets, register_all_css, register_all_js,
                                register_theme_sass)
-from indico.web.flask.errors import errors_bp
-from indico.web.flask.stats import get_request_stats, setup_request_stats
-from indico.web.flask.templating import (EnsureUnicodeExtension, call_template_hook, dedent, groupby, instanceof,
+from fossir.web.flask.errors import errors_bp
+from fossir.web.flask.stats import get_request_stats, setup_request_stats
+from fossir.web.flask.templating import (EnsureUnicodeExtension, call_template_hook, dedent, groupby, instanceof,
                                          markdown, natsort, subclassof, underline)
-from indico.web.flask.util import ListConverter, XAccelMiddleware, discover_blueprints, url_for, url_rule_to_js
-from indico.web.flask.wrappers import IndicoFlask
-from indico.web.forms.jinja_helpers import is_single_line_field, iter_form_fields, render_field
-from indico.web.menu import render_sidemenu
-from indico.web.util import url_for_index
-from indico.web.views import render_session_bar
+from fossir.web.flask.util import ListConverter, XAccelMiddleware, discover_blueprints, url_for, url_rule_to_js
+from fossir.web.flask.wrappers import fossirFlask
+from fossir.web.forms.jinja_helpers import is_single_line_field, iter_form_fields, render_field
+from fossir.web.menu import render_sidemenu
+from fossir.web.util import url_for_index
+from fossir.web.views import render_session_bar
 
 
 def configure_app(app, set_path=False):
-    config = IndicoConfig(app.config['INDICO'])  # needed since we don't have an app ctx yet
+    config = fossirConfig(app.config['fossir'])  # needed since we don't have an app ctx yet
     app.config['DEBUG'] = config.DEBUG
     app.config['SECRET_KEY'] = config.SECRET_KEY
     app.config['LOGGER_NAME'] = 'flask.app'
@@ -75,7 +61,7 @@ def configure_app(app, set_path=False):
     if config.SENTRY_DSN:
         app.config['SENTRY_CONFIG'] = {
             'dsn': config.SENTRY_DSN,
-            'release': indico.__version__
+            'release': fossir.__version__
         }
     if not app.config['SECRET_KEY'] or len(app.config['SECRET_KEY']) < 16:
         raise ValueError('SECRET_KEY must be set to a random secret of at least 16 characters. '
@@ -85,10 +71,10 @@ def configure_app(app, set_path=False):
     app.config['PROPAGATE_EXCEPTIONS'] = True
     app.config['TRAP_HTTP_EXCEPTIONS'] = False
     app.config['TRAP_BAD_REQUEST_ERRORS'] = config.DEBUG
-    app.config['SESSION_COOKIE_NAME'] = 'indico_session'
+    app.config['SESSION_COOKIE_NAME'] = 'fossir_session'
     app.config['PERMANENT_SESSION_LIFETIME'] = config.SESSION_LIFETIME
     configure_multipass(app, config)
-    app.config['PLUGINENGINE_NAMESPACE'] = 'indico.plugins'
+    app.config['PLUGINENGINE_NAMESPACE'] = 'fossir.plugins'
     app.config['PLUGINENGINE_PLUGINS'] = config.PLUGINS
     if set_path:
         base = url_parse(config.BASE_URL)
@@ -105,8 +91,8 @@ def configure_multipass(app, config):
     app.config['MULTIPASS_AUTH_PROVIDERS'] = config.AUTH_PROVIDERS
     app.config['MULTIPASS_IDENTITY_PROVIDERS'] = config.IDENTITY_PROVIDERS
     app.config['MULTIPASS_PROVIDER_MAP'] = config.PROVIDER_MAP or {x: x for x in config.AUTH_PROVIDERS}
-    if 'indico' in app.config['MULTIPASS_AUTH_PROVIDERS'] or 'indico' in app.config['MULTIPASS_IDENTITY_PROVIDERS']:
-        raise ValueError('The name `indico` is reserved and cannot be used as an Auth/Identity provider name.')
+    if 'fossir' in app.config['MULTIPASS_AUTH_PROVIDERS'] or 'fossir' in app.config['MULTIPASS_IDENTITY_PROVIDERS']:
+        raise ValueError('The name `fossir` is reserved and cannot be used as an Auth/Identity provider name.')
     if config.LOCAL_IDENTITIES:
         configure_multipass_local(app)
     app.config['MULTIPASS_IDENTITY_INFO_KEYS'] = {'first_name', 'last_name', 'email', 'affiliation', 'phone',
@@ -118,17 +104,17 @@ def configure_multipass(app, config):
 
 
 def configure_multipass_local(app):
-    app.config['MULTIPASS_AUTH_PROVIDERS']['indico'] = {
-        'type': IndicoAuthProvider,
-        'title': 'Indico',
+    app.config['MULTIPASS_AUTH_PROVIDERS']['fossir'] = {
+        'type': fossirAuthProvider,
+        'title': 'fossir',
         'default': not any(p.get('default') for p in app.config['MULTIPASS_AUTH_PROVIDERS'].itervalues())
     }
-    app.config['MULTIPASS_IDENTITY_PROVIDERS']['indico'] = {
-        'type': IndicoIdentityProvider,
+    app.config['MULTIPASS_IDENTITY_PROVIDERS']['fossir'] = {
+        'type': fossirIdentityProvider,
         # We don't want any user info from this provider
         'identity_info_keys': {}
     }
-    app.config['MULTIPASS_PROVIDER_MAP']['indico'] = 'indico'
+    app.config['MULTIPASS_PROVIDER_MAP']['fossir'] = 'fossir'
 
 
 def configure_xsendfile(app, method):
@@ -165,7 +151,7 @@ def setup_jinja(app):
     app.add_template_global(url_for)
     app.add_template_global(url_for_plugin)
     app.add_template_global(url_rule_to_js)
-    app.add_template_global(IndicoConfig(exc=Exception), 'indico_config')
+    app.add_template_global(fossirConfig(exc=Exception), 'fossir_config')
     app.add_template_global(include_css_assets)
     app.add_template_global(include_js_assets)
     app.add_template_global(include_plugin_css_assets)
@@ -192,7 +178,7 @@ def setup_jinja(app):
     app.add_template_global(LocalProxy(get_current_locale), 'current_locale')
     # Useful constants
     app.add_template_global('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', name='time_regex_hhmm')  # for input[type=time]
-    # Filters (indico functions returning UTF8)
+    # Filters (fossir functions returning UTF8)
     app.add_template_filter(EnsureUnicodeExtension.wrap_func(date_time_util.format_date))
     app.add_template_filter(EnsureUnicodeExtension.wrap_func(date_time_util.format_time))
     app.add_template_filter(EnsureUnicodeExtension.wrap_func(date_time_util.format_datetime))
@@ -250,7 +236,7 @@ def configure_db(app):
         app.config.setdefault('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:')
     else:
         if config.SQLALCHEMY_DATABASE_URI is None:
-            raise Exception("No proper SQLAlchemy store has been configured. Please edit your indico.conf")
+            raise Exception("No proper SQLAlchemy store has been configured. Please edit your fossir.conf")
 
         app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
         app.config['SQLALCHEMY_RECORD_QUERIES'] = False
@@ -325,7 +311,7 @@ def inject_current_url(response):
         url.encode('latin1')
     except UnicodeEncodeError:
         return response
-    response.headers['X-Indico-URL'] = url
+    response.headers['X-fossir-URL'] = url
     return response
 
 
@@ -335,14 +321,14 @@ def make_app(set_path=False, testing=False, config_override=None):
     # This only works while inside an application context but you really shouldn't have any
     # reason to access it outside this method without being inside an application context.
     # When set_path is enabled, SERVER_NAME and APPLICATION_ROOT are set according to BASE_URL
-    # so URLs can be generated without an app context, e.g. in the indico shell
+    # so URLs can be generated without an app context, e.g. in the fossir shell
 
     if _app_ctx_stack.top:
         Logger.get('flask').warn('make_app called within app context, using existing app')
         return _app_ctx_stack.top.app
-    app = IndicoFlask('indico', static_folder=None, template_folder='web/templates')
+    app = fossirFlask('fossir', static_folder=None, template_folder='web/templates')
     app.config['TESTING'] = testing
-    app.config['INDICO'] = load_config(only_defaults=testing, override=config_override)
+    app.config['fossir'] = load_config(only_defaults=testing, override=config_override)
     configure_app(app, set_path)
 
     with app.app_context():

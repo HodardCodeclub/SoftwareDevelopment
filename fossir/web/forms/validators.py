@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -22,9 +8,9 @@ from types import NoneType
 
 from wtforms.validators import EqualTo, Length, Regexp, StopValidation, ValidationError
 
-from indico.util.date_time import as_utc, format_datetime, format_human_timedelta, format_time, now_utc
-from indico.util.i18n import _, ngettext
-from indico.util.string import is_valid_mail
+from fossir.util.date_time import as_utc, format_datetime, format_human_timedelta, format_time, now_utc
+from fossir.util.i18n import _, ngettext
+from fossir.util.string import is_valid_mail
 
 
 class UsedIf(object):
@@ -107,7 +93,7 @@ class ConfirmPassword(EqualTo):
         super(ConfirmPassword, self).__init__(fieldname, message=_('The passwords do not match.'))
 
 
-class IndicoEmail(object):
+class fossirEmail(object):
     """Validates one or more email addresses"""
     def __init__(self, multi=False):
         self.multi = multi
@@ -284,7 +270,7 @@ class WordCount(object):
             raise ValidationError(message.format(min=self.min, max=self.max, length=count))
 
 
-class IndicoRegexp(Regexp):
+class fossirRegexp(Regexp):
     """
     Like the WTForms `Regexp` validator, but supports populating the
     HTML5 `patttern` attribute (the regex may not use any non-standard
@@ -293,7 +279,7 @@ class IndicoRegexp(Regexp):
 
     def __init__(self, *args, **kwargs):
         self.client_side = kwargs.pop('client_side', True)
-        super(IndicoRegexp, self).__init__(*args, **kwargs)
+        super(fossirRegexp, self).__init__(*args, **kwargs)
 
 
 class SoftLength(Length):

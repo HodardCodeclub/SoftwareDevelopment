@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import unicode_literals
 
@@ -24,16 +10,16 @@ from itsdangerous import BadData
 from sqlalchemy.exc import DatabaseError
 from werkzeug.exceptions import BadRequest, BadRequestKeyError, Forbidden, HTTPException, NotFound
 
-from indico.core.errors import IndicoError, get_error_description
-from indico.core.logger import Logger, sentry_log_exception
-from indico.modules.auth.util import redirect_to_login
-from indico.util.i18n import _
-from indico.util.string import to_unicode
-from indico.web.errors import render_error
-from indico.web.flask.wrappers import IndicoBlueprint
+from fossir.core.errors import fossirError, get_error_description
+from fossir.core.logger import Logger, sentry_log_exception
+from fossir.modules.auth.util import redirect_to_login
+from fossir.util.i18n import _
+from fossir.util.string import to_unicode
+from fossir.web.errors import render_error
+from fossir.web.flask.wrappers import fossirBlueprint
 
 
-errors_bp = IndicoBlueprint('errors', __name__)
+errors_bp = fossirBlueprint('errors', __name__)
 
 
 @errors_bp.app_errorhandler(NotFound)
@@ -92,8 +78,8 @@ def handle_baddata(exc):
     return render_error(exc, _('Invalid or expired token'), to_unicode(exc.message), 400)
 
 
-@errors_bp.app_errorhandler(IndicoError)
-def handle_indico_exception(exc):
+@errors_bp.app_errorhandler(fossirError)
+def handle_fossir_exception(exc):
     return render_error(exc, _('Something went wrong'), to_unicode(exc.message), getattr(exc, 'http_status_code', 500))
 
 

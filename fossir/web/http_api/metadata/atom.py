@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from datetime import datetime
 
@@ -20,8 +6,8 @@ import dateutil.parser
 from pyatom import AtomFeed
 from pytz import timezone, utc
 
-from indico.util.string import to_unicode
-from indico.web.http_api.metadata.serializer import Serializer
+from fossir.util.string import to_unicode
+from fossir.web.http_api.metadata.serializer import Serializer
 
 
 def _deserialize_date(date_dict):
@@ -43,7 +29,7 @@ class AtomSerializer(Serializer):
             results = [results]
 
         feed = AtomFeed(
-            title='Indico Feed',
+            title='fossir Feed',
             feed_url=fossils['url']
         )
 

@@ -1,18 +1,4 @@
-# This file is part of Indico.
-# Copyright (C) 2002 - 2017 European Organization for Nuclear Research (CERN).
-#
-# Indico is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
-# License, or (at your option) any later version.
-#
-# Indico is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Indico; if not, see <http://www.gnu.org/licenses/>.
+
 
 from __future__ import absolute_import, unicode_literals
 
@@ -21,7 +7,7 @@ from operator import attrgetter
 from wtforms import HiddenField, SelectFieldBase
 from wtforms.widgets import RadioInput, Select
 
-from indico.web.forms.widgets import JinjaWidget
+from fossir.web.forms.widgets import JinjaWidget
 
 
 class _EnumFieldMixin(object):
@@ -36,14 +22,14 @@ class _EnumFieldMixin(object):
                     raise ValueError(self.gettext('Not a valid choice'))
 
 
-class IndicoEnumSelectField(_EnumFieldMixin, SelectFieldBase):
+class fossirEnumSelectField(_EnumFieldMixin, SelectFieldBase):
     """Select field backed by a :class:`RichEnum`"""
 
     widget = Select()
 
     def __init__(self, label=None, validators=None, enum=None, sorted=False, only=None, skip=None, none=None,
                  titles=None, **kwargs):
-        super(IndicoEnumSelectField, self).__init__(label, validators, **kwargs)
+        super(fossirEnumSelectField, self).__init__(label, validators, **kwargs)
         self.enum = enum
         self.sorted = sorted
         self.only = set(only) if only is not None else None
@@ -62,7 +48,7 @@ class IndicoEnumSelectField(_EnumFieldMixin, SelectFieldBase):
             yield (item.name, title, item == self.data)
 
 
-class IndicoEnumRadioField(IndicoEnumSelectField):
+class fossirEnumRadioField(fossirEnumSelectField):
     widget = JinjaWidget('forms/radio_buttons_widget.html', orientation='horizontal', single_kwargs=True)
     option_widget = RadioInput()
 
