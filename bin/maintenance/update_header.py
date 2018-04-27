@@ -16,7 +16,7 @@ HEADER = """
 {comment_middle}
 {comment_middle} fossir is free software; you can redistribute it and/or
 {comment_middle} modify it under the terms of the GNU General Public License as
-{comment_middle} published by the Free Software Foundation; either version 3 of the
+{comment_middle} published by the Free Software Foundation; either version 1.0 of the
 {comment_middle} License, or (at your option) any later version.
 {comment_middle}
 {comment_middle} fossir is distributed in the hope that it will be useful, but
